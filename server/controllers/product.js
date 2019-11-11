@@ -1,4 +1,5 @@
 const Product = require('../models/product')
+const User = require('../models/user')
 
 class ProductController {
     static showAllProduct(req, res, next) {
@@ -16,6 +17,7 @@ class ProductController {
     static createProduct(req, res, next) {
         // console.log(req.file)
         // console.log('aaaaaaaaaaaaaaa')
+        let productData = null
         if (!req.file) {
             req.body.image = null
         } else {
@@ -29,9 +31,17 @@ class ProductController {
                 seller: req.decoded.id
             })
             .then(product => {
+                productData = product
+                return User.findByIdAndUpdate(req.decoded.id, {
+                    $push: {
+                        product_on_sell: product._id
+                    }
+                })
+            })
+            .then(result => {
                 res.status(201).json({
                     message: 'Product successfully created',
-                    product
+                    productData
                 })
             })
             .catch(next)
