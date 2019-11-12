@@ -15,7 +15,7 @@ module.exports= {
   },
   isAdmin (req, res, next) {
     if(req.loggedUser.role === 'admin') next()
-    else next({ status: 403, message: 'Authorization failed'})
+    else next({ status: 403, message: {message: 'Authorization failed' }})
   },
   trxAuthorization (req ,res, next) {
     const { id } = req.params
@@ -27,7 +27,7 @@ module.exports= {
           if(transaction && transaction.owner.toString() === req.loggedUser.id){
             next()
           } else {
-            next({status: 403, message: 'Authorization failed'})
+            next({status: 403, message: { message: 'Authorization failed'}})
           }
         })
         .catch(next)

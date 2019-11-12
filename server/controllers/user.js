@@ -45,7 +45,7 @@ class UserController {
       next(err)
     }
   }
-  static vefiyAdmin (req, res, next) {
+  static verifyAdmin (req, res, next) {
     try{
       const decoded = verifyToken(req.headers.token)
       if(decoded.role === 'admin') {
@@ -60,7 +60,7 @@ class UserController {
   }
   static getCart (req, res, next) {
     const { id } = req.loggedUser
-    User.findById(id).populate('cart.id')
+    User.findById(id).populate('cart.product')
       .then(user => {
         res.status(200).json(user)
       })
@@ -68,9 +68,9 @@ class UserController {
   }
   static updateCart (req, res, next) {
     const { cart } = req.body
-    cart.id = ObjectId(cart.id)
+    cart.product = ObjectId(cart.product)
     const { id } = req.loggedUser
-    User.findByIdAndUpdate(id , { cart }).populate('cart.id')
+    User.findByIdAndUpdate(id , { cart }).populate('cart.product')
       .then(user => {
         res.status(200).json({ user, message: 'Successfully update cart'})
       })
@@ -79,7 +79,7 @@ class UserController {
   static checkout (req, res, next ) {
     const cart = []
     const { id } = req.loggedUser
-    User.findByIdAndUpdate(id, { $set: { cart }}).populate('cart.id')
+    User.findByIdAndUpdate(id, { $set: { cart }}).populate('cart.product')
       .then(user => {
         res.status(200).json({ user, message: 'Successfully checkout'})
       })
@@ -88,7 +88,7 @@ class UserController {
   static deleteFromCart (req, res, next) {
     const { id } = req.params
     const userId = req.loggedUser.id
-    User.findByIdAndUpdate(userId, { $pull: { cart: { _id: id }}}).populate('cart.id')
+    User.findByIdAndUpdate(userId, { $pull: { cart: { _id: id }}}).populate('cart.product')
       .then(user => {
         res.status(200).json({ user, message: 'Successfully deleted item from cart'})
       })

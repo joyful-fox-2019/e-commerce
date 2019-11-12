@@ -1,7 +1,7 @@
 const multer = require('multer')
 const uploadToGcs = require('./gcsUpload')
 
-module.exports = ({ limit, gcsConfig }) => {
+module.exports = ({ limits, gcsConfig }) => {
   const multerStorage = multer.memoryStorage()
   const upload = multer({ storage: multerStorage, limits })
 

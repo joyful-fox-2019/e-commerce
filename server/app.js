@@ -20,7 +20,7 @@ const errorHandler = require('./middlewares/errorHandler')
 const routes = require('./routes')
 
 //  DB
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false })
   .then(() => console.log('Connected to database'))
   .catch(err => console.log(err))
 

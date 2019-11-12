@@ -1,9 +1,7 @@
 const router = require('express').Router()
 const ProductController = require('../controllers/product')
 const { authenticate, isAdmin } = require('../middlewares/auth')
-
 const gcsUpload = require('../middlewares/gcs')
-
 const upload = gcsUpload({
   limits: {
     fileSize: 2e6

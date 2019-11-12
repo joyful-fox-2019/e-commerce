@@ -1,5 +1,6 @@
 const Product = require('../models/product')
 const { Storage } = require('@google-cloud/storage')
+const { ObjectId } = require('mongoose').Types
 
 class ProductController {
   static create (req,res, next) {
@@ -17,10 +18,10 @@ class ProductController {
     if (sort === 'popular') sortParams = [[ 'likes', 'desc']]
     if (sort === 'sold') sortParams = [['sold', 'desc']]
     if (keyword) { objParams.name = { $regex: keyword, $options: 'i' }}
-    if(whose === 'mine') objParams.favorites = req.loggedUser.id
+    if(whose === 'mine') objParams.favourites = req.loggedUser.id
     
     Product.find(objParams).sort(sortParams)
-      .populate('favorites')
+      .populate('favourites')
       .then(products => {
         res.status(200).json(products)
       })
@@ -29,7 +30,7 @@ class ProductController {
   static findById (req, res, next) {
     const { id } = req.params
     Product.findById(id)
-      .populate('favorites')
+      .populate('favourites')
       .then(product => {
         res.status(200).json(product)
       })
@@ -63,22 +64,23 @@ class ProductController {
   static favorite (req, res, next) {
     const { id } = req.params
     const userId = req.loggedUser.id
-    Product.findOne({ _id: id , favorites: userId })
+    let likes = null
+    Product.findOne({ _id: id , favourites: userId })
       .then(product => {
         if(product) {
-          return Product.findOneAndUpdate({ _id: id }, { $pull: { favorites: userId }})
+          return Product.findOneAndUpdate({ _id: id }, { $pull: { favourites: ObjectId(userId) }})
             .then(product => {
-              product.likes--
-              return product.save()
+              likes = product.likes - 1
+              return Product.findByIdAndUpdate(id, { likes }).populate('favourites')
               .then(product => {
                 res.status(200).json({ product, message: 'Successfully remove from your favorite'})
               })
             })
         } else {
-          return Product.findOneAndUpdate({ _id: id }, { $push: { favorites: userId }})
+          return Product.findOneAndUpdate({ _id: id }, { $push: { favourites: ObjectId(userId) }})
             .then(product=> {
-              product.likes++
-              return product.save()
+              likes = product.likes + 1
+              return Product.findByIdAndUpdate(id, { likes }).populate('favourites')
               .then(product => {
                 res.status(200).json({ product, message: 'Successfully add to your favorite'})
               })

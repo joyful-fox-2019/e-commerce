@@ -11,5 +11,7 @@ router.get('/', (req, res, next) => {
 })
 
 router.use('/users', userRoute)
+router.use('/products', productRoute)
+router.use('/transactions', transactionRoute)
 
 module.exports = router
