@@ -62,6 +62,18 @@ class ProductController {
                 next(err)
             })
     }
+
+    static async uploadGCS(req,res,next){
+        try {
+          let _id = req.user.id
+          let name = req.file.originalname
+          let location = req.file.cloudStoragePublicUrl
+          let data = {name,location}
+          res.status(201).json(data)
+        } catch (error) {
+          next(error)
+        }
+      }
 }
 
 module.exports = ProductController

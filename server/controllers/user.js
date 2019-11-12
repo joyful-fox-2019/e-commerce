@@ -4,6 +4,7 @@ const Password = require('../helpers/hashPassword')
 
 class UserController {
     static register(req, res, next) {
+        console.log('masuk disini')
         User.findOne({
                 email: req.body.email
             })

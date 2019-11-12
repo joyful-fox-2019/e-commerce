@@ -24,6 +24,10 @@ const userSchema = new Schema({
         required: [true, 'password cannot be empty'],
         minlength: [8, "Password minimal 8 digits"]
     }
+},
+{
+    timestamps: true,
+    versionKey: false
 })
 
 userSchema.pre('save', function (next) {
