@@ -1,0 +1,22 @@
+User
+  name
+  email
+  password
+  role
+
+Product
+  name
+  stock
+  image
+  desctription
+  price
+
+Cart
+  userId
+  productId
+  amount
+
+Transaction
+  userId
+  carts
+  total
