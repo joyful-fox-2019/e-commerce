@@ -18,6 +18,10 @@ const StoreSchema = new Schema({
   ],
   store_image: String,
   background_image: String,
+  link: {
+    type: String,
+    required: [true, 'store need link']
+  },
   location: {
     type: String,
     required: [true, 'Store need location']

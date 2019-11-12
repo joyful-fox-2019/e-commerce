@@ -26,7 +26,7 @@ const UserSchema = new Schema({
   WishList: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'wishes'
+      ref: 'products'
     }
   ],
   History: [

@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Store = require('../models/Store');
 const { decodeToken } = require('../helpers/jwt');
+const Cart = require('../models/cart');
 
 module.exports = {
   authentication (req, res, next) {
@@ -38,6 +39,19 @@ module.exports = {
           else {
             next()
           }
+        })
+        .catch(next)
+    }
+    catch(err){
+      next(err)
+    }
+  },
+  transaction (req, res, next) {
+    try {
+      Cart.findOne({ UserId: req.loggedUser.id })
+        .then(cart => {
+          req.CartId = cart
+          next()
         })
         .catch(next)
     }

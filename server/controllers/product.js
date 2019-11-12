@@ -21,6 +21,7 @@ module.exports = {
   },
   createProduct (req, res, next) {
     const { name, description, price, stock, category } = req.body;
+    const url = req.file.cloudStoragePublicUrl;
     const id = req.loggedUser.id
     let storeId,
       tempProduct
@@ -29,7 +30,7 @@ module.exports = {
         if(!user.StoreId) return 
         else {
           storeId = user.StoreId
-          return Product.create({ name, description, price, stock, StoreId: user.StoreId, category })
+          return Product.create({ name, description, price, stock, StoreId: user.StoreId, category, product_image: url })
         }
       })
       .then(product => {
@@ -56,10 +57,40 @@ module.exports = {
         return Product.findByIdAndDelete(id)
       })
       .then(() => {
-        return Store.findByIdAndUpdate(tempStoreId, {$pull: { ProjectId: id }}, {new: true})
+        return Store.findByIdAndUpdate(tempStoreId, {$pull: { ProductId: id }}, {new: true})
       })
       .then(store => {
         res.status(200).json({ store })
+      })
+      .catch(next)
+  },
+  findAllCategory (req, res, next) {
+    let tempCategory = []
+    Product.find()
+      .then(products => {
+        products.forEach((el, i) => {
+          el.category.forEach((category, i) => {
+            tempCategory.push(category)
+          })
+        })
+        res.status(200).json({categories: tempCategory})
+      })
+      .catch(next)
+  },
+  findByCategoryName (req, res, next) {
+    const name = req.params.name;
+    Product.find().populate('StoreId')
+      .then(products => {
+        let tempProduct = []
+        products.forEach((product, i) => {
+          product.category.forEach((el, i) => {
+            if(el == name)  tempProduct.push(product)
+          })
+        })
+        if(tempProduct.length == 0) next({status:404, msg: 'not found!'})
+        else {
+          res.status(200).json({products: tempProduct})
+        }
       })
       .catch(next)
   }

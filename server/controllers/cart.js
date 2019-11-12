@@ -1,4 +1,5 @@
 const Cart = require('../models/cart');
+const Product = require('../models/product');
 
 module.exports = {
   getCart (req, res, next) {
@@ -13,39 +14,56 @@ module.exports = {
     const { product_image, description, name, price, id, count } = req.body
     const payload = { product_image, description, name, price, id, count };
     const UserId = req.loggedUser.id;
+    let pass = true;
+    let maxCount = true;
+    let tempCart
     Cart.findOne({ UserId })
       .then(cart => {
-        let pass = true
-        cart.product.forEach((el, i) => {
-          if(el.id == id) {
-            pass = false;
-            let newCount = Number(el.count) + Number(count)
-            el.count = newCount;
+        tempCart = cart
+        return Product.findById(id)
+      })
+      .then(product => {
+        tempCart.product.forEach((el, i) => {
+          if(el.name == name) {
+            let math = Number(el.count) + Number(count)
+            if(el.id == id && math <= product.stock) {
+              pass = false;
+              el.count = math;
+            } else if(el.id == id && math > product.stock){
+              pass = false;
+              maxCount = false;
+              el.count = product.stock
+            }
           }
         })
         if(!pass) {
-          return Cart.findOneAndUpdate({ UserId }, { product: cart.product }, {new: true})
-        } else {
-          return Cart.findOneAndUpdate({ UserId }, { $push: { product: payload, count }}, { new: true })
+          return Cart.findOneAndUpdate({ UserId }, { product: tempCart.product }, {new: true})
+        } else if (pass && count <= product.stock) {
+          return Cart.findOneAndUpdate({ UserId }, { $push: { product: payload, count }}, {new: true})
+        } else if (pass && count > product.stock) {
+          return Cart.findOneAndUpdate({ UserId }, { $push: { product: payload, count: product.stock }}, {new: true})
         }
       })
       .then(cart => {
-        res.status(201).json({msg: 'success add to cart', cart})
+        if(!pass && !maxCount) {
+          res.status(201).json({msg: 'Out of stock, automaticly add max stock', cart})
+        } else {
+          res.status(201).json({msg: 'success add to cart', cart})
+        }
       })
       .catch(next)
   },
 
 
 
-
-
-
-  checkout (req,res,next) {
-    const product = []
-    Cart.findOneAndUpdate({ UserId: req.loggedUser.id }, { product }, {new: true})
-      .then((cart) => {
-        res.status(200).json({ cart })
-      })
-      .catch(next)
+  checkout (UserId) {
+    return new Promise ((resolve, reject) => {
+      const product = []
+      Cart.findOneAndUpdate({ UserId }, { product }, {new: true})
+        .then((cart) => {
+          resolve(cart)
+        })
+        .catch(reject)
+    })
   }
 }

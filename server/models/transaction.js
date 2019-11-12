@@ -5,7 +5,8 @@ const TransSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'products'
   },
-  status: Boolean
+  status: Boolean,
+  payment: Number
 }, {timestamps: true})
 
 TransSchema.pre('save', function (next) {
@@ -13,6 +14,6 @@ TransSchema.pre('save', function (next) {
   next()
 })
 
-const Transaction = model('transactions', transSchema);
+const Transaction = model('transactions', TransSchema);
 
 module.exports = Transaction;

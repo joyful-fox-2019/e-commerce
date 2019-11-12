@@ -92,12 +92,20 @@ module.exports = {
   },
   getLogin (req, res, next) {
     const id = req.loggedUser.id;
-    User.findById(id)
+    User.findById(id).populate('History').populate('WishList').populate('StoreId')
       .then(user => {
         if(!user) next({status: 400, msg: 'bad request'})
         else {
           res.status(200).json({user, msg: 'Online'})
         }
+      })
+      .catch(next)
+  },
+  updateImage (req, res, next) {
+    const url = req.file.cloudStoragePublicUrl;
+    User.findByIdAndUpdate(req.loggedUser.id, {profile_image: url}, {new:true})
+      .then(user => {
+        res.status(201).json({user, msg: 'uploading success'})
       })
       .catch(next)
   }

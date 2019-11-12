@@ -23,7 +23,7 @@ const ProductSchema = new Schema({
   product_image: String,
   StoreId: {
     type: Schema.Types.ObjectId,
-    ref: 'users'
+    ref: 'stores'
   },
   category: []
 }, {timestamps: true})

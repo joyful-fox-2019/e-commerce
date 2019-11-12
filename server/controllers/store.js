@@ -4,13 +4,14 @@ const User = require('../models/user');
 module.exports = {
   createStore (req, res, next) {
     const id = req.loggedUser.id;
-    const { name, location } = req.body;
+    console.log(req.body)
+    const { name, location, link } = req.body;
     let tempStore
     User.findById(id)
       .then(user => {
         if(!user.verification) return
         else {
-          return Store.create({ Owner: id, name, location })
+          return Store.create({ Owner: id, name, location, link })
         }
       })
       .then(store => {
@@ -22,9 +23,7 @@ module.exports = {
       })
       .then(user => {
         if(!user) next({status: 403, msg: 'Cannot create Store, please verify your account first!'})
-        else {
-          res.status(201).json({user, store: tempStore, msg: 'Store Created!'})
-        }
+        else res.status(201).json({user, store: tempStore, msg: 'Store Created!'})
       })
       .catch(next)
   },
@@ -32,7 +31,8 @@ module.exports = {
     const Owner = req.loggedUser.id;
     Store.findOne({ Owner }).populate('ProductId')
       .then(store => {
-        res.status(200).json({ store })
+        if(!store) next({status: 404, msg: 'You no have shop'})
+        else res.status(200).json({ store })
       })
       .catch(next)
   }
