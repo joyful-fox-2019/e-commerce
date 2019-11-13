@@ -1,5 +1,5 @@
 <template>
-  <v-app class="bg-standard">
+  <v-app class="bg-standard app">
     <Navbar></Navbar>
     <v-content>
       <router-view></router-view>
@@ -17,11 +17,26 @@ export default {
   components: {
     Navbar,
     Alert
+  },
+  created () {
+    if (localStorage.getItem('access_token') &&
+    localStorage.getItem('_id') &&
+    localStorage.getItem('name') &&
+    localStorage.getItem('isAdmin')) {
+      let user = {
+        _id: localStorage.getItem('_id'),
+        name: localStorage.getItem('name'),
+        isAdmin: true
+      }
+      this.$store.commit('SET_USER', user)
+    }
   }
 }
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Oswald|Squada+One&display=swap');
+
 :root {
   --background-color: #FFFFFF;
   --surface-color: #202020;
@@ -48,6 +63,12 @@ export default {
   background: var(--secondary-color) !important;
   color: var(--on-secondary-color) !important;
 }
+.t-primary {
+  color: var(--primary-color) !important;
+}
+.t-secondary {
+  color: var(--secondary-color) !important;
+}
 .clickable {
   cursor: pointer;
 }
@@ -65,5 +86,22 @@ hr {
   right: 0;
   width: 400px;
   margin-right: 10%;
+}
+.app {
+  font-family: 'Oswald', sans-serif !important;
+}
+v-btn {
+  font-family: 'Squada One', cursive !important;
+}
+.logo {
+  font-family: 'Squada One', cursive !important;
+  height: 90% !important;
+  font-size: 35px;
+  width: 160px;
+  font-weight: bold;
+  margin: auto;
+  background: rgb(230,37,42);
+  background: linear-gradient(90deg, rgba(230,37,42,1) 0%, rgba(2,130,249,1) 100%);
+  color: #FFFFFF;
 }
 </style>

@@ -7,12 +7,14 @@
         :rules="emailRules"
         label="Email"
         required
+        outlined
       ></v-text-field>
       <v-text-field
         v-model="password"
         :rules="passwordRules"
         label="Password"
         required
+        outlined
         type="password"
       ></v-text-field>
       <v-btn

@@ -1,9 +1,9 @@
 <template>
 <v-card>
   <v-snackbar
-    v-model="$store.state.alertStatus"
+    v-model="$store.state.alert.status"
+    :color="$store.state.alert.color"
     :bottom="y === 'bottom'"
-    :color="color"
     :left="x === 'left'"
     :multi-line="mode === 'multi-line'"
     :right="x === 'right'"
@@ -11,7 +11,9 @@
     :top="y === 'top'"
     :vertical="mode === 'vertical'"
   >
-    {{ $store.state.errMessages }}
+    <div>
+    {{ $store.state.alert.message }}
+    </div>
   </v-snackbar>
 </v-card>
 </template>
@@ -21,7 +23,6 @@ export default {
   name: 'Alert',
   data () {
     return {
-      color: 'error',
       mode: '',
       timeout: 2000,
       x: 'right',

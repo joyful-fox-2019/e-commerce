@@ -5,7 +5,14 @@ const { comparePassword } = require('../helpers/bcryptjs')
 module.exports = {
   register: (req, res, next) => {
     const { name, email, password, adminPassword } = req.body
-    const isAdmin = adminPassword && adminPassword === process.env.ADMIN_PASSWORD
+    let isAdmin = undefined
+    if(adminPassword) {
+      if(adminPassword !== process.env.ADMIN_PASSWORD) {
+        throw { status: 401, msg: 'Wrong admin password' }
+      } else {
+        isAdmin = true
+      }
+    }
     User.create({ name, email, password, isAdmin })
       .then(user => {
         const { _id, password, isAdmin } = user

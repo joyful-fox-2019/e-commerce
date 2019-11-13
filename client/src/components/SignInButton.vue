@@ -1,10 +1,11 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" persistent max-width="450">
+    <v-dialog v-model="$store.state.authDialog" persistent max-width="450">
       <template v-slot:activator="{ on }">
-        <v-toolbar-items class="hidden-sm-and-down">
-          <v-btn class="bg-surface nav-button" dark v-on="on">SIGN IN</v-btn>
-        </v-toolbar-items>
+        <div class="hidden-sm-and-down">
+          <v-btn v-if="!$store.state.user._id" @click="setForm('login')" class="bg-surface nav-button" dark v-on="on">SIGN IN</v-btn>
+          <v-btn v-if="$store.state.user._id" @click="signout" class="bg-surface nav-button" dark>SIGN OUT</v-btn>
+        </div>
         <v-toolbar-items class="hidden-md-and-up">
           <v-menu offset-y>
             <template v-slot:activator="{ on }">
@@ -15,7 +16,8 @@
             <v-list>
               <v-list-item>
                 <v-list-item-title>
-                  <v-btn class="bg-surface nav-button" dark v-on="on">SIGN IN</v-btn>
+                  <v-btn v-if="!$store.state.user._id" @click="setForm('login')" class="bg-surface nav-button" dark v-on="on">SIGN IN</v-btn>
+                  <v-btn v-if="$store.state.user._id" @click="signout" class="bg-surface nav-button" dark>SIGN OUT</v-btn>
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -23,42 +25,16 @@
         </v-toolbar-items>
       </template>
       <v-card>
-        <!-- <v-form @submit.prevent="register" v-model="valid">
-          <v-container>
-            <div class="container">
-              <v-text-field
-                v-model="name"
-                :rules="nameRules"
-                :counter="20"
-                label="Name"
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="email"
-                :rules="emailRules"
-                label="Email"
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="password"
-                :rules="passwordRules"
-                :counter="10"
-                label="Password"
-                required
-                type="password"
-              ></v-text-field>
-            </div>
-            <v-btn
-              :disabled="!valid"
-              color="success"
-              class="mr-4"
-              type="submit"
-            >
-              Validate
-            </v-btn>
-          </v-container>
-        </v-form> -->
-        <LoginForm @setForm="setForm"></LoginForm>
+        <div class="container text-right">
+          <div class="container">
+            <v-icon @click="$store.commit('SET_AUTH_DIALOG', false)" class="clickable">mdi-close</v-icon>
+          </div>
+          <div class="text-center logo">
+            OMNIVERSE
+          </div>
+        </div>
+        <LoginForm v-if="form === 'login'" @setForm="setForm"></LoginForm>
+        <RegisterForm v-if="form !== 'login'" @setForm="setForm"></RegisterForm>
       </v-card>
     </v-dialog>
   </v-row>
@@ -66,27 +42,34 @@
 
 <script>
 import LoginForm from '../components/LoginForm'
+import RegisterForm from '../components/RegisterForm'
 
 export default {
   data () {
     return {
-      dialog: false,
       form: 'login'
     }
   },
   components: {
-    LoginForm
+    LoginForm,
+    RegisterForm
   },
   methods: {
     setForm (form) {
       this.form = form
+    },
+    signout () {
+      let user = {
+        _id: '',
+        name: '',
+        isAdmin: false
+      }
+      this.$store.commit('SET_USER', user)
+      localStorage.removeItem('_id')
+      localStorage.removeItem('name')
+      localStorage.removeItem('isAdmin')
+      localStorage.removeItem('access_token')
     }
   }
 }
 </script>
-
-<style scoped>
-.nav-button {
-  padding: 10px !important;
-}
-</style>

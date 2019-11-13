@@ -2,31 +2,27 @@
   <div>
     <v-toolbar class="bg-surface">
       <v-container>
-        <v-row no-gutters>
+        <v-row no-gutters
+          align="center"
+          justify="center"
+        >
           <v-col>
-              <SignInButton></SignInButton>
+            <SignInButton></SignInButton>
           </v-col>
           <v-col class="text-center">
-            OMNIVERSE
+            <div class="logo">
+              OMNIVERSE
+            </div>
           </v-col>
           <v-col>
+            <div class="hidden-sm-and-down text-center">
+              <v-btn v-if="$store.state.user._id && !$store.state.user.isAdmin" class="bg-surface nav-button"><v-icon>mdi-cart</v-icon></v-btn>
+              <v-btn v-if="$store.state.user._id && !$store.state.user.isAdmin" class="bg-surface nav-button"><v-icon>mdi-account</v-icon></v-btn>
+              <v-btn v-if="$store.state.user._id && $store.state.user.isAdmin" class="bg-primary nav-button"><v-icon>mdi-plus</v-icon>Add Product</v-btn>
+            </div>
           </v-col>
         </v-row>
       </v-container>
-      <!-- <v-toolbar-items>
-        <v-btn class="bg-surface" text>Link 1</v-btn>
-      </v-toolbar-items>
-      <v-spacer></v-spacer>
-      <v-toolbar-title class="bg-primary logo">Title</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <template v-if="$vuetify.breakpoint.smAndUp">
-        <v-btn icon>
-          <v-icon>mdi-delete-circle</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>mdi-plus-circle</v-icon>
-        </v-btn>
-      </template> -->
     </v-toolbar>
   </div>
 </template>
@@ -42,8 +38,5 @@ export default {
 }
 </script>
 
-<style scoped>
-.logo {
-  height: 100% !important;
-}
+<style>
 </style>
