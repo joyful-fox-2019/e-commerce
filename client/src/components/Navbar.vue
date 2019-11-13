@@ -4,7 +4,7 @@
       <v-container>
         <v-row no-gutters>
           <v-col>
-              <v-btn class="bg-surface" text>SIGN IN</v-btn>
+              <SignInButton></SignInButton>
           </v-col>
           <v-col class="text-center">
             OMNIVERSE
@@ -32,8 +32,13 @@
 </template>
 
 <script>
-export default {
+import SignInButton from './SignInButton'
 
+export default {
+  name: 'Navbar',
+  components: {
+    SignInButton
+  }
 }
 </script>
 
