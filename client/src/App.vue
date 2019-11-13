@@ -3,6 +3,30 @@
     <Navbar></Navbar>
     <v-content>
       <router-view></router-view>
+      <template>
+  <div>
+    <div class="text-center mb-4">
+      <v-btn
+        color="primary"
+        @click="alert = !alert"
+      >
+        Toggle
+      </v-btn>
+      </div>
+      <div class="alert">
+      <v-alert
+        :value="alert"
+        icon="mdi-alert"
+        border="left"
+        prominent
+        class="bg-primary"
+      >
+        Praesent congue erat at massa. Nullam vel sem. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Proin viverra, ligula sit amet ultrices semper, ligula arcu tristique sapien, a accumsan nisi mauris ac eros. Curabitur at lacus ac velit ornare lobortis.
+      </v-alert>
+
+      </div>
+    </div>
+</template>
     </v-content>
   </v-app>
 </template>
@@ -16,7 +40,7 @@ export default {
     Navbar
   },
   data: () => ({
-    //
+    alert: true
   })
 }
 </script>
@@ -44,7 +68,26 @@ export default {
   background: var(--primary-color) !important;
   color: var(--on-primary-color) !important;
 }
+.bg-secondary {
+  background: var(--secondary-color) !important;
+  color: var(--on-secondary-color) !important;
+}
 .clickable {
   cursor: pointer;
+}
+.full-width {
+  width: 100% !important;
+}
+hr {
+  border-top: 1px solid #E0E0E0;
+  width: 80%;
+  margin: auto;
+}
+.alert {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  margin-right: 10%;
 }
 </style>

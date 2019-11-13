@@ -3,7 +3,7 @@ const { Schema } = mongoose
 const { hashPassword } = require('../helpers/bcryptjs')
 
 const userSchema = new Schema({
-  fullName: {
+  name: {
     type: String,
     required: [true, 'Name cannot be empty']
   },
@@ -27,6 +27,17 @@ const userSchema = new Schema({
   isAdmin: {
     type: Boolean
   }
+  // cart: [
+  //   {
+  //     product: {
+  //       type: Schema.Types.ObjectId,
+  //       ref: 'Product'
+  //     },
+  //     amount: {
+  //       type: Number
+  //     }
+  //   }
+  // ]
 }, {
   versionKey: false
 })

@@ -14,9 +14,9 @@ describe('User Test', function () {
       .catch(console.log)
   })
   describe('register', function () {
-    it('should return _id, fullName, email, password and access_token when input is valid (admin)', function (done) {
+    it('should return _id, name, email, password and access_token when input is valid (admin)', function (done) {
       let body = {
-        fullName: 'Tony Stark',
+        name: 'Tony Stark',
         email: 'tony@stark.com',
         password: 'iamironman',
         adminPassword: 'excelsior'
@@ -29,17 +29,17 @@ describe('User Test', function () {
         expect(err).to.be.null
         expect(res).status(201)
         expect(res.body).to.be.an('object')
-        expect(res.body).to.have.all.keys('_id', 'fullName', 'email', 'password', 'access_token', 'isAdmin')
+        expect(res.body).to.have.all.keys('_id', 'name', 'email', 'password', 'access_token', 'isAdmin')
 
         expect(res.body._id).to.be.a('string')
-        expect(res.body.fullName).to.be.a('string')
+        expect(res.body.name).to.be.a('string')
         expect(res.body.email).to.be.a('string')
         expect(res.body.access_token).to.be.a('string')
         expect(res.body.password).to.be.a('string')
         expect(res.body.isAdmin).to.be.a('boolean')
 
         expect(res.body._id).to.exist
-        expect(res.body.fullName).to.exist
+        expect(res.body.name).to.exist
         expect(res.body.email).to.exist
         expect(res.body.access_token).to.exist
         expect(res.body.password).to.exist
@@ -52,7 +52,7 @@ describe('User Test', function () {
     })
     it('should return error message when email is already registered', function (done) {
       let body = {
-        fullName: 'Tony Stark',
+        name: 'Tony Stark',
         email: 'tony@stark.com',
         password: 'iamironman',
         adminPassword: 'excelsior'
@@ -72,9 +72,9 @@ describe('User Test', function () {
         done()
       })
     })
-    it('should return _id, fullName, email, password and access_token when input is valid (customer)', function (done) {
+    it('should return _id, name, email, password and access_token when input is valid (customer)', function (done) {
       let body = {
-        fullName: 'Peter Parker',
+        name: 'Peter Parker',
         email: 'parker@bugle.com',
         password: 'webhead'
       }
@@ -86,16 +86,16 @@ describe('User Test', function () {
         expect(err).to.be.null
         expect(res).status(201)
         expect(res.body).to.be.an('object')
-        expect(res.body).to.have.all.keys('_id', 'fullName', 'email', 'password', 'access_token')
+        expect(res.body).to.have.all.keys('_id', 'name', 'email', 'password', 'access_token')
 
         expect(res.body._id).to.be.a('string')
-        expect(res.body.fullName).to.be.a('string')
+        expect(res.body.name).to.be.a('string')
         expect(res.body.email).to.be.a('string')
         expect(res.body.access_token).to.be.a('string')
         expect(res.body.password).to.be.a('string')
 
         expect(res.body._id).to.exist
-        expect(res.body.fullName).to.exist
+        expect(res.body.name).to.exist
         expect(res.body.email).to.exist
         expect(res.body.access_token).to.exist
         expect(res.body.password).to.exist
@@ -107,7 +107,7 @@ describe('User Test', function () {
     })
     it('should return error messages when input is empty', function (done) {
       let body = {
-        fullName: '',
+        name: '',
         email: '',
         password: ''
       }
@@ -128,7 +128,7 @@ describe('User Test', function () {
     })
     it('should return error messages when email is invalid and password is too short', function (done) {
       let body = {
-        fullName: 'Steve Rogers',
+        name: 'Steve Rogers',
         email: 'steve',
         password: 'steve'
       }
@@ -148,7 +148,7 @@ describe('User Test', function () {
     })
   })
   describe('login', function () {
-    it('should return _id, fullName, email, and access_token when input is valid (admin)', function (done) {
+    it('should return _id, name, email, and access_token when input is valid (admin)', function (done) {
       let body = {
         email: 'tony@stark.com',
         password: 'iamironman'
@@ -161,16 +161,16 @@ describe('User Test', function () {
         expect(err).to.be.null
         expect(res).status(200)
         expect(res.body).to.be.an('object')
-        expect(res.body).to.have.all.keys('_id', 'fullName', 'email', 'isAdmin', 'access_token')
+        expect(res.body).to.have.all.keys('_id', 'name', 'email', 'isAdmin', 'access_token')
 
         expect(res.body._id).to.be.a('string')
-        expect(res.body.fullName).to.be.a('string')
+        expect(res.body.name).to.be.a('string')
         expect(res.body.email).to.be.a('string')
         expect(res.body.isAdmin).to.be.a('boolean')
         expect(res.body.access_token).to.be.a('string')
 
         expect(res.body._id).to.exist
-        expect(res.body.fullName).to.exist
+        expect(res.body.name).to.exist
         expect(res.body.email).to.exist
         expect(res.body.isAdmin).to.exist
         expect(res.body.access_token).to.exist

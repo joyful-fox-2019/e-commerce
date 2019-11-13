@@ -23,7 +23,7 @@
         </v-toolbar-items>
       </template>
       <v-card>
-        <v-form @submit.prevent="register" v-model="valid">
+        <!-- <v-form @submit.prevent="register" v-model="valid">
           <v-container>
             <div class="container">
               <v-text-field
@@ -57,38 +57,29 @@
               Validate
             </v-btn>
           </v-container>
-        </v-form>
+        </v-form> -->
+        <LoginForm @setForm="setForm"></LoginForm>
       </v-card>
     </v-dialog>
   </v-row>
 </template>
 
 <script>
+import LoginForm from '../components/LoginForm'
+
 export default {
   data () {
     return {
       dialog: false,
-      valid: true,
-      name: '',
-      nameRules: [
-        v => !!v || 'Name is required',
-        v => v.length <= 20 || 'Name must be less than 20 characters'
-      ],
-      email: '',
-      emailRules: [
-        v => !!v || 'E-mail is required',
-        v => /.+@.+/.test(v) || 'E-mail must be valid'
-      ],
-      password: '',
-      passwordRules: [
-        v => !!v || 'password is required',
-        v => v.length > 6 || 'password must be more than 6 characters'
-      ]
+      form: 'login'
     }
   },
+  components: {
+    LoginForm
+  },
   methods: {
-    register () {
-      console.log('register')
+    setForm (form) {
+      this.form = form
     }
   }
 }

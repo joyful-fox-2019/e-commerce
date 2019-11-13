@@ -4,13 +4,13 @@ const { comparePassword } = require('../helpers/bcryptjs')
 
 module.exports = {
   register: (req, res, next) => {
-    const { fullName, email, password, adminPassword } = req.body
+    const { name, email, password, adminPassword } = req.body
     const isAdmin = adminPassword && adminPassword === process.env.ADMIN_PASSWORD
-    User.create({ fullName, email, password, isAdmin })
+    User.create({ name, email, password, isAdmin })
       .then(user => {
         const { _id, password, isAdmin } = user
         const access_token = generateToken({ _id, email })
-        res.status(201).json({ _id, fullName, email, password, isAdmin, access_token })
+        res.status(201).json({ _id, name, email, password, isAdmin, access_token })
       })
       .catch(next)
   },
@@ -21,9 +21,9 @@ module.exports = {
         if(!user || !comparePassword(password, user.password)) {
           throw { status: 400, msg: 'Wrong email/password'}
         } else {
-          const { _id, fullName, isAdmin } = user
-          const access_token = generateToken({ _id, email, fullName })
-          res.status(200).json({ _id, fullName, email, isAdmin, access_token })
+          const { _id, name, isAdmin } = user
+          const access_token = generateToken({ _id, email, name })
+          res.status(200).json({ _id, name, email, isAdmin, access_token })
         }
       })
       .catch(next)
