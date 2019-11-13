@@ -23,8 +23,7 @@ const productSchema = new Schema({
   stock: {
     type: Number,
     min: [0, 'Stock cannot be a negative number'],
-    default: 0,
-    required: [ true, 'Stock is required']
+    default: 0
   },
   sold: {
     type: Number,

@@ -17,16 +17,18 @@ let userLogin = {
   password: newUser.password
 }
 
-before(function (){
-  User.create(newUser)
-    .then(()=> {
-      console.log('create initial user');
-    })
-    .catch(console.log)
-  })
+before( async () =>{
+  try {
+    await User.create(newUser)
+    console.log('Initial user created')
+  }
+  catch(err){
+    console.log(err);
+  }
+})
 
-after(function(done){
-  if(process.env.NODE_ENV === 'testing'){
+after((done) => {
+  if(process.env.NODE_ENV === 'test'){
     User.deleteMany()
     .then(()=> {
       console.log('User test finished');
@@ -120,10 +122,23 @@ describe('User Test', function () {
           expect(res).to.have.status(400)
           expect(res.body).to.be.an('object').to.have.any.keys('message', 'errors')
           expect(res.body.message).to.equal('Validation Error')
-          expect(res.body.errors).to.be.an('array').that.includes('This email address is already taken')
-          expect(res.body.errors).includes('This username is already taken')
+          expect(res.body.errors).includes('This email address is already taken')
           done()
         })
+    })
+    it('Should return error object (message, errors) with status 400 when existing username is inserted', function (done) {
+    chai
+      .request(app)
+      .post('/users/register')
+      .send(newUser)
+      .end(function (err, res) {
+        expect(err).to.be.null
+        expect(res).to.have.status(400)
+        expect(res.body).to.be.an('object').to.have.any.keys('message', 'errors')
+        expect(res.body.message).to.equal('Validation Error')
+        expect(res.body.errors).includes('This username is already taken')
+        done()
+      })
     })
     it('Should return error object (message, errors) with status 400 when email format is invalid', function (done) {
       chai
