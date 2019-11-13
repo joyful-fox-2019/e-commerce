@@ -1,46 +1,19 @@
-if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'){
-    require('dotenv').config();
+if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'test') {
+    require('dotenv').config()
 }
 
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT;
-const mongoURI = process.env.MONGO_URI;
-console.log(mongoURI)
-const mongoose = require('mongoose');
-const cors = require('cors');
-const routes = require('./routes');
-const morgan = require('morgan');
-const { errorHandler } = require('./middlewares/errorHandler');
+require('./config/mongoose')
+const express = require("express"),
+    cors = require("cors"),
+    morgan = require("morgan"),
+    app = express(),
+    routes = require('./routes'),
+    { errorHandler } = require("./middlewares/errorHandler");
 
-app.use(express.json());
-app.use(express.urlencoded({extended: false}));
-app.use(cors());
-
-mongoose
-    .connect(mongoURI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-        useFindAndModify: false
-    })
-    .then(_ => console.log('connected to database.'))
-    .catch(_ => console.log('database connection failed.'));
-    
-
-app.use(morgan('dev'));
-app.use('/', routes);
-
-app.use((req, res, next) => {
-    const err = {
-        msg: 'Not Found.',
-        status: 404
-    }
-    next(err);
-})
-
-app.use(errorHandler);
-
-app.listen(PORT, () => console.log(`listening on port ${PORT}`));
+app.use(cors())
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+app.use('/', routes)
+app.use(errorHandler)
 
 module.exports = app

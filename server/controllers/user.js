@@ -1,88 +1,55 @@
-const User = require('../models/User');
-const bcrypt = require('../helpers/bcrypt');
-const session = require('../helpers/session');
+const User = require('../models/user'),
+    { compare } = require('../helpers/bcrypt'),
+    { generateToken } = require('../helpers/jwt'),
+    { OAuth2Client } = require('google-auth-library');
 
 class UserController {
-    static signup(req, res, next) {
-        const { name, email, password, isAdmin } = req.body;
-        User.findOne({
-            email
-        })
-            .then(user => {
-                if (!req.body.password) {
-                    let err = {
-                        status: 400,
-                        msg: "Password should not be empty."
-                    }
-                    next(err);
-                }
 
-                if (user) {
-                    let err = {
-                        status: 400,
-                        msg: "Email user is already registered!"
-                    }
-                    next(err);
-
-                } else {
-                    User
-                    .create({
-                        name,
-                        email,
-                        password,
-                        isAdmin
-                    })
-                    .then( data => {
-                        res.status(201).json(data);
-                    })
-                    .catch( err => {
-                        next(err);
-                    })
-                }
+    static register(req, res, next) {
+        let { username, email, password, isAdmin } = req.body
+        User.create({ username, email, password, isAdmin })
+            .then(newUser => {
+                res.status(201).json({ message: 'successful register', newUser })
             })
-            .catch( err => {
-                next(err);
-            })
+            .catch(next)
     }
 
-    static signin(req, res, next) {
-        const { email, password } = req.body;
-        User
-            .findOne({
-                email
-            })
-            .then( user => {
-                if (!req.body.email || !req.body.password) {
-                    let err = {
-                        status: 400,
-                        msg: 'bad request'
-                    }
-                    next(err);
-                }
-                if(user) {
-                    if (bcrypt.compare(password, user.password)) {
-                        let token = session.encode({id: user.id, email: user.email, isAdmin: user.isAdmin});
-                        
-                        res.status(200).json({token});
-                    } else {
-                        let err = {
-                            status: 404,
-                            msg: 'invalid email/password'
-                        }
-                        next(err);
-                    }
+    static login(req, res, next) {
+        let { email, password } = req.body
+        User.findOne({
+            email: email
+        })
+            .populate('cart', 'cart.product')
+            .then(user => {
+                if (!user) {
+                    next({ status: 403, message: 'Invalid password or email' })
                 } else {
-                    let err = {
-                        status: 404,
-                        msg: 'invalid email/password'
+                    let authPass = compare(password, user.password)
+                    if (authPass) {
+                        let payload = {
+                            username: user.username,
+                            email: user.email,
+                            cart: user.cart,
+                            id: user._id,
+                            isAdmin: user.isAdmin
+                        }
+                        let token = generateToken(payload)
+                        res.status(200).json({ token, user: payload })
+                    } else {
+                        next({ status: 403, message: 'Invalid password or email' })
                     }
-                    next(err);
                 }
             })
-            .catch( err => {
-                next(err);
+            .catch(next)
+    }
+
+    static findLoggedIn(req, res, next) {
+        User.findById(req.loggedUser.id).populate('cart cart.product')
+            .then(user => {
+                res.status(200).json(user)
             })
+            .catch(next)
     }
 }
 
-module.exports = UserController;
+module.exports = UserController
