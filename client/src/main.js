@@ -11,7 +11,9 @@ import VueAWN from "vue-awesome-notifications"
 import 'vue-awesome-notifications/dist/styles/style.css'
 import feather from 'vue-icon'
 import Textra from 'vue-textra'
+import InputTag from 'vue-input-tag'
 
+Vue.component('input-tag', InputTag)
 Vue.use(Textra);
 Vue.use(feather, 'v-icon')
 // Your custom options

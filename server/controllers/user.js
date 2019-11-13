@@ -59,11 +59,13 @@ module.exports = {
     }
   },
   verifyEmail (req, res, next) {
+    console.log(req.body)
     const { code } = req.body;
     const id = req.loggedUser.id;
     User.findByIdAndUpdate(id, { verification: true})
       .then(user => {
-        if(user && compareCode(user._id, code)) {
+        console.log(compareCode(id, code))
+        if(user && compareCode(id, code)) {
           res.status(201).json({user, msg: 'Your Account now Verified'})
         } else {
           next({ status: 400, msg: 'invalid code verify'})

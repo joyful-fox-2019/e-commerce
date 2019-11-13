@@ -19,6 +19,7 @@ export default {
   methods: {
   },
   created () {
+    this.$router.push('/home')
     if(localStorage.getItem('token')) {
       this.$awn.asyncBlock(
         this.$store.dispatch('checkSignIn'),
@@ -32,7 +33,22 @@ export default {
           localStorage.removeItem('token')
         })
     }
-  }
+    this.$awn.asyncBlock(
+      this.$store.dispatch('fetchAllProduct'),
+      null,
+      null,
+      'Fetching Data'
+    )
+      .then(() => {
+        return this.$store.dispatch('fetchCategory')
+      })
+      .then(() => {
+        this.$awn.success('hello')
+      })
+      .catch(err => {
+        this.$awn.warning(err)
+      })
+  },
 }
 </script>
 
@@ -43,6 +59,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   background-color: #F8F8F8;
+  height: 100vh
 }
 
 #nav {

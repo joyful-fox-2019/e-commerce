@@ -9,7 +9,9 @@ export default new Vuex.Store({
     userSignin: {},
     userStore: {},
     userCart: {},
-    isSignin: false
+    isSignin: false,
+    allProduct: [],
+    allCategory: []
   },
   mutations: {
     CHECK_SIGNIN (state, payload) {
@@ -30,10 +32,56 @@ export default new Vuex.Store({
       state.userCart = payload
     },
     CHANGE_IMAGE (state, payload) {
-      state.userSignin.profile_image = payload
+      state.userSignin.profile_image = payload;
+    },
+    SIGN_OUT (state, payload) {
+      state.userSignin = '';
+      state.userCart = '';
+      state.userStore = '';
+      state.isSignin = false;
+    },
+    COMMIT_PRODUCT (state, payload) {
+      state.allProduct = payload
+    },
+    COMMIT_CATEGORY (state, payload) {
+      state.allCategory = payload
+    },
+    CREATE_PRODUCT (state, payload) {
+      state.userStore = payload.store
+      state.allProduct.unshift(payload.product);
     }
   },
   actions: {
+    fetchAllProduct (context, payload) {
+      return new Promise ((resolve, reject) => {
+        axios({
+          method: 'get',
+          url: '/products'
+        })
+          .then(({data}) => {
+            context.commit('COMMIT_PRODUCT', data.products)
+            resolve()
+          })
+          .catch(err => {
+            reject(err.response.data.msg)
+          })
+      })
+    },
+    fetchCategory (context, payload) {
+      return new Promise ((resolve, reject) => {
+        axios({
+          method: 'get',
+          url: '/products/category'
+        })
+          .then(({data}) => {
+            context.commit('COMMIT_CATEGORY', data.categories)
+            resolve()
+          })
+          .catch(err => {
+            reject(err.response.data.msg)
+          })
+      })
+    },
     checkSignIn ( context, payload ) {
       let tempMsg
       return new Promise ((resolve, reject) => {
@@ -48,13 +96,13 @@ export default new Vuex.Store({
             context.commit('CHECK_SIGNIN', data.user)
             tempMsg = data.msg
             return this.dispatch('getUserCart')
-            resolve({msg: data.msg})
           })
           .then(() => {
             resolve({msg: tempMsg})
           })
           .catch(err => {
             context.commit('CHECK_SIGNIN', '')
+            this.$router.push('/')
             reject(err.response.data.msg)
           })
       })
@@ -83,7 +131,6 @@ export default new Vuex.Store({
       })
     },
     getUserCart (context, payload) {
-      console.log('kepanggil')
       return new Promise ((resolve, reject) => {
         axios({
           method: 'get',
@@ -98,6 +145,28 @@ export default new Vuex.Store({
           })
           .catch(err => {
             reject(err.response.dta.msg)
+          })
+      })
+    },
+    createProduct (context, payload) {
+      console.log('action')
+      return new Promise ((resolve, reject) => {
+        axios({
+          method: 'post',
+          url: '/products',
+          data: payload,
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+          .then(({data}) => {
+            console.log('dari store action');
+            console.log(data)
+            context.commit('CREATE_PRODUCT', data)
+            resolve(data.msg)
+          })
+          .catch(err => {
+            reject(err.response.data.msg)
           })
       })
     }

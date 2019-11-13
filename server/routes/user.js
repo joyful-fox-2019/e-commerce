@@ -11,7 +11,6 @@ Route.use(authentication)
 
 Route.get('/', user.getLogin);
 
-
 Route.patch('/', user.updateAddress);
 Route.patch('/upload',  images.multer.single('image'), images.sendUploadToGCS, user.updateImage);
 

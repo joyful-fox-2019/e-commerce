@@ -11,7 +11,8 @@ Route.get('/:id', Product.findOneProduct);
 Route.use(authentication);
 Route.post('/',  images.multer.single('image'), images.sendUploadToGCS, Product.createProduct);
 
-
+Route.patch('/wish/:id', Product.addToWishList);
+Route.patch('/wish/remove/:id', Product.removeWishList)
 Route.use('/:id', authorCrudProduct);
 Route.delete('/:id', Product.deleteProduct);
 

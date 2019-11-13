@@ -11,47 +11,52 @@ module.exports = {
       .catch(next)
   },
   addToCart (req, res, next) {
+    console.log(req.body)
     const { product_image, description, name, price, id, count } = req.body
     const payload = { product_image, description, name, price, id, count };
     const UserId = req.loggedUser.id;
     let pass = true;
     let maxCount = true;
     let tempCart
-    Cart.findOne({ UserId })
-      .then(cart => {
-        tempCart = cart
-        return Product.findById(id)
-      })
-      .then(product => {
-        tempCart.product.forEach((el, i) => {
-          if(el.name == name) {
-            let math = Number(el.count) + Number(count)
-            if(el.id == id && math <= product.stock) {
-              pass = false;
-              el.count = math;
-            } else if(el.id == id && math > product.stock){
-              pass = false;
-              maxCount = false;
-              el.count = product.stock
+    if(!count) next({status:400, msg: 'miss qty, please input qty'})
+    else {
+      Cart.findOne({ UserId })
+        .then(cart => {
+          tempCart = cart
+          return Product.findById(id)
+        })
+        .then(product => {
+          console.log(product)
+          tempCart.product.forEach((el, i) => {
+            if(el.name == name) {
+              let math = Number(el.count) + Number(count)
+              if(el.id == id && math <= product.stock) {
+                pass = false;
+                el.count = math;
+              } else if(el.id == id && math > product.stock){
+                pass = false;
+                maxCount = false;
+                el.count = product.stock
+              }
             }
+          })
+          if(!pass) {
+            return Cart.findOneAndUpdate({ UserId }, { product: tempCart.product }, {new: true})
+          } else if (pass && count <= product.stock) {
+            return Cart.findOneAndUpdate({ UserId }, { $push: { product: payload, count }}, {new: true})
+          } else if (pass && count > product.stock) {
+            return Cart.findOneAndUpdate({ UserId }, { $push: { product: payload, count: product.stock }}, {new: true})
           }
         })
-        if(!pass) {
-          return Cart.findOneAndUpdate({ UserId }, { product: tempCart.product }, {new: true})
-        } else if (pass && count <= product.stock) {
-          return Cart.findOneAndUpdate({ UserId }, { $push: { product: payload, count }}, {new: true})
-        } else if (pass && count > product.stock) {
-          return Cart.findOneAndUpdate({ UserId }, { $push: { product: payload, count: product.stock }}, {new: true})
-        }
-      })
-      .then(cart => {
-        if(!pass && !maxCount) {
-          res.status(201).json({msg: 'Out of stock, automaticly add max stock', cart})
-        } else {
-          res.status(201).json({msg: 'success add to cart', cart})
-        }
-      })
-      .catch(next)
+        .then(cart => {
+          if(!pass && !maxCount) {
+            res.status(201).json({msg: 'Out of stock, automaticly add max stock', cart})
+          } else {
+            res.status(201).json({msg: 'success add to cart', cart})
+          }
+        })
+        .catch(next)
+    }
   },
 
 

@@ -12,7 +12,7 @@ module.exports = (err, req, res, next) => {
   } else if (err.status && err.msg ){
     res.status(status).json({ msg })
   } else if (err.name == 'JsonWebTokenError' && err.message == 'jwt malformed' ){
-    res.status(400).json({msg: 'Invalid Token'})
+    res.status(400).json({msg: 'Authentication Error'})
   } else if (err.name == 'JsonWebTokenError') {
     res.status(400).json({msg: err.message})
   } else {

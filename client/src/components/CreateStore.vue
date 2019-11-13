@@ -9,7 +9,7 @@
     </div>
     <div class="description">
       <h1>Hello {{ name }}, let's fill in your store details!</h1>
-      <h2><textra :data='words' :timer="4" filter="press" /></h2>
+      <h2><textra :data='words' :timer="3.1" :infinite='true' filter="press"/></h2>
       <div class="insideDescription">
         <div class="leftInside col-3">
           <label class='labell'>Name</label>

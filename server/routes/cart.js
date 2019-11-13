@@ -6,7 +6,7 @@ Route.use(authentication);
 
 
 Route.get('/', CartController.getCart)
-Route.patch('/', CartController.addToCart);
+Route.post('/', CartController.addToCart);
 
 
 Route.patch('/', CartController.checkout);

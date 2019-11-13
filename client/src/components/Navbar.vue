@@ -2,13 +2,13 @@
   <div>
   <b-navbar toggleable="lg" type="dark" variant="light" class='d-flex justify-content-space-between'>
     <b-navbar-brand href="#">
-      <h2 @click='goMain' id='dcShop'>DC Shop</h2>
+      <h2 @click='goMain' id='dcShop'>DC Emporium</h2>
     </b-navbar-brand>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <div>
           <b-button v-b-modal.modal-prevent-closing2 class='btnL btnregister mr-4 btn-outline-success' style='background-color: white; color: black' v-if='isSignin'>
-            <v-icon name='shopping-cart' class='vicon'></v-icon>
+            <v-icon name='shopping-cart' class='vicon'></v-icon> &nbsp; <b-badge variant="light"> {{ userCart }} </b-badge>
           </b-button>
           <b-button class='btnL mr-4 btn-outliner-warning' v-if='isSignin' @click='signout'><v-icon name='power' class='vicon'></v-icon></b-button>
           <b-button v-b-modal.modal-prevent-closing class='btnL mr-4' style='background-color: white; color: black' v-if='!isSignin'><v-icon name='log-in' class='vicon'></v-icon></b-button>
@@ -115,35 +115,44 @@ export default {
         passwordSignup: null,
         request: null,
         password: null,
-        isSignin: null
+        isSignin: false
       }
     },
     methods: {
       goMain () {
-        this.$router.push('/');
+        this.$router.push('/home');
       },
       signout () {
         localStorage.removeItem('token')
+        this.goMain();
         this.$awn.success(`See you again ${this.$store.state.userSignin.username}`)
         setTimeout(() => {
-          this.$store.dispatch('checkSignIn')
+          this.$store.commit('SIGN_OUT')
           this.isSignin = false
         }, 1000);
       },
       signin () {
+        console.log('sevelum axios login')
+        console.log(this.isSignin)
         this.$awn.asyncBlock(
           this.signinAction(),
           null
         )
           .then(msg => {
             setTimeout(() => {
-              this.isSignin = true
               this.$awn.success(msg)
-            }, 1000);
+              this.isSignin = true;
+              console.log('setelah success login masuk ga')
+              console.log(this.isSignin)
+            }, 2000);
           })
           .catch(err => {
             this.$awn.warning(err)
           })
+          setTimeout(() => {
+          console.log('diluar axios')
+            console.log(this.isSignin)
+          }, 2000);
       },
       signup () {
         this.$awn.asyncBlock(
@@ -214,10 +223,24 @@ export default {
     watch: {
       isSignin: {
         handler (val) {
+          // console.log('ini watch val')
+          // console.log(val)
+          this.isSignin = val
+          // console.log('ini dari watch isSignin')
+          // console.log(this.isSignin)
+        }
+      },
+      userCart: {
+        handler (val) {
           if(val) {
-            this.isSignin = val
+            this.userCart = val;
           }
         }
+      }
+    },
+    computed: {
+      userCart () {
+        return this.$store.state.userCart.product.length
       }
     },
     created () {

@@ -24,11 +24,32 @@
             </div>
           </div>
           <div class="nameProfileStore ml-3">
-            <h3 class='textProfile'>{{ store.name }}</h3>
+            <router-link to='/store'><h3 class='textProfile'><v-icon name='star' class='vicon'></v-icon>{{ store.name }}</h3></router-link>
           </div>
       </div>
         <div class='location'>
           <small>Location: </small>{{store.location}}
+        </div>
+      </div>
+      <div class="border mt-3">
+        <h5>My Profile </h5>
+        <div class='mt-2 ml-3'>
+          <b-button class='link' @click='seeWishList'>
+            Wish List
+            <b-badge variant="light">{{ userr.WishList.length }}</b-badge>
+          </b-button>
+        </div>
+        <div class='mt-2 ml-3'>
+          Admin Page
+        </div>
+      </div>
+      <div class="border mt-3" v-if='store'>
+        <h5>My Store</h5>
+        <div class='mt-2 ml-3'>
+          <router-link to='/product/create' class='link'><v-icon name='plus' class='vicon'></v-icon>Create Product</router-link>
+        </div>
+        <div class='mt-2 ml-3'>
+          Admin Page
         </div>
       </div>
     </div>
@@ -40,6 +61,9 @@ export default {
   methods: {
     profilePage () {
       this.$router.push('/profile')
+    },
+    seeWishList () {
+      this.$router.push('/profile/wishlist')
     }
   },
   computed: {
@@ -52,6 +76,9 @@ export default {
     },
     store () {
       return this.$store.state.userStore
+    },
+    userr () {
+      return this.$store.state.userSignin
     }
   },
   watch: {
@@ -73,6 +100,14 @@ export default {
       handler (val) {
         if(val) {
           this.store = val
+        }
+      }
+    },
+    userr: {
+      handler (val) {
+        console.log(val)
+        if(val) {
+          this.userr = val
         }
       }
     }
@@ -99,6 +134,7 @@ export default {
 .profile {
   display: flex;
   flex-direction: column;
+  height: 50vh
 }
 .topProfile {
   height: 4vw;
@@ -115,6 +151,12 @@ export default {
 .textProfile:hover {
   color: #FF6E44;
   cursor: pointer;
+}
+.link {
+  color:#41B549 
+}
+.link:hover {
+  color: #FF6E44;
 }
 .vicon {
   width: 15px

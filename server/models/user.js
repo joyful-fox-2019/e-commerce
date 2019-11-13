@@ -37,7 +37,11 @@ const UserSchema = new Schema({
   ],
   verification: Boolean,
   profile_image: String,
-  address: String,
+  address: [
+    {
+      type: String
+    }
+  ],
   role: String,
   StoreId: {
     type: Schema.Types.ObjectId,

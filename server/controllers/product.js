@@ -5,7 +5,7 @@ const Store = require('../models/Store');
 
 module.exports = {
   findAllProduct (req, res, next) {
-    Product.find()
+    Product.find().sort([['createdAt', 'descending']]).populate('StoreId')
       .then(products => {
         res.status(200).json({products})
       })
@@ -19,8 +19,25 @@ module.exports = {
       })
       .catch(next)
   },
+  addToWishList (req, res, next) {
+    const id = req.params.id;
+    User.findByIdAndUpdate(req.loggedUser.id, {$push: {WishList: id}}, {new: true})
+      .then(user => {
+        res.status(200).json({user})
+      })
+      .catch(next)
+  },
+  removeWishList (req, res, next) {
+    const id = req.params.id
+    User.findByIdAndUpdate(req.loggedUser.id, {$pull: {WishList: id}}, {new: true})
+      .then(user => {
+        res.status(200).json({user})
+      })
+      .catch(next)
+  },
   createProduct (req, res, next) {
-    const { name, description, price, stock, category } = req.body;
+    const { name, description, price, stock, category, condition } = req.body;
+    const categoryS = category.split(',')
     const url = req.file.cloudStoragePublicUrl;
     const id = req.loggedUser.id
     let storeId,
@@ -30,7 +47,7 @@ module.exports = {
         if(!user.StoreId) return 
         else {
           storeId = user.StoreId
-          return Product.create({ name, description, price, stock, StoreId: user.StoreId, category, product_image: url })
+          return Product.create({ name, description, price, stock, StoreId: user.StoreId, category: categoryS, product_image: url, condition })
         }
       })
       .then(product => {
@@ -66,11 +83,23 @@ module.exports = {
   },
   findAllCategory (req, res, next) {
     let tempCategory = []
-    Product.find()
+    Product.find().populate('StoreId')
       .then(products => {
         products.forEach((el, i) => {
           el.category.forEach((category, i) => {
-            tempCategory.push(category)
+            if(tempCategory.length == 0) {
+              tempCategory.push(category)
+            } else {
+              var counter = 0
+              tempCategory.forEach((m, i) => {
+                if(m == category) {
+                  counter++
+                }
+              })
+            }
+            if(counter == 0) {
+              tempCategory.push(category)
+            }
           })
         })
         res.status(200).json({categories: tempCategory})

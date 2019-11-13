@@ -4,13 +4,14 @@ const { checkout } = require('../controllers/cart');
 
 
 function updateProduct(data) {
-  // console.log('ini dalam function updateProduct')
-  // console.log(data)
+  console.log('ini dalam function updateProduct')
+  console.log(data)
   return new Promise ((resolve, reject) => {
     Product.findById(data.id)
       .then(product => {
         // console.log('dalam prmise')
-        // console.log(product)
+        console.log('ini dalam promise')
+        console.log(product)
         product.stock = Number(product.stock) - Number(data.count)
         return Product.findByIdAndUpdate(data.id, {stock: product.stock}, {new: true})
       })
@@ -22,6 +23,22 @@ function updateProduct(data) {
   })
 }
 module.exports = {
+  getTransaction (req, res, next) {
+    Transaction.findOne({CartId: req.CartId._id})
+      .populate({
+        path: 'CartId',
+        model: 'carts',
+        populate: {
+          path: 'UserId',
+          model: 'users',
+          // select: 'email username profile_image '
+        }
+      })
+      .then(transaction => {
+        res.status(200).json({transaction})
+      })
+      .catch(next)
+  },
   createTransaction (req, res, next) {
     const Cart = req.CartId;
     console.log(Cart)
@@ -37,15 +54,15 @@ module.exports = {
     // prosses pengurangan stock
     
     let tempUpdateProduct = []
-    tempProductId.forEach((el, i) => {
-      updateProduct(el)
-      .then(data => {
-        // console.log('ini dalam looping')
-        // console.log(data)
-        tempUpdateProduct.push(data)
+    setTimeout(() => {
+      tempProductId.forEach((el, i) => {
+        updateProduct(el)
+        .then(data => {
+          tempUpdateProduct.push(data)
+        })
+        .catch(next)
       })
-      .catch(next)
-    })
+    }, 500);
     
     // prosess membuat transaction
     let tempTrasaction
