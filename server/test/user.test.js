@@ -12,6 +12,11 @@ let userData = {
     email: 'arnold@mail.com',
     password: 'Google123'
 }
+// let userData = {
+//     name: 'admin',
+//     email: 'admin@mail.com',
+//     password: 'Admin123'
+// }
 
 let userDataLogin = {
     email: 'arnold@mail.com',
