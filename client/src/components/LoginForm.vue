@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import axios from '../../helpers/axios'
 
 export default {
   data () {
@@ -57,15 +56,11 @@ export default {
   },
   methods: {
     login () {
-      console.log('login')
-      axios.post('/users/login', {
+      const payload = {
         email: this.email,
         password: this.password
-      })
-        .then(({ data }) => {
-          console.log(data)
-        })
-        .catch(this.showAlert)
+      }
+      this.$store.dispatch('login', payload)
     },
     toRegister () {
       console.log('to register')
