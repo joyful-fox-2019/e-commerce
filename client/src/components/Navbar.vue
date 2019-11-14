@@ -7,7 +7,7 @@
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <div>
-          <b-button v-b-modal.modal-prevent-closing2 class='btnL btnregister mr-4 btn-outline-success' style='background-color: white; color: black' v-if='isSignin'>
+          <b-button @click='toCartPage' class='btnL btnregister mr-4 btn-outline-success' style='background-color: white; color: black' v-if='isSignin'>
             <v-icon name='shopping-cart' class='vicon'></v-icon> &nbsp; <b-badge variant="light"> {{ userCart }} </b-badge>
           </b-button>
           <b-button class='btnL mr-4 btn-outliner-warning' v-if='isSignin' @click='signout'><v-icon name='power' class='vicon'></v-icon></b-button>
@@ -119,6 +119,9 @@ export default {
       }
     },
     methods: {
+      toCartPage () {
+        this.$router.push({ name: 'cart' });
+      },
       goMain () {
         this.$router.push('/home');
       },
@@ -132,8 +135,6 @@ export default {
         }, 1000);
       },
       signin () {
-        console.log('sevelum axios login')
-        console.log(this.isSignin)
         this.$awn.asyncBlock(
           this.signinAction(),
           null
@@ -142,17 +143,11 @@ export default {
             setTimeout(() => {
               this.$awn.success(msg)
               this.isSignin = true;
-              console.log('setelah success login masuk ga')
-              console.log(this.isSignin)
             }, 2000);
           })
           .catch(err => {
             this.$awn.warning(err)
           })
-          setTimeout(() => {
-          console.log('diluar axios')
-            console.log(this.isSignin)
-          }, 2000);
       },
       signup () {
         this.$awn.asyncBlock(
@@ -223,11 +218,7 @@ export default {
     watch: {
       isSignin: {
         handler (val) {
-          // console.log('ini watch val')
-          // console.log(val)
           this.isSignin = val
-          // console.log('ini dari watch isSignin')
-          // console.log(this.isSignin)
         }
       },
       userCart: {

@@ -24,7 +24,7 @@ export default {
   },
   data () {
     return {
-      bar: ''
+      bar: 'col-10 border'
     }
   },
   computed: {

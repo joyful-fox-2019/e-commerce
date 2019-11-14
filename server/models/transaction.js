@@ -1,10 +1,7 @@
 const { model, Schema } = require('mongoose')
 
 const TransSchema = new Schema({
-  CartId: {
-    type: Schema.Types.ObjectId,
-    ref: 'products'
-  },
+  ProductId: [],
   status: Boolean,
   payment: Number
 }, {timestamps: true})

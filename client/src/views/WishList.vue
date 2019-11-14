@@ -29,7 +29,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .productC {
   display:flex;
   flex-direction: row;

@@ -1,5 +1,6 @@
 const Transaction = require('../models/transaction');
 const Product = require('../models/product');
+const User = require('../models/user');
 const { checkout } = require('../controllers/cart');
 
 
@@ -12,8 +13,12 @@ function updateProduct(data) {
         // console.log('dalam prmise')
         console.log('ini dalam promise')
         console.log(product)
-        product.stock = Number(product.stock) - Number(data.count)
-        return Product.findByIdAndUpdate(data.id, {stock: product.stock}, {new: true})
+        if(Number(product.stock) >= Number(data.count)) {
+          product.stock = Number(product.stock) - Number(data.count)
+          return Product.findByIdAndUpdate(data.id, {stock: product.stock}, {new: true})
+        } else {
+          throw {msg: 'out of stock'}
+        }
       })
       .then(product => {
         console.log(product)
@@ -66,17 +71,22 @@ module.exports = {
     
     // prosess membuat transaction
     let tempTrasaction
+    let tempCart
     setTimeout(() => {
       if(tempUpdateProduct.length == 0) next({msg: 404, msg: 'no have Cart'})
       else {
         setTimeout(() => {
-          Transaction.create({ CartId: Cart._id, payment: totalPayment })
+          Transaction.create({ ProductId: tempUpdateProduct, payment: totalPayment })
             .then(transaction => {
               tempTrasaction = transaction
               return checkout(req.loggedUser.id)
             })
-            .then(() => {
-              res.status(201).json({transaction: tempTrasaction, product: tempUpdateProduct})
+            .then((cart) => {
+              tempCart = cart
+              return User.findByIdAndUpdate(req.loggedUser.id, {$push: {History: tempTrasaction._id}})
+            })
+            .then(user => {
+              res.status(201).json({transaction: tempTrasaction, product: tempUpdateProduct, cart: tempCart, user})
             })
             .catch(next)
         }, 5000);

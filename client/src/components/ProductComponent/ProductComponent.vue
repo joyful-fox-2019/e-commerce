@@ -69,9 +69,17 @@ export default {
     }
   },
   computed: {
-    price () {
-      return this.getProduct.price + ' IDR'
-    }
+   price() {
+     const number_string = this.getProduct.price.toString();
+     const remainder = number_string.length % 3;
+     let money = number_string.substr(0, remainder);
+     const thousand = number_string.substr(remainder).match(/\d{3}/g);
+     if (thousand) {
+       const separator = remainder ? "." : "";
+       money += separator + thousand.join(".");
+     }
+     return `Rp. ${money}`;
+   }
   },
   watch: {
     getProduct: {

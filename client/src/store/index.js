@@ -49,6 +49,13 @@ export default new Vuex.Store({
     CREATE_PRODUCT (state, payload) {
       state.userStore = payload.store
       state.allProduct.unshift(payload.product);
+    },
+    REMOVE_CART (state, cart) {
+      state.userCart = cart
+    },
+    CREATE_TRANSACTION (state, data) {
+      state.userSignin = data.user;
+      state.cart = data.cart
     }
   },
   actions: {
@@ -102,7 +109,6 @@ export default new Vuex.Store({
           })
           .catch(err => {
             context.commit('CHECK_SIGNIN', '')
-            this.$router.push('/')
             reject(err.response.data.msg)
           })
       })
@@ -164,6 +170,40 @@ export default new Vuex.Store({
             console.log(data)
             context.commit('CREATE_PRODUCT', data)
             resolve(data.msg)
+          })
+          .catch(err => {
+            reject(err.response.data.msg)
+          })
+      })
+    },
+    removeCart (context, name) {
+      axios({
+        method: 'put',
+        url: `/carts/${name}`,
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+        .then(({data}) => {
+          context.commit('REMOVE_CART', data.cart)
+        })
+        .catch(err => {
+          this.$awn.warning(err.response.data.msg)
+        })
+    },
+    createTransaction (context, paylaod) {
+      return new Promise ((resolve, reject) => {
+        axios({
+          method: 'post',
+          url: '/transactions',
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+          .then(({data}) => {
+            context.commit('CREATE_TRANSACTION', data)
+            resolve(data.transaction)
+            return this.dispatch('fetchAllProduct')
           })
           .catch(err => {
             reject(err.response.data.msg)

@@ -60,7 +60,7 @@
 export default {
   methods: {
     profilePage () {
-      this.$router.push('/profile')
+      this.$router.push({ name: 'profile' })
     },
     seeWishList () {
       this.$router.push('/profile/wishlist')

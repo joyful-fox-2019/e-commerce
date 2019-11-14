@@ -19,7 +19,7 @@
           <h4>{{ product.StoreId.name }} Store</h4>
           <h4>Store Site {{ product.StoreId.link }}</h4>
           <h3>Stock {{ product.stock }}</h3>
-          <h1>IDR {{ product.price }}</h1>
+          <h1>IDR {{ price }}</h1>
           <p>{{product.description}}</p>
           <p><input type='number' :placeholder="message" v-model='count'></p>
           <button @click='addToCart'>Add to Cart</button>
@@ -55,7 +55,9 @@ export default {
           name: this.product.name,
           price: this.product.price,
           id: this.product._id,
-          count: this.count
+          count: this.count,
+          storeName: this.product.StoreId.name,
+          stock: this.product.stock
         },
         headers: {
           token: localStorage.getItem('token')
@@ -113,6 +115,17 @@ export default {
     },
     isSignin () {
       return this.$store.state.isSignin
+    },
+    price() {
+      const number_string = this.product.price.toString();
+      const remainder = number_string.length % 3;
+      let money = number_string.substr(0, remainder);
+      const thousand = number_string.substr(remainder).match(/\d{3}/g);
+      if (thousand) {
+        const separator = remainder ? "." : "";
+        money += separator + thousand.join(".");
+      }
+      return `Rp. ${money}`;
     }
   }
 }
