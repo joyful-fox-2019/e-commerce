@@ -27,6 +27,9 @@ const productSchema = new Schema({
   },
   penciler: {
     type: String
+  },
+  image: {
+    type: String
   }
 }, {
   versionKey: false,

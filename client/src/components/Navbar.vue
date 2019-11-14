@@ -18,7 +18,7 @@
             <div class="hidden-sm-and-down text-center">
               <v-btn v-if="$store.state.user._id && !$store.state.user.isAdmin" class="bg-surface nav-button"><v-icon>mdi-cart</v-icon></v-btn>
               <v-btn v-if="$store.state.user._id && !$store.state.user.isAdmin" class="bg-surface nav-button"><v-icon>mdi-account</v-icon></v-btn>
-              <v-btn v-if="$store.state.user._id && $store.state.user.isAdmin" class="bg-primary nav-button"><v-icon>mdi-plus</v-icon>Add Product</v-btn>
+              <v-btn v-if="$store.state.user._id && $store.state.user.isAdmin" class="bg-primary nav-button"><v-icon style="font-size: 20px;">mdi-plus</v-icon>Product</v-btn>
             </div>
           </v-col>
         </v-row>

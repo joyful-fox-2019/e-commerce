@@ -4,16 +4,47 @@ const chaiHttp = require('chai-http')
 const app = require('../app')
 chai.use(chaiHttp)
 const Product = require('../models/Product')
+const User = require('../models/User')
+const { generateToken } = require('../helpers/jwt')
+let adminToken = ''
+let customerToken = ''
 
 describe('Product Test', function () {
+  before(function (done) {
+    User.create({
+      name: 'Tony Stark',
+      email: 'tony@stark.com',
+      password: 'iamironman',
+      isAdmin: true
+    })
+      .then(user => {
+        console.log(user)
+        const { _id, email } = user
+        adminToken = generateToken({ _id, email })
+        return User.create({
+          name: 'Peter Parker',
+          email: 'parker@bugle.com',
+          password: 'webhead'
+        })
+      })
+      .then(user => {
+        const { _id, email } = user
+        customerToken = generateToken({ _id, email })
+        done()
+      })
+      .catch(console.log)
+  })
   after(function (done) {
     Product.deleteMany({})
+      .then(_ => {
+        return User.deleteMany({})
+      })
       .then(_ => {
         done()
       })
       .catch(console.log)
   })
-  describe('create', function () {
+  describe('create product', function () {
     it('should return _id, name, description, price, stock, published, writer, penciler, createdAt, updatetAd when input is complete and valid', function (done) {
       let body = {
         name: 'Runaways (2017) #27',
@@ -28,6 +59,7 @@ describe('Product Test', function () {
       chai.request(app)
       .post('/products')
       .send(body)
+      .set('access_token', adminToken)
       .end((err, res) => {
         expect(err).to.be.null
         expect(res).status(201)
@@ -48,6 +80,32 @@ describe('Product Test', function () {
         done()
       })
     })
+    it('should return unauthorized error message if user is a customer', function (done) {
+      let body = {
+        name: 'Runaways (2017) #27',
+        description: 'JUSTICE IS SERVED! The Runaways can’t go home, but Los Angeles’ First Protector and Most Venerable Hero has taken them in! Have they FINALLY met a powerful adult they can trust? To fight by his side, they’ll have to leave one of their own behind! And without a soul to feast on, Gib is fading fast. Sounds like a ticking clock…',
+        published: new Date('2019-11-13'),
+        price: 3.99,
+        stock: 5,
+        writer: 'Rainbow Rowell',
+        penciler: 'Andres Genolet'
+      }
+
+      chai.request(app)
+      .post('/products')
+      .send(body)
+      .set('access_token', customerToken)
+      .end((err, res) => {
+        expect(err).to.be.null
+        expect(res).status(403)
+        expect(res.body).to.be.an('object')
+        expect(res.body).to.have.all.keys('messages')
+
+        expect(res.body.messages).to.include('You are not authorized to access this data')
+
+        done()
+      })
+    })
     it('should return error messages when name, price and stock is empty', function (done) {
       let body = {
         name: '',
@@ -61,6 +119,7 @@ describe('Product Test', function () {
 
       chai.request(app)
       .post('/products')
+      .set('access_token', adminToken)
       .send(body)
       .end((err, res) => {
         expect(err).to.be.null
@@ -88,6 +147,7 @@ describe('Product Test', function () {
 
       chai.request(app)
       .post('/products')
+      .set('access_token', adminToken)
       .send(body)
       .end((err, res) => {
         expect(err).to.be.null

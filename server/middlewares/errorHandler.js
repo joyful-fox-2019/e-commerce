@@ -6,6 +6,9 @@ module.exports = (err, req, res, next) => {
     for(let field in err.errors) {
       messages.push(err.errors[field].message)
     }
+  } else if(err.name === 'JsonWebTokenError') {
+    err.status = 401
+    messages.push('You have to login first')
   } else if(err.code === 11000) {
     err.status = 400
     let field = Object.keys(err.keyPattern)[0]
@@ -17,10 +20,12 @@ module.exports = (err, req, res, next) => {
     }
   } else if(err.status) {
     messages.push(err.msg)
+  } else if(err.message === `Cannot read property 'originalname' of undefined`) {
+    err.status = 400
+    messages.push('You have to upload an image')
   } else {
     err.status = 500
     messages.push('Something went wrong with server')
   }
-  console.log(messages)
   res.status(err.status).json({ messages })
 }

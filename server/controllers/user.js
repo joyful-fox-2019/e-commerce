@@ -10,6 +10,7 @@ module.exports = {
       if(adminPassword !== process.env.ADMIN_PASSWORD) {
         throw { status: 401, msg: 'Wrong admin password' }
       } else {
+        console.log('masuk isadmin true')
         isAdmin = true
       }
     }

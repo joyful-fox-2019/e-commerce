@@ -9,8 +9,8 @@ module.exports = {
       .catch(next)
   },
   create: (req, res, next) => {
-    const { name, description, price, stock, published, writer, penciler } = req.body
-    Product.create({ name, description, price, stock, published, writer, penciler })
+    const { name, description, price, stock, published, writer, penciler, image } = req.body
+    Product.create({ name, description, price, stock, published, writer, penciler, image })
       .then(product => {
         res.status(201).json(product)
       })

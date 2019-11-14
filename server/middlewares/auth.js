@@ -13,5 +13,17 @@ module.exports = {
         }
       })
       .catch(next)
+  },
+  adminAuthorization : (req, res, next) => {
+    try {
+      console.log('inidia', req.loggedUser)
+      if(!req.loggedUser.isAdmin) {
+        throw { status: 403, msg: 'You are not authorized to access this data'}
+      } else {
+        next()
+      }
+    } catch (err) {
+      next(err)
+    }
   }
 }
