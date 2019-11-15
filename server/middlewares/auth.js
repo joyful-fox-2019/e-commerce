@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Store = require('../models/Store');
+const Transaction = require('../models/transaction');
 const { decodeToken } = require('../helpers/jwt');
 const Cart = require('../models/cart');
 
@@ -22,6 +23,39 @@ module.exports = {
       }
     }
     catch(err) {
+      next(err)
+    }
+  },
+  confirmTransaction (req, res, next) {
+    try {
+      Transaction.findById(req.params.id)
+        .then(transaction => {
+          if(transaction.UserId == req.loggedUser.id) {
+            next()
+          } else {
+            next({status: 400, msg: 'dont have access'})
+          }
+        })
+        .catch(next)
+    }
+    catch(err){
+      next(err)
+    }
+  },
+  updateStatusTransaction (req, res, next) {
+    try{
+      console.log(req.params.id)
+      Transaction.findById(req.params.id)
+        .then(transaction => {
+          if(transaction.confirm) {
+            next()
+          } else {
+            next({ status: 403, msg: 'Wait till the Admin confirm this transaction'})
+          }
+        })
+        .catch(next)
+    }
+    catch(err){
       next(err)
     }
   },
@@ -48,7 +82,7 @@ module.exports = {
   },
   transaction (req, res, next) {
     try {
-      Cart.findOne({ UserId: req.loggedUser.id })
+      Cart.findOne({ UserId: req.loggedUser.id }).populate('UserId')
         .then(cart => {
           req.CartId = cart
           next()

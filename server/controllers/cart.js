@@ -6,8 +6,8 @@ module.exports = {
   getCart (req, res, next) {
     const UserId = req.loggedUser.id;
     Cart.findOne({ UserId }).populate({
-      path: 'StoreId',
-      model: 'stores'
+      path: 'UserId',
+      model: 'users'
     })
       .then(cart => {
         console.log(cart)

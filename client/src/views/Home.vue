@@ -24,7 +24,7 @@ export default {
   },
   data () {
     return {
-      bar: 'col-10 border'
+      bar: null
     }
   },
   computed: {
@@ -37,11 +37,10 @@ export default {
   watch: {
     signin: {
       handler (val) {
-        console.log(val)
-        if(val) {
-          this.bar = 'col-10 border';
+        if(!val) {
+          this.bar = 'col-12 border';
         } else {
-          this.bar = 'col-12 border'
+          this.bar = 'col-10 border'
         }
       }
     }
@@ -64,6 +63,7 @@ export default {
   background-color: white;
 }
 .rightside {
-  height: 90vh
+  height: 90vh;
+  width: 100%
 }
 </style>

@@ -34,13 +34,15 @@
       <div class="border mt-3">
         <h5>My Profile </h5>
         <div class='mt-2 ml-3'>
-          <b-button class='link' @click='seeWishList'>
+          <b-button class='link' @click='seeWishList' style='width: 180px'>
             Wish List
             <b-badge variant="light">{{ userr.WishList.length }}</b-badge>
           </b-button>
         </div>
         <div class='mt-2 ml-3'>
-          Admin Page
+          <b-button  class='btnL btnregister mr-4 btn-outline-success bg-light' style="width: 180px" @click='seeHistory'>
+            <v-icon name='server' class='vicon'></v-icon> History &nbsp; <b-badge variant="light"> {{ userr.History.length }} </b-badge>
+          </b-button>
         </div>
       </div>
       <div class="border mt-3" v-if='store'>
@@ -59,8 +61,11 @@
 <script>
 export default {
   methods: {
+    seeHistory () {
+      this.$router.push('/history/list')
+    },
     profilePage () {
-      this.$router.push({ name: 'profile' })
+      this.$router.push('/profile')
     },
     seeWishList () {
       this.$router.push('/profile/wishlist')

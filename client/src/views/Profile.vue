@@ -159,11 +159,11 @@ export default {
       return this.$store.state.userSignin
     },
     address () {
-      if(this.$store.state.userSignin.address.length == 0) {
-        return 
-      } else {
+      // if(this.$store.state.userSignin.address.length == 0) {
+      //   return 
+      // } else {
         return this.$store.state.userSignin.address
-      }
+      // }
     },
     verification () {
       return this.$store.state.userSignin.verification
@@ -187,6 +187,9 @@ export default {
         }
       }
     }
+  },
+  created () {
+    console.log('lelel')
   }
 }
 </script>

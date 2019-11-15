@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import MainPage from '../views/MainPage.vue'
+import HistoryPage from '../views/HistoryPage'
 
 Vue.use(VueRouter)
 
@@ -10,10 +12,16 @@ const routes = [
     name: 'home',
     component: Home,
     children: [
+
+      {
+        path: '/profile',
+        name: 'profile',
+        component: () => import(/* webpackChunkName: "profile" */ '../views/Profile.vue')
+      },
       {
         path: '',
         name: 'mainproduct',
-        component: () => import (/* webpackChunkName: 'mainproduct' */ '../views/MainPage.vue'),
+        component: MainPage,
         children: [
           {
             path: '',
@@ -34,14 +42,36 @@ const routes = [
             path: '/profile/wishlist',
             name: 'wishlist',
             component: () => import(/* webpackChunkName: "wishlist" */ '../views/WishList.vue')
+          },
+          {
+            path: '/history/list',
+            name: 'history',
+            component: HistoryPage,
+            children: [
+              {
+                path: '',
+                name: 'allhistory',
+                component: () => import(/* webpackChunkName: "allhistory" */ '../views/History/AllHistory.vue')
+              },
+              {
+                path: 'confirm',
+                name: 'confirm',
+                component: () => import(/* webpackChunkName: "confirm" */ '../views/History/ConfirmHistory.vue')
+              },
+              {
+                path: 'process',
+                name: 'process',
+                component: () => import(/* webpackChunkName: "process" */ '../views/History/ProcessHistory.vue')
+              },
+              {
+                path: 'sent',
+                name: 'sent',
+                component: () => import(/* webpackChunkName: "sent" */ '../views/History/SentHistory.vue')
+              }
+            ]
           }
         ]
       },
-      {
-        path: '/profile',
-        name: 'profile',
-        component: () => import(/* webpackChunkName: "profile" */ '../views/Profile.vue')
-      }
     ]
   },
   {

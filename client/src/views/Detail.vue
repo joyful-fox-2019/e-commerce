@@ -22,8 +22,9 @@
           <h1>IDR {{ price }}</h1>
           <p>{{product.description}}</p>
           <p><input type='number' :placeholder="message" v-model='count'></p>
-          <button @click='addToCart'>Add to Cart</button>
-          <button @click='addWishList(product._id)'>Wishlist</button>
+          <button @click='addToCart' v-if='!isAdmin'>Add to Cart</button>
+          <button @click='addWishList(product._id)' v-if='!isAdmin'>Wishlist</button>
+          <button v-if='isAdmin'>Manage</button>
         </div>
       </div>
     </div>
@@ -69,7 +70,11 @@ export default {
           this.$awn.success('Add to cart')
         })
         .catch(err => {
-          this.$awn.warning(err.response.data.msg)
+          if(err.response.data.msg == 'Authentication Error') {
+            this.$awn.warning('Please Signin First')
+          } else {
+            this.$awn.warning(err.response.data.msg)
+          }
         })
     },
     addWishList (id) {
@@ -110,6 +115,11 @@ export default {
     this.fetchProductById()
   },
   computed: {
+    isAdmin () {
+      if(this.product.StoreId.Owner == this.$store.state.userSignin._id) {
+        return true
+      }
+    },
     message () {
       return `count .. max ${this.product.stock}`
     },

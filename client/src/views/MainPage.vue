@@ -38,6 +38,15 @@ export default {
     rows () {
       return this.categories.length
     }
+  },
+  watch: {
+    categories: {
+      handler (val) {
+        if(val) {
+          this.categories = val
+        }
+      }
+    }
   }
 }
 </script>

@@ -28,8 +28,36 @@ function updateProduct(data) {
   })
 }
 module.exports = {
+  // getConfirmTransaction () {
+  //   Transaction.find({ UserId: req.loggedUser.id })
+  //     .then(transactions => {
+  //       transactions.forEach
+  //     })
+  //   Transaction.find({ confirm: true })
+  //     .then(transactions => {
+  //       res.status(200).json({ transactions })
+  //     })
+  //     .catch(next)
+  // },
+  updateStatusReceived (req, res, next) {
+    console.log(req.params.id)
+    Transaction.findByIdAndUpdate(req.params.id, {status: true}, {new: true})
+      .then(transaction => {
+        res.status(200).json({transaction})
+      })
+      .catch(next)
+  },
+  updateStatusConfirm (req, res, next) {
+    Transaction.findByIdAndUpdate(req.params.id, {confirm: true}, {new: true})
+      .then(transaction => {
+        res.status(200).json({transaction})
+      })
+      .catch(next)
+  },
+
   getTransaction (req, res, next) {
-    Transaction.findOne({CartId: req.CartId._id})
+    console.log(req.CartId)
+    Transaction.findOne({StoreId: req.CartId.UserId.StoreId})
       .populate({
         path: 'CartId',
         model: 'carts',
@@ -40,18 +68,17 @@ module.exports = {
         }
       })
       .then(transaction => {
+        console.log(transaction)
         res.status(200).json({transaction})
       })
       .catch(next)
   },
   createTransaction (req, res, next) {
     const Cart = req.CartId;
-    console.log(Cart)
+    console.log(Cart.UserId)
     let totalPayment = 0
     let tempProductId = []
     Cart.product.forEach((el, i) => {
-      console.log('looping cart')
-      console.log(el)
       tempProductId.push({id: el.id, count: el.count})
       totalPayment += Number(el.price) * Number(el.count)
     })
@@ -76,7 +103,7 @@ module.exports = {
       if(tempUpdateProduct.length == 0) next({msg: 404, msg: 'no have Cart'})
       else {
         setTimeout(() => {
-          Transaction.create({ ProductId: tempUpdateProduct, payment: totalPayment })
+          Transaction.create({ ProductId: tempUpdateProduct, payment: totalPayment, UserId: req.loggedUser.id })
             .then(transaction => {
               tempTrasaction = transaction
               return checkout(req.loggedUser.id)

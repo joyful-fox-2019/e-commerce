@@ -2,18 +2,6 @@
 <div>
     <img :src="storeP.background_image" alt="" class='imageA'>
   <div class='container contentContainer border'>
-    <div class='mt-3' v-if='!status'>
-      <b-alert show variant="danger">
-        <h4 class="alert-heading">Your store has not been verified</h4>
-        <p>
-          Oops, you haven't been verified. Verify your account now then add the first product and it's time to reach potential buyers and get profits
-        </p>
-        <hr>
-        <p class="mb-0">
-          <router-link to='/profile'>Click here</router-link> to verify
-        </p>
-      </b-alert>
-    </div>
     <div class='mt-3' v-if='status'>
       <b-alert show variant="success">
         <h4 class="alert-heading">Your account has been verified</h4>
@@ -37,7 +25,12 @@
         </div>
       </div>
       <div class="col-5">
-        fdsafas
+        <div>
+          {{ storeP }}
+        </div>
+        <div>
+          {{ storeP }}
+        </div>
       </div>
     </div>
   </div>
@@ -47,11 +40,11 @@
 <script>
 export default {
   computed: {
-    status () {
-      return this.$store.state.userSignin.verification
-    },
     storeP () {
       return this.$store.state.userStore
+    },
+    userO () {
+      return this.$store.state.userSignin
     }
   }
 }
