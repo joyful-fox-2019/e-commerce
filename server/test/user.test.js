@@ -7,16 +7,19 @@ chai.use(chaiHttp)
 const expect = chai.expect
 
 let newUser = {
+    username: 'andreas',
     email: "andre@mail.com",
     password: 'qwe'
 }
 let userLogin = {
+    username: newUser.username,
     email: newUser.email,
     password: newUser.password
 }
 
 before(function() {
     const data = {
+        username: 'milotic',
         email: "milotic@mail.com",
         password: '123'
     }
@@ -36,7 +39,7 @@ after(function(done) {
     }
 })
 
-describe('CRUD Users', function() {
+describe('Users Endpoints', function() {
     describe('Register User', function() {
         describe('success process', function() {
             it('should return status 201 when sign up success', function(done) {
@@ -69,6 +72,19 @@ describe('CRUD Users', function() {
                     .request(app)
                     .post('/users/register')
                     .send(newUser)
+                    .end(function(err, res) {
+                        expect(err).to.be.null
+                        expect(res).to.have.status(400)
+                        done()
+                    })
+            })
+            it('should return status 400 when username is duplicated', function(done) {
+                const duplicatedUsername = { ...newUser, email: 'anothermail@mail.com'}
+
+                chai
+                    .request(app)
+                    .post('/users/register')
+                    .send(duplicatedUsername)
                     .end(function(err, res) {
                         expect(err).to.be.null
                         expect(res).to.have.status(400)

@@ -17,9 +17,7 @@ function errorHandler(err, req, res, next) {
         })
     } else if(err.message.name === 'JsonWebTokenError') {
         res.status(status).json({ message: err.message.message })
-    } 
-    
-    else {
+    } else {
         res.status(status).json({ message })
     }
 }

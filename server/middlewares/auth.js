@@ -1,6 +1,6 @@
 const verifyToken = require('../helpers/tokenMaker').decodeToken
 const User = require('../models/user')
-const OTHER_MODEL = require('../models/OTHER_MODEL')
+const Product = require('../models/product')
 
 function authentication(req, res, next) {
     try {
@@ -21,21 +21,32 @@ function authentication(req, res, next) {
     }
 }
 
+function adminAuthorization(req, res, next) {
+    try {
+        if(req.loggedUser.role !== 'admin') {
+            throw({status: 401, message: 'You are not authorized'})
+        } else {
+            next()
+        }
+    }
+    catch(err) {
+        next(err)
+    }
+}
+
 function authorization(req, res, next) {
     let { id } = req.params
-    OTHER_MODEL.findById(id)
-        .then(other_modeldata => {
-            if(artice && OTHER_MODEL.OBJECTIDNYAAAA == req.loggedUser.id) {
+    Product.findById(id)
+        .then(product => {
+            if(product && product._id == id) {
                 next()
-            } else if(!article) {
-                next({ status: 404, message: "Data not found" })
-            } else {
-                next({ status: 401, message: "Authorization failed" })
+            } else if(!product) {
+                next({ status: 404, message: "product not found" })
             }
         })
         .catch(next)
 }
 
 module.exports = {
-    authentication, authorization
+    authentication, adminAuthorization, authorization
 }

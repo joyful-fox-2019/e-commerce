@@ -8,7 +8,6 @@ const routes = require('./routes')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const PORT = process.env.PORT || 3000
-const urlMongoose = 'mongodb://localhost/E-Commerce'
 const errorHandler = require('./middlewares/errorHandler')
 
 app.use(express.json())
@@ -20,7 +19,7 @@ if(process.env.NODE_ENV === 'testing') {
         else console.log(`(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ Connected to db `);
     })
 } else {
-    mongoose.connect(urlMongoose, { useNewUrlParser: true, useUnifiedTopology: true, useUnifiedTopology: true, useCreateIndex: true }, function(err) {
+    mongoose.connect(process.env.URL_MONGOOSE, { useNewUrlParser: true, useUnifiedTopology: true, useUnifiedTopology: true, useCreateIndex: true }, function(err) {
         if(err) console.log(`Failed to connect to db ಠ_ಠ`)
         else console.log(`(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ Connected to db `);
     })

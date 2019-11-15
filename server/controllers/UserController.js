@@ -5,12 +5,21 @@ const generateToken = require('../helpers/tokenMaker').generateToken
 class UserController {
     static register(req, res, next) {
         let objUser = {
+            username: req.body.username,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            role: req.body.role
         }
         User.create(objUser)
             .then(result => {
-                res.status(201).json(result)
+                let payload = {
+                    id: result._id,
+                    username: result.username,
+                    email: result.email,
+                    role: result.role
+                }
+                let token = generateToken(payload)
+                res.status(201).json({ token })
             })
             .catch(next)
     }
@@ -29,7 +38,8 @@ class UserController {
                     if(user && comparePassword(password, user.password)) {
                         let payload = {
                             id: user._id,
-                            email: user.email
+                            email: user.email,
+                            role: user.role
                         }
                         let token = generateToken(payload)
                         res.status(200).json({ token })
@@ -39,6 +49,31 @@ class UserController {
                 })
                 .catch(next)
         }
+    }
+
+    static addToCart(req, res, next) {
+        console.log(req.loggedUser);
+        let { product_id, quantity } = req.body
+        let user_id = req.loggedUser.id
+        let newItem = {
+            product_id,
+            quantity
+        }
+        User.updateOne({ _id: user_id }, { $push: { cart: newItem }})
+            .then(result => {
+                res.status(200).json(result)
+            })
+            .catch(next)
+    }
+
+    static removeFromCart(req, res, next) {
+        const user_id = req.loggedUser.id
+        const { cart_id } = req.body
+        User.updateOne({ _id: user_id }, { $pull: { cart: { _id: cart_id }}})
+            .then(result => {
+                res.status(200).json(result)
+            })
+            .catch(next)
     }
 }
 
