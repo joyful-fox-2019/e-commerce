@@ -7,5 +7,6 @@ router.post('/login', UserController.login)
 
 router.patch('/cart', authentication, UserController.addToCart)
 router.patch('/cart/remove', authentication, UserController.removeFromCart)
+router.get('/cart', authentication, UserController.viewCart)
 
 module.exports = router

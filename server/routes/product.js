@@ -4,8 +4,8 @@ const { authentication, adminAuthorization, authorization } = require('../middle
 const multer = require('../middlewares/multer')
 const gcs = require('../middlewares/gcs')
 
-router.use(authentication)
 router.get('/', ProductController.readAll)
+router.use(authentication)
 router.get('/:id', ProductController.readOne)
 
 router.use(adminAuthorization)

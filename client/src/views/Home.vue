@@ -6,18 +6,13 @@
 
         <div class="col-lg-3">
           <h1 class="my-4">Bubblebeam</h1>
-          <b-button variant="info"> <i class="fas fa-shopping-cart"> View Cart </i> </b-button>
+          <b-button variant="info" @click="viewCart"> <i class="fas fa-shopping-cart"></i> View Cart </b-button>
         </div>
 
         <div class="col-lg-9">
           <Carousel></Carousel>
           <div class="row">
-            <ProductCard></ProductCard>
-            <ProductCard></ProductCard>
-            <ProductCard></ProductCard>
-            <ProductCard></ProductCard>
-            <ProductCard></ProductCard>
-            <ProductCard></ProductCard>
+            <ProductCard v-for="(product) in this.$store.state.products" :key="product._id" :ProductData="product"></ProductCard>
           </div>
         </div>
 
@@ -28,7 +23,7 @@
      <!-- Footer -->
     <footer class="py-5 bg-dark">
       <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; <i class="fas fa-cloud-meatball"> Bubblebeam </i> 2019 </p>
+        <p class="m-0 text-center text-white">Copyright &copy; Bubblebeam 2019 </p>
       </div>
       <!-- /.container -->
     </footer>
@@ -39,12 +34,27 @@
 // @ is an alias to /src
 import Carousel from '../components/Carousel'
 import ProductCard from '../components/ProductCard'
+// import axios from 'axios'
 
 export default {
   name: 'home',
   components: {
     Carousel,
     ProductCard
+  },
+  props: ['ProductData'],
+  data () {
+    return {
+      products: []
+    }
+  },
+  methods: {
+    viewCart () {
+      this.$router.push('/cart')
+    }
+  },
+  created () {
+    this.$store.dispatch('getAllProducts')
   }
 }
 </script>

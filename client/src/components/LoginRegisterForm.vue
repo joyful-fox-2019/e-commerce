@@ -36,7 +36,7 @@
             v-model="password"
           />
           <div class="d-flex justify-content-center align-item-center mt-2" style="width: 100%;">
-            <b-button class="btn">Login</b-button>
+            <b-button type="submit" class="btn"> <i class="fas fa-sign-in-alt"></i> Login </b-button>
           </div>
         </form>
         <div>
@@ -56,7 +56,7 @@
         <form
           class="d-flex flex-column justify-content-start align-items-start mt-3"
           style="width: 70%"
-          @submit.prevent="register()"
+          @submit.prevent="register"
         >
           <label>Username</label>
           <input
@@ -86,7 +86,7 @@
             class="d-flex justify-content-center align-item-center mt-2 mb-2"
             style="width: 100%;"
           >
-            <b-button class="btn">Register</b-button>
+            <b-button type="submit" class="btn">Register</b-button>
           </div>
         </form>
         <div>
@@ -103,7 +103,6 @@
 <script>
 import axios from 'axios'
 import Swal from 'sweetalert2'
-const url = `http://34.87.3.189`
 
 export default {
   name: 'LoginRegisterForm',
@@ -127,7 +126,7 @@ export default {
     },
     register () {
       axios({
-        url: `${url}/users/register`,
+        url: `http://localhost:3000/users/register`,
         method: 'post',
         data: {
           username: this.username,
@@ -139,21 +138,24 @@ export default {
           this.username = ''
           this.email = ''
           this.password = ''
+          this.$store.commit('setLogin', true)
           localStorage.setItem('token', data.token)
-          localStorage.setItem('username', data.username)
-          this.$router.push('/home')
-          Swal.fire(`Success`, `Register success`, `success`)
+          this.$router.push('/')
+          Swal.fire({
+            icon: 'success',
+            title: 'Registration Successful',
+            showConfirmButton: false,
+            timer: 1500
+          })
         })
         .catch(err => {
           console.log(err)
-          Swal.fire('Errors', `Invalid format input`, `error`)
+          Swal.fire('Errors', `Invalid input format`, `error`)
         })
     },
     login () {
-      console.log(this.email)
-      console.log(this.password)
       axios({
-        url: `${url}/users/login`,
+        url: `http://localhost:3000/users/login`,
         method: 'post',
         data: {
           email: this.email,
@@ -161,11 +163,18 @@ export default {
         }
       })
         .then(({ data }) => {
+          console.log(data)
           this.email = ''
           this.password = ''
+          this.$store.commit('setLogin', true)
           localStorage.setItem('token', data.token)
-          localStorage.setItem('username', data.username)
-          this.$router.push('/home')
+          Swal.fire({
+            icon: 'success',
+            title: 'Login Successful',
+            showConfirmButton: false,
+            timer: 1500
+          })
+          this.$router.push('/')
         })
         .catch(err => {
           console.log(err)

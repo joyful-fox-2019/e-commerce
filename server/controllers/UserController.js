@@ -52,13 +52,15 @@ class UserController {
     }
 
     static addToCart(req, res, next) {
-        console.log(req.loggedUser);
-        let { product_id, quantity } = req.body
+        let { product_id, product_name, product_image, quantity } = req.body
         let user_id = req.loggedUser.id
         let newItem = {
             product_id,
+            product_name,
+            product_image,
             quantity
         }
+        console.log(newItem);
         User.updateOne({ _id: user_id }, { $push: { cart: newItem }})
             .then(result => {
                 res.status(200).json(result)
@@ -72,6 +74,15 @@ class UserController {
         User.updateOne({ _id: user_id }, { $pull: { cart: { _id: cart_id }}})
             .then(result => {
                 res.status(200).json(result)
+            })
+            .catch(next)
+    }
+
+    static viewCart(req, res, next) {
+        const user_id = req.loggedUser.id
+        User.findById({ _id: user_id })
+            .then(result => {
+                res.status(200).json(result.cart)
             })
             .catch(next)
     }

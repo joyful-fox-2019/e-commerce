@@ -27,6 +27,8 @@ const userSchema = new Schema ({
                 type: Schema.Types.ObjectId,
                 ref: 'Product'
             },
+            product_name: String,
+            product_image: String,
             quantity: Number
         }
     ]
