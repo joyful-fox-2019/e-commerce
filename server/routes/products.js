@@ -7,5 +7,6 @@ router.get('/', ProductController.find)
 router.get('/:id', ProductController.findOne)
 router.use(authentication)
 router.post('/', adminAuthorization, upload.single('image'), ProductController.create)
+router.patch('/:id', adminAuthorization, ProductController.update)
 
 module.exports = router

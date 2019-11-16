@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const { decodeToken } = require('../helpers/jwt')
+const Product = require('../models/Product')
 
 module.exports = {
   authentication: (req, res, next) => {
@@ -14,7 +15,7 @@ module.exports = {
       })
       .catch(next)
   },
-  adminAuthorization : (req, res, next) => {
+  adminAuthorization: (req, res, next) => {
     try {
       console.log('inidia', req.loggedUser)
       if(!req.loggedUser.isAdmin) {

@@ -11,6 +11,7 @@
     </div>
     <v-btn
       class="bg-secondary mt-5"
+      @click="$router.push(`/comics/${product._id}/update`)"
     >
     <v-icon class="mr-1">
       mdi-pencil

@@ -26,5 +26,19 @@ module.exports = {
         res.status(201).json(product)
       })
       .catch(next)
+  },
+  update: (req, res, next) => {
+    console.log('masuk update')
+    console.log(req.body)
+    const { name, description, price, stock, published, writer, penciler } = req.body
+    Product.findByIdAndUpdate(req.params.id,
+      { name, description, price, stock, published, writer, penciler }, {
+      omitUndefined: true,
+      new: true
+    })
+      .then(product => {
+        res.status(200).json(product)
+      })
+      .catch(next)
   }
 }
