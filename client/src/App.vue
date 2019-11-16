@@ -1,22 +1,25 @@
 <template>
-  <v-app class="bg-standard app">
+  <v-app class="app">
     <Navbar></Navbar>
     <v-content>
       <router-view></router-view>
     </v-content>
     <Alert></Alert>
+    <Loading></Loading>
   </v-app>
 </template>
 
 <script>
 import Navbar from './components/Navbar'
 import Alert from './components/Alert'
+import Loading from './components/Loading'
 
 export default {
   name: 'App',
   components: {
     Navbar,
-    Alert
+    Alert,
+    Loading
   },
   created () {
     if (localStorage.getItem('access_token') &&
@@ -89,6 +92,7 @@ hr {
 }
 .app {
   font-family: 'Oswald', sans-serif !important;
+  padding-bottom: 50px;
 }
 v-btn {
   font-family: 'Squada One', cursive !important;
@@ -103,5 +107,22 @@ v-btn {
   background: rgb(230,37,42);
   background: linear-gradient(90deg, rgba(230,37,42,1) 0%, rgba(2,130,249,1) 100%);
   color: #FFFFFF;
+}
+.narrow-container {
+  max-width: 500px !important;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: auto;
+}
+.parallax-layer {
+  background-color: rgba(230, 37, 42, 0.7);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding-top: 100px;
+  font-size: 60px;
+  font-weight: bold;
 }
 </style>

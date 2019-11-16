@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import axios from '../../helpers/axios'
 import alert from '../../helpers/errorHandler'
 import alertSuccess from '../../helpers/alertSuccess'
+import router from '../router'
 
 Vue.use(Vuex)
 
@@ -18,7 +19,8 @@ export default new Vuex.Store({
       color: '#E6252A',
       message: ''
     },
-    authDialog: false
+    authDialog: false,
+    products: []
   },
   mutations: {
     SET_USER (state, payload) {
@@ -29,6 +31,9 @@ export default new Vuex.Store({
     },
     SET_AUTH_DIALOG (state, payload) {
       state.authDialog = payload
+    },
+    SET_PRODUCTS (state, payload) {
+      state.products = payload
     }
   },
   actions: {
@@ -68,6 +73,32 @@ export default new Vuex.Store({
           localStorage.setItem('access_token', data.access_token)
           commit('SET_AUTH_DIALOG', false)
           alertSuccess('You are logged in!')
+        })
+        .catch(alert)
+    },
+    addProduct ({ commit }, payload) {
+      axios.post('/products', payload, {
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          router.push('/')
+          alertSuccess('New comic added!')
+        })
+        .catch(alert)
+    },
+    getProducts ({ commit }, payload) {
+      console.log('masuk get products')
+      axios.get('/products', {
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          commit('SET_PRODUCTS', data)
         })
         .catch(alert)
     }
