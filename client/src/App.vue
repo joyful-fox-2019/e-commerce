@@ -78,6 +78,9 @@ export default {
 .full-width {
   width: 100% !important;
 }
+.half-width {
+  width: 50% !important;
+}
 hr {
   border-top: 1px solid #E0E0E0;
   width: 80%;
@@ -92,7 +95,6 @@ hr {
 }
 .app {
   font-family: 'Oswald', sans-serif !important;
-  padding-bottom: 50px;
 }
 v-btn {
   font-family: 'Squada One', cursive !important;
@@ -124,5 +126,14 @@ v-btn {
   padding-top: 100px;
   font-size: 60px;
   font-weight: bold;
+}
+.image-layer-black {
+  background-color: #000000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 1 !important;
+  width: 100%;
+  height: 100%;
 }
 </style>

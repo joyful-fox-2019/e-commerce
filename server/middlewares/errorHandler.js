@@ -18,6 +18,9 @@ module.exports = (err, req, res, next) => {
     } else {
       messages.push(`${field} is already exist`)
     }
+  } else if(err.name === 'CastError' && err.kind === 'ObjectId') {
+    err.status = 404
+    messages.push('Data not found')
   } else if(err.status) {
     messages.push(err.msg)
   } else if(err.message === `Cannot read property 'originalname' of undefined`) {

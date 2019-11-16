@@ -3,7 +3,6 @@
     <v-parallax
       height="300"
       src="https://cdn.wallpapersafari.com/98/36/IwpZT5.jpg"
-      style="background-position: right 20px bottom 10px !important;"
     >
     <div class="parallax-layer text-center">
       ADD NEW COMIC

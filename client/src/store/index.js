@@ -21,7 +21,17 @@ export default new Vuex.Store({
     },
     authDialog: false,
     loading: false,
-    products: []
+    products: [],
+    product: {
+      name: '',
+      description: '',
+      image: '',
+      price: 0,
+      stock: 0,
+      published: new Date(),
+      writer: '',
+      penciler: ''
+    }
   },
   mutations: {
     SET_USER (state, payload) {
@@ -38,6 +48,9 @@ export default new Vuex.Store({
     },
     SET_PRODUCTS (state, payload) {
       state.products = payload
+    },
+    SET_PRODUCT (state, payload) {
+      state.product = payload
     }
   },
   actions: {
@@ -98,16 +111,23 @@ export default new Vuex.Store({
     },
     getProducts ({ commit }, payload) {
       console.log('masuk get products')
-      commit('SET_LOADING', true)
-      axios.get('/products', {
-        headers: {
-          access_token: localStorage.getItem('access_token')
-        }
-      })
+      // commit('SET_LOADING', true)
+      axios.get('/products')
         .then(({ data }) => {
           console.log(data)
           commit('SET_PRODUCTS', data)
-          commit('SET_LOADING', false)
+          // commit('SET_LOADING', false)
+        })
+        .catch(alert)
+    },
+    getProduct ({ commit }, payload) {
+      console.log('masuk get product')
+      // commit('SET_LOADING', true)
+      axios.get(`/products/${payload}`)
+        .then(({ data }) => {
+          console.log(data)
+          commit('SET_PRODUCT', data)
+          // commit('SET_LOADING', false)
         })
         .catch(alert)
     }

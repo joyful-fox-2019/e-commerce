@@ -1,12 +1,13 @@
 <template>
   <div class="product">
     <v-img
+      @click="$router.push(`/comics/${product._id}`)"
       :src="product.image"
       lazy-src="https://picsum.photos/id/11/10/6"
       aspect-ratio="0.7"
       class="grey lighten-2 product-img clickable"
     ></v-img>
-    <div class="product-name mt-5">
+    <div @click="$router.push(`/comics/${product._id}`)" class="product-name clickable mt-5">
       {{ product.name }}
     </div>
     <div>
@@ -43,6 +44,10 @@ export default {
   top: -10px;
 }
 .product-img:hover ~ .product-name {
+  color: var(--secondary-color)
+}
+
+.product-name:hover {
   color: var(--secondary-color)
 }
 .product {

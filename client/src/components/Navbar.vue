@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar class="bg-surface">
+    <v-toolbar class="bg-surface navbar">
       <v-container>
         <v-row no-gutters
           align="center"
@@ -18,11 +18,11 @@
             <div class="hidden-sm-and-down text-center">
               <v-btn v-if="$store.state.user._id && !$store.state.user.isAdmin" class="bg-surface nav-button"><v-icon>mdi-cart</v-icon></v-btn>
               <v-btn v-if="$store.state.user._id && !$store.state.user.isAdmin" class="bg-surface nav-button"><v-icon>mdi-account</v-icon></v-btn>
-              <v-btn @click="$router.push('/add-product')" v-if="$store.state.user._id && $store.state.user.isAdmin" class="bg-primary nav-button">
-                <v-icon style="font-size: 20px;">
-                  mdi-plus
+              <v-btn @click="$router.push('/add-comic')" v-if="$store.state.user._id && $store.state.user.isAdmin" class="bg-primary nav-button">
+                <v-icon class="mr-1">
+                  mdi-plus-circle
                 </v-icon>
-                ADD COMIC
+                NEW COMIC
               </v-btn>
             </div>
           </v-col>
