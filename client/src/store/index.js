@@ -126,6 +126,21 @@ export default new Vuex.Store({
         })
         .catch(alert)
     },
+    deleteProduct ({ commit }, payload) {
+      commit('SET_LOADING', true)
+      axios.delete(`/products/${payload}`, {
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          commit('SET_LOADING', false)
+          router.push('/')
+          alertSuccess('Comic deleted!')
+        })
+        .catch(alert)
+    },
     getProducts ({ commit }, payload) {
       console.log('masuk get products')
       // commit('SET_LOADING', true)
