@@ -20,6 +20,7 @@ export default new Vuex.Store({
       message: ''
     },
     authDialog: false,
+    loading: false,
     products: []
   },
   mutations: {
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     },
     SET_ALERT (state, payload) {
       state.alert = payload
+    },
+    SET_LOADING (state, payload) {
+      state.loading = payload
     },
     SET_AUTH_DIALOG (state, payload) {
       state.authDialog = payload
@@ -77,6 +81,7 @@ export default new Vuex.Store({
         .catch(alert)
     },
     addProduct ({ commit }, payload) {
+      commit('SET_LOADING', true)
       axios.post('/products', payload, {
         headers: {
           access_token: localStorage.getItem('access_token')
@@ -84,6 +89,8 @@ export default new Vuex.Store({
       })
         .then(({ data }) => {
           console.log(data)
+          console.log('harusnya tutup loading')
+          commit('SET_LOADING', false)
           router.push('/')
           alertSuccess('New comic added!')
         })
@@ -91,6 +98,7 @@ export default new Vuex.Store({
     },
     getProducts ({ commit }, payload) {
       console.log('masuk get products')
+      commit('SET_LOADING', true)
       axios.get('/products', {
         headers: {
           access_token: localStorage.getItem('access_token')
@@ -99,6 +107,7 @@ export default new Vuex.Store({
         .then(({ data }) => {
           console.log(data)
           commit('SET_PRODUCTS', data)
+          commit('SET_LOADING', false)
         })
         .catch(alert)
     }

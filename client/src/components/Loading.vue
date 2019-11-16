@@ -1,17 +1,17 @@
 <template>
   <div class="text-center">
     <v-dialog
-      v-model="dialog"
+      v-model="$store.state.loading"
       hide-overlay
       persistent
       width="300"
     >
       <v-card
-        color="primary"
+        color="#E6252A"
         dark
       >
         <v-card-text>
-          Please stand by
+          Wait for a moment...
           <v-progress-linear
             indeterminate
             color="white"
@@ -20,24 +20,10 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-overlay :value="$store.state.loading">
+    </v-overlay>
   </div>
 </template>
-
-<script>
-export default {
-  data () {
-    return {
-      dialog: false
-    }
-  },
-  watch: {
-    dialog (val) {
-      if (!val) return
-      setTimeout(() => (this.dialog = false), 4000)
-    }
-  }
-}
-</script>
 
 <style>
 

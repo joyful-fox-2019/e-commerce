@@ -1,13 +1,16 @@
 <template>
-  <div>
+  <div class="product">
     <v-img
       :src="product.image"
       lazy-src="https://picsum.photos/id/11/10/6"
       aspect-ratio="0.7"
       class="grey lighten-2 product-img clickable"
     ></v-img>
-    <div class="mt-5">
+    <div class="product-name mt-5">
       {{ product.name }}
+    </div>
+    <div>
+      <b class="t-primary">{{ formattedPrice }}</b>
     </div>
     <div>
       <small></small>
@@ -20,6 +23,11 @@ export default {
   name: 'Product',
   props: {
     product: Object
+  },
+  computed: {
+    formattedPrice () {
+      return 'IDR ' + this.product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    }
   }
 }
 </script>
@@ -33,5 +41,11 @@ export default {
 }
 .product-img:hover {
   top: -10px;
+}
+.product-img:hover ~ .product-name {
+  color: var(--secondary-color)
+}
+.product {
+  text-align: left;
 }
 </style>

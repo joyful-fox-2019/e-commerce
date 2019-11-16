@@ -23,6 +23,9 @@ module.exports = (err, req, res, next) => {
   } else if(err.message === `Cannot read property 'originalname' of undefined`) {
     err.status = 400
     messages.push('You have to upload an image')
+  } else if(err.message === `File too large`) {
+    err.status = 400
+    messages.push('The image is too large')
   } else {
     err.status = 500
     messages.push('Something went wrong with server')
