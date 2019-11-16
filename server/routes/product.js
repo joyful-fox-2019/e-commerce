@@ -14,6 +14,7 @@ const upload = gcsUpload({
 
 router.get('/', ProductController.findAll)
 router.post('/', authenticate, isAdmin, upload.single('image') ,ProductController.create)
+router.get('/fav', authenticate, ProductController.getMyFav)
 router.patch('/fav/:id',authenticate, ProductController.favorite)
 router.get('/:id', ProductController.findById )
 router.patch('/:id', authenticate, isAdmin, upload.single('image'), ProductController.update)

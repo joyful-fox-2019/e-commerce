@@ -28,7 +28,7 @@ class UserController {
       .then(user => {
         if(user && comparePass(password, user.password)){
           const token = genToken({ id: user._id, role: user.role })
-          res.status(200).json({ message: 'Welcome back!', token })
+          res.status(200).json({ message: 'Welcome back!', token, id: user._id })
         } else {
           next({ status: 400, message: { message: 'Invalid email/password'}})
           // res.status(400).json({ message: 'Invalid email/password'})

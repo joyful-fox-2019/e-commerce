@@ -1,9 +1,15 @@
 <template>
-  <div>
-    <div class="product-window p-10 m-10 w-4/5">
+  <div id="product-page" class="flex-column items-center border border-blue-700" >
+    <div class="sort flex justify-center m-4 flex">
+      <div class="border hover:bg-blue-200 cursor-pointer p-2" :class="sort === 'sold' ? 'bg-green-400' : 'bg-blue-400' " @click="changeSort('sold')">Most Sold</div>
+      <div class=" border hover:bg-blue-200 cursor-pointer p-2" :class="sort === 'popular'? 'bg-green-400' : 'bg-blue-400' " @click="changeSort('popular')">Most Favorites</div>
+      <div class=" border hover:bg-blue-200 cursor-pointer p-2" :class="sort === 'cheapest'? 'bg-green-400' : 'bg-blue-400'" @click="changeSort('cheapest')">Lowest Price</div>
+      <div class=" border hover:bg-blue-200 cursor-pointer p-2" :class="sort === 'expensive'? 'bg-green-400' : 'bg-blue-400'" @click="changeSort('expensive')">Highest Price</div>
+    </div>
+    <div v-if="$route.params.id" class="product-window p-10 my-10 mx-auto w-1/2 flex justify-center border border-red-800">
       <router-view></router-view>
     </div>
-    <div class="product-list flex flex-wrap justify-around">
+    <div class="product-list flex flex-wrap justify-around my-20 mx-auto w-4/5">
       <ProductCard v-for="product in products" :key="product._id" :product="product"></ProductCard>
     </div>
   </div>
@@ -15,24 +21,49 @@ export default {
   components: {
     ProductCard
   },
+  data () {
+    return {
+      sort: ''
+    }
+  },
   computed: {
     products () {
       return this.$store.state.products
     }
   },
+  methods: {
+    changeSort (val) {
+      this.sort = val
+    },
+    fetchProducts () {
+      this.$store.dispatch('fetchProducts', { sort: this.sort })
+        .then(({ data }) => {
+          this.$store.commit('SET_PRODUCTS', data)
+        })
+        .catch(({ response }) => {
+          this.$notify({ type: 'error', text: response.data.message })
+        })
+    }
+  },
   created () {
-    this.$store.dispatch('fetchProducts')
+    this.$store.dispatch('fetchProducts', { })
       .then(({ data }) => {
         this.$store.commit('SET_PRODUCTS', data)
-        console.log(data)
       })
       .catch(({ response }) => {
         this.$notify({ type: 'error', text: response.data.message })
       })
+  },
+  watch: {
+    sort () {
+      this.fetchProducts()
+    }
   }
 }
 </script>
 
-<style>
-
+<style scoped>
+  #product-page {
+    background-color: azure;
+  }
 </style>

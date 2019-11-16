@@ -33,6 +33,7 @@ export default {
         .then(({ data }) => {
           this.$notify({ type: 'success', title: data.message })
           localStorage.setItem('token', data.token)
+          localStorage.setItem('userId', data.id)
           this.$store.commit('SET_LOGIN_STATUS', true)
           this.$router.push('/')
         })

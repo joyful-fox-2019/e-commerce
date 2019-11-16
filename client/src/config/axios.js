@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // DEVELOPMENT
-const server = 'http://localhost:3000'
+const server = 'http://192.168.1.31:3000'
 
 // DEPLOY
 // const server = 'http://bikelah.mardii.site'

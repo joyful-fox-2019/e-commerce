@@ -18,7 +18,7 @@ export default {
   props: ['product'],
   methods: {
     showDetail (id) {
-      this.$router.push(`/products/${id}`)
+      this.$router.push(`/myaccount/favorites/${id}`)
     }
   }
 }

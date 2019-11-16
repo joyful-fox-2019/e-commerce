@@ -1,5 +1,5 @@
 <template>
-  <div>ini notification</div>
+  <div class="bg-green-400 h-48">ini notification</div>
 </template>
 
 <script>

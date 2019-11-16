@@ -50,6 +50,18 @@ const router = new Router({
           path: 'notification',
           name: 'notification',
           component: () => import(/* webpackChunkName: "notification" */ './views/Notification.vue')
+        },
+        {
+          path: 'favorites',
+          name: 'favorites',
+          component: () => import(/* webpackChunkName: "favorites" */ './views/Favorites.vue'),
+          children: [
+            {
+              path: ':id',
+              name: 'favDetail',
+              component: () => import(/* webpackChunkName: 'favDetail' */ './views/ProductDetail.vue')
+            }
+          ]
         }
       ],
       beforeEnter (to, from, next) {
