@@ -38,7 +38,7 @@ class TransactionController {
       //     qty: cartData.ProductId.qty - cartData.amount
       //   })
       // })
-
+      
       if(userCartData.cart.length !== 0){
         let emptyConfirmation = []
         for(let i = 0; i < userCartData.cart.length; i++){
