@@ -1,33 +1,31 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const bcrypt = require('../helpers/bcrypt');
+const mongoose = require('mongoose')
+const { hashPassword } = require('../helpers/bcrypt')
+const Schema = mongoose.Schema
 
-const userSchema = new Schema({
-    name: {
-        type: String,
-        required: [true, 'Name can not be empty']
-    },
+const UserSchema = new Schema({
     email: {
         type: String,
-        required: [true, 'Email can not be empty'],
-        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+        unique: [true, 'Email already registered'],
+        required: [true, 'Email cant be empty']
     },
     password: {
-        type: String
+        type: String,
+        minlength: [5, 'Minimum password is 5 characters length'],
+        required: [true, 'Password cant be empty']
     },
-    isAdmin: {
-        type: Boolean,
-        default: false
+    role: {
+        type: String,
+        required: [true, 'You must choose your role']
     }
-},{
-    timestamps: true
-});
-
-userSchema.pre('save', function(next) {
-    this.password = bcrypt.generate(this.password);
-    next();
+}, {
+    versionKey: false
 })
 
-const User = mongoose.model('User', userSchema);
+UserSchema.pre('save', function(next) {
+    this.password = hashPassword(this.password)
+    next()
+})
 
-module.exports = User;
+const User = mongoose.model('Users', UserSchema)
+
+module.exports = User

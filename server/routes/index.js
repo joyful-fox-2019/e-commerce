@@ -1,10 +1,12 @@
-const router = require('express').Router();
-const UserRouter = require('../routes/users');
-const ProductRouter = require('./products');
-const CartRouter = require('./carts');
+const routes = require('express').Router()
+const UserRouter = require('./UserRouter')
+const ProductRouter = require('./ProductRouter')
+const CartRouter = require('./CartRouter')
+const { authentication }= require('../middlewares/authentication')
 
-router.use('/users', UserRouter);
-router.use('/products', ProductRouter);
-router.use('/carts', CartRouter);
+// routes.use(authentication)
+routes.use('/', UserRouter)
+routes.use('/product', authentication, ProductRouter)
+routes.use('/cart', authentication, CartRouter)
 
-module.exports = router;
+module.exports = routes

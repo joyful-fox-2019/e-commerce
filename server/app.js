@@ -1,46 +1,37 @@
-if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'){
-    require('dotenv').config();
+if (process.env.NODE_ENV == 'testing' || process.env.NODE_ENV == 'development') {
+    require('dotenv').config()
 }
 
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT;
-const mongoURI = process.env.MONGO_URI;
-console.log(mongoURI)
-const mongoose = require('mongoose');
-const cors = require('cors');
-const routes = require('./routes');
-const morgan = require('morgan');
-const { errorHandler } = require('./middlewares/errorHandler');
+const express = require('express')
+const morgan = require('morgan')
+const cors = require('cors')
+const mongoose = require('mongoose')
+const errorHandler = require('./middlewares/errorHandler')
+const router = require('./routes')
 
-app.use(express.json());
-app.use(express.urlencoded({extended: false}));
-app.use(cors());
+const app = express()
+const PORT = process.env.PORT || 3000
 
-mongoose
-    .connect(mongoURI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-        useFindAndModify: false
-    })
-    .then(_ => console.log('connected to database.'))
-    .catch(_ => console.log('database connection failed.'));
-    
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(morgan('dev'))
+app.use(cors())
 
-app.use(morgan('dev'));
-app.use('/', routes);
+const mongoConfig =  { 
+    useNewUrlParser:true, 
+    useUnifiedTopology:true, 
+    useCreateIndex:true, 
+    useFindAndModify:false
+}
 
-app.use((req, res, next) => {
-    const err = {
-        msg: 'Not Found.',
-        status: 404
-    }
-    next(err);
+mongoose.connect(process.env.MONGOOSE_URL + process.env.NODE_ENV, mongoConfig, (err) => {
+    if (err) console.log(err)
+    console.log('database connected')    
 })
 
-app.use(errorHandler);
-
-app.listen(PORT, () => console.log(`listening on port ${PORT}`));
-
+app.use('/', router)
+app.use(errorHandler)
+app.listen(PORT, () => {
+    console.log(`kamu terhubung ${PORT}`)
+})
 module.exports = app
