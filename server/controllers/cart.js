@@ -1,7 +1,11 @@
 const Cart = require('../models/cart')
+console.log('kehalaman car')
 
 class CartController {
   static find(req, res, next) {
+    // Cart.findOneAndUpdate({})
+    console.log('kesini')
+    console.log(req.loggedUser)
     Cart.find()
     .populate('user')//field mana yg akan di populate
     .populate('product')
