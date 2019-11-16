@@ -50,7 +50,7 @@ class ProductController {
       const dataProduct = await Product.findOne({ _id })
       let deleteImageData
       if(dataProduct){
-        console.log( dataProduct, "controller" )
+        // console.log( dataProduct, "controller" )
         deleteImageData = dataProduct.imgUrl
       }
       else{
@@ -61,15 +61,20 @@ class ProductController {
       //if notSame, delete the image, and replace with new link
       // PLEASE SEE THE DETAIL IN MINIWP CLIENT TO HANDLE THE CLIENT SIDE
       const { name, price, imgUrl, qty } = req.body
-      if(imgUrl && deleteImageData != imgUrl){
-        let myfile = deleteImageData.split('/')
-        const file = myBucket.file(myfile[4])
-        const deleteImgDataInGCS = await file.delete()
+      if(name && price && imgUrl && qty){
+        if(imgUrl && deleteImageData != imgUrl){
+          let myfile = deleteImageData.split('/')
+          const file = myBucket.file(myfile[4])
+          const deleteImgDataInGCS = await file.delete()
+        }
+  
+        // then VOILA! update!
+        const data = await Product.updateOne({ _id }, { name, price, imgUrl, qty })
+        res.status(200).json(data)
       }
-
-      // then VOILA! update!
-      const data = await Product.updateOne({ _id }, { name, price, imgUrl, qty })
-      res.status(200).json(data)
+      else{
+        throw { message:"Must update with valid data!",status:400 }
+      }
     }
     catch(err){
       next(err)

@@ -65,7 +65,6 @@ describe('User Routes', () => {
         .post('/users/register')
         .send(withoutName)
         .end((err,res) => {
-          console.log(res.body)
           expect(err).to.be.null
           expect(res).to.have.status(400)
           expect(res.body).to.be.an('object').to.have.any.keys('message','errors')
@@ -181,7 +180,7 @@ describe('User Routes', () => {
           done()
         })
       })
-      it('should send an error with 404 status code because invalid password', () => {
+      it('should send an error with 404 status code because invalid password', (done) => {
         const falsePassword = { ...userSignin }
         falsePassword.password = 'passwordKosasih'
         chai.request(app)
@@ -189,7 +188,7 @@ describe('User Routes', () => {
         .send(falsePassword)
         .end(function(err, res) {
           expect(err).to.be.null
-          expect(res).to.have.status(404)
+          expect(res).to.have.status(400)
           expect(res.body).to.be.an('object').to.have.any.keys('message')
           expect(res.body.message).to.equal('Invalid email/password')
           done()

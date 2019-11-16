@@ -59,7 +59,7 @@ class CartController {
       const userData = await User.updateOne({ _id, 'cart.ProductId':ProductId },{
         $set: { 'cart.$.amount' : amount }
       })
-      res.status(200).json(userData)
+      res.status(200).json({ message:'Succesfuly update amount',userData })
     }
     catch(err){
       next(err)

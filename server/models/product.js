@@ -19,7 +19,7 @@ const productSchema = new Schema({
   },
   hotProduct:{
     type: Boolean,
-    default: false
+    default: false,
   }
 },{ timestamps:true,versionKey:false })
 
