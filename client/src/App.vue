@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="" id="app">
     <Navbar/>
     <router-view/>
   </div>
@@ -16,5 +16,7 @@ export default {
 </script>
 
 <style>
-
+  body{
+    background-color: #000;
+  }
 </style>

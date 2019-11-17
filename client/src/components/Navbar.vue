@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <b-navbar toggleable="lg" type="dark" variant="dark">
+    <b-navbar class="sticky-top" toggleable="lg" type="dark" variant="dark">
       <b-navbar-brand class="ml-md-2">Dipa E-Commerce</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -36,7 +35,6 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-  </div>
 </template>
 
 <script>
