@@ -29,7 +29,7 @@
             <b-dropdown-item @click="myProduct">My Products</b-dropdown-item>
             <b-dropdown-item href="#" @click="addProduct">Add Product</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+            <b-dropdown-item href="#" @click.prevent="onLogout" >Sign Out</b-dropdown-item>
           </b-nav-item-dropdown>
           <b-nav-item v-if="!isLogin" href="#" @click.prevent="goLogin">Login</b-nav-item>
         </b-navbar-nav>
@@ -72,6 +72,11 @@ export default {
     Icon
   },
   methods: {
+    onLogout(){
+      localStorage.clear();
+      this.$store.commit('loginFalse');
+      this.$router.push('/')
+    },
     goLogin () {
       this.$router.push('/login')
     },
