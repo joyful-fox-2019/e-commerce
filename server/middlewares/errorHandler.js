@@ -15,6 +15,8 @@ module.exports = (err, req, res, next) => {
     field = field.substring(0, 1).toUpperCase() + field.substring(1)
     if(field === 'Email') {
       messages.push(`${field} is already registered`)
+    } else if(field === 'Product') {
+      messages.push(`This comic is already in your cart`)
     } else {
       messages.push(`${field} is already exist`)
     }

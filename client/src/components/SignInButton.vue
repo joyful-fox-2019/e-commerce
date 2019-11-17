@@ -4,7 +4,7 @@
       <template v-slot:activator="{ on }">
         <div class="hidden-sm-and-down">
           <v-btn v-if="!$store.state.user._id" @click="setForm('login')" class="bg-surface nav-button" dark v-on="on">SIGN IN</v-btn>
-          <v-btn v-if="$store.state.user._id" @click="signout" class="bg-surface nav-button" dark>SIGN OUT</v-btn>
+          <v-btn v-if="$store.state.user._id" @click="logout" class="bg-surface nav-button" dark>SIGN OUT</v-btn>
         </div>
         <v-toolbar-items class="hidden-md-and-up">
           <v-menu offset-y>
@@ -17,7 +17,7 @@
               <v-list-item>
                 <v-list-item-title>
                   <v-btn v-if="!$store.state.user._id" @click="setForm('login')" class="bg-surface nav-button" dark v-on="on">SIGN IN</v-btn>
-                  <v-btn v-if="$store.state.user._id" @click="signout" class="bg-surface nav-button" dark>SIGN OUT</v-btn>
+                  <v-btn v-if="$store.state.user._id" @click="logout" class="bg-surface nav-button" dark>SIGN OUT</v-btn>
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -58,17 +58,8 @@ export default {
     setForm (form) {
       this.form = form
     },
-    signout () {
-      let user = {
-        _id: '',
-        name: '',
-        isAdmin: false
-      }
-      this.$store.commit('SET_USER', user)
-      localStorage.removeItem('_id')
-      localStorage.removeItem('name')
-      localStorage.removeItem('isAdmin')
-      localStorage.removeItem('access_token')
+    logout () {
+      this.$store.dispatch('logout')
     }
   }
 }

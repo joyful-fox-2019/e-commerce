@@ -26,10 +26,14 @@ export default {
     localStorage.getItem('_id') &&
     localStorage.getItem('name') &&
     localStorage.getItem('isAdmin')) {
+      let isAdmin = false
+      if (localStorage.getItem('isAdmin') === 'true') {
+        isAdmin = true
+      }
       let user = {
         _id: localStorage.getItem('_id'),
         name: localStorage.getItem('name'),
-        isAdmin: true
+        isAdmin
       }
       this.$store.commit('SET_USER', user)
     }

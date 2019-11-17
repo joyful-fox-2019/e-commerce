@@ -31,7 +31,8 @@ export default new Vuex.Store({
       published: new Date(),
       writer: '',
       penciler: ''
-    }
+    },
+    addCartDialog: false
   },
   mutations: {
     SET_USER (state, payload) {
@@ -51,6 +52,9 @@ export default new Vuex.Store({
     },
     SET_PRODUCT (state, payload) {
       state.product = payload
+    },
+    SET_ADD_CART_DIALOG (state, payload) {
+      state.addCartDialog = payload
     }
   },
   actions: {
@@ -70,6 +74,7 @@ export default new Vuex.Store({
           localStorage.setItem('isAdmin', user.isAdmin)
           localStorage.setItem('access_token', data.access_token)
           commit('SET_AUTH_DIALOG', false)
+          alertSuccess('You are logged in!')
         })
         .catch(alert)
     },
@@ -92,6 +97,20 @@ export default new Vuex.Store({
           alertSuccess('You are logged in!')
         })
         .catch(alert)
+    },
+    logout ({ commit }, payload) {
+      let user = {
+        _id: '',
+        name: '',
+        isAdmin: false
+      }
+      commit('SET_USER', user)
+      localStorage.removeItem('_id')
+      localStorage.removeItem('name')
+      localStorage.removeItem('isAdmin')
+      localStorage.removeItem('access_token')
+      router.push('/')
+      alertSuccess('You are logged out!')
     },
     addProduct ({ commit }, payload) {
       commit('SET_LOADING', true)
@@ -159,6 +178,19 @@ export default new Vuex.Store({
         .then(({ data }) => {
           console.log(data)
           commit('SET_PRODUCT', data)
+          // commit('SET_LOADING', false)
+        })
+        .catch(alert)
+    },
+    addToCart ({ commit }, payload) {
+      axios.post(`/carts`, payload, {
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          commit('SET_ADD_CART_DIALOG', true)
           // commit('SET_LOADING', false)
         })
         .catch(alert)
