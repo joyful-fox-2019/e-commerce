@@ -15,9 +15,11 @@ let userSignin = {
 }
 
 let newProduct = {
-  name: 'book',
-  price: 5000,
-  image: 'image'
+  name: 'caramel2',
+  price: 20000,
+  image: 'image',
+  stock: 1000,
+  category: 'Macarons'
 }
 let initialProduct = {}
 let adminToken = ''
@@ -43,9 +45,11 @@ before(function(done) {
 
       console.log('success generate token')
       return Product.create({
-        name: 'pen',
-        price: 2000,
-        image: 'image'
+        name: 'caramel',
+        price: 20000,
+        image: 'image',
+        stock: 200,
+        category: 'Macarons'
       })
     })
     .then(product => {
@@ -82,7 +86,7 @@ describe('Products CRUD', function() {
   })
   describe('POST /products', function() {
     describe('success process', function() {
-      it('should send an object (_id, name, price, image) with 201 status code', function(done) {
+      it('should send an object (_id, name, price, image, stock, category) with 201 status code', function(done) {
         chai.request(app)
         .post('/products')
         .send(newProduct)
@@ -90,8 +94,14 @@ describe('Products CRUD', function() {
         .end(function(err, res) {
           expect(err).to.be.null
           expect(res).to.have.status(201)
-          expect(res.body).to.be.an('object').to.have.any.keys('_id', 'name', 'price', 'image')
-          expect(res.body).to.includes({ name: newProduct.name, price: newProduct.price, image: newProduct.image})
+          expect(res.body).to.be.an('object').to.have.any.keys('_id', 'name', 'price', 'image', 'stock', 'category')
+          expect(res.body).to.includes({ 
+            name: newProduct.name, 
+            price: newProduct.price, 
+            image: newProduct.image,
+            stock: newProduct.stock,
+            category: newProduct.category
+          })
           done()
         })
       })
@@ -137,6 +147,37 @@ describe('Products CRUD', function() {
           expect(res).to.have.status(422)
           expect(res.body).to.be.an('object').to.have.any.keys('message')
           expect(res.body.message).to.be.an('array').that.includes('Price can not be empty')
+          done()
+        })
+      })
+      it('should send an error with 422 status code because missing stock value', function(done) {
+        const withoutStock = { ...newProduct }
+        delete withoutStock.stock
+        chai.request(app)
+        .post('/products')
+        .send(withoutStock)
+        .set('authorization', adminToken)
+        .end(function(err, res) {
+          console.log(err)
+          expect(err).to.be.null
+          expect(res).to.have.status(422)
+          expect(res.body).to.be.an('object').to.have.any.keys('message')
+          expect(res.body.message).to.be.an('array').that.includes('Stock can not be empty')
+          done()
+        })
+      })
+      it('should send an error with 422 status code because missing category value', function(done) {
+        const withoutCat = { ...newProduct }
+        delete withoutCat.category
+        chai.request(app)
+        .post('/products')
+        .send(withoutCat)
+        .set('authorization', adminToken)
+        .end(function(err, res) {
+          expect(err).to.be.null
+          expect(res).to.have.status(422)
+          expect(res.body).to.be.an('object').to.have.any.keys('message')
+          expect(res.body.message).to.be.an('array').that.includes('Category can not be empty')
           done()
         })
       })
@@ -204,7 +245,14 @@ describe('Products CRUD', function() {
           expect(err).to.be.null
           expect(res).to.have.status(200)
           expect(res.body).to.be.an('object').to.have.any.keys('_id', 'name', 'price', 'image')
-          expect(res.body).to.includes({ _id: String(initialProduct._id), name: initialProduct.name, price: initialProduct.price, image: initialProduct.image})
+          expect(res.body).to.includes({ 
+            _id: String(initialProduct._id), 
+            name: initialProduct.name, 
+            price: initialProduct.price, 
+            image: initialProduct.image,
+            stock: initialProduct.stock,
+            category: initialProduct.category,
+          })
           done()
         })
       })

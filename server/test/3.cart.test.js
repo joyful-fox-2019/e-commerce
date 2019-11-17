@@ -16,9 +16,11 @@ let userSignin = {
 }
 
 let newProduct = {
-  name: 'book',
-  price: 5000,
-  image: 'image'
+  name: 'caramel',
+  price: 20000,
+  image: 'image',
+  stock: 200,
+  category: 'Macarons'
 }
 let initialProduct = {}
 let userToken = ''
@@ -35,6 +37,9 @@ after(function(done) {
         return User.deleteMany({})
       })
       .then(_ => {
+        return Cart.deleteMany({})
+      })
+      .then(_ => {
         console.log('testing: delete data user success!')
         done()
       })
@@ -47,9 +52,11 @@ describe('carts CRUD', function() {
   before(function(done){
     
     Product.create({
-        name: 'pen',
-        price: 2000,
-        image: 'image'
+      name: 'caramel',
+      price: 20000,
+      image: 'image',
+      stock: 200,
+      category: 'Macarons'
     })
     .then( product => {
         initialProduct = product;
@@ -72,7 +79,7 @@ describe('carts CRUD', function() {
   })
   describe('POST /carts', function() {
     describe('success process', function() {
-      it('should send an object (_id, UserId, ProductId) with 201 status code', function(done) {
+      it('should send an object (_id, UserId, ProductId, isActive) with 201 status code', function(done) {
         chai.request(app)
         .post('/carts')
         .send(newCart)
@@ -81,7 +88,7 @@ describe('carts CRUD', function() {
           createdCart = res.body;
           expect(err).to.be.null
           expect(res).to.have.status(201)
-          expect(res.body).to.be.an('object').to.have.any.keys('_id', 'UserId', 'ProductId')
+          expect(res.body).to.be.an('object').to.have.any.keys('_id', 'UserId', 'ProductId', 'isActive')
           expect(res.body).to.includes({ UserId: newCart.UserId })
           expect(res.body.ProductId).to.be.an('array')
           done()

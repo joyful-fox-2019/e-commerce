@@ -9,12 +9,14 @@ class ProductController {
             }
             next(err);
         } else {
-            const { name, price, image } = req.body;
+            const { name, price, image, category, stock } = req.body;
             Product
                 .create({
                     name,
                     price,
-                    image
+                    image,
+                    category,
+                    stock
                 })
                 .then( product => {
                     res.status(201).json(product);

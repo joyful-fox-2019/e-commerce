@@ -62,8 +62,11 @@ class UserController {
                 if(user) {
                     if (bcrypt.compare(password, user.password)) {
                         let token = session.encode({id: user.id, email: user.email, isAdmin: user.isAdmin});
-                        
-                        res.status(200).json({token});
+                        res.status(200).json({
+                            token,
+                            name: user.name,
+                            email: user.email
+                        });
                     } else {
                         let err = {
                             status: 404,

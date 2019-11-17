@@ -10,6 +10,14 @@ const productSchema = new Schema({
         type: Number,
         required: [true, 'Price can not be empty']
     },
+    stock: {
+        type: Number,
+        required: [true, 'Stock can not be empty']
+    },
+    category: {
+        type: String,
+        required: [true, 'Category can not be empty']
+    },
     image: String
 },{
     timestamps: true

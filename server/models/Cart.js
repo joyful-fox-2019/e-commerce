@@ -6,7 +6,11 @@ const cartSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    ProductId: [ Schema.Types.ObjectId ]
+    ProductId: [ Schema.Types.ObjectId ],
+    isActive: {
+        type: Boolean,
+        default: true
+    }
 },{
     timestamps: true
 });

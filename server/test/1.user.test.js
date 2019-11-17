@@ -19,7 +19,6 @@ let userSignin = {
 
 // middleware testing
 before(function() {
-  console.log("===================2s")
   const data = {
     name: 'kakashi',
     email: 'kakashi@gmail.com',
@@ -66,7 +65,6 @@ describe('User Routes', function() {
         .post('/users/signup')
         .send(userWithoutName)
         .end(function(err, res) {
-            console.log(res.body, "ini message")
           expect(err).to.be.null
           expect(res).to.have.status(422)
           expect(res.body).to.be.an('object').to.have.any.keys('message')
