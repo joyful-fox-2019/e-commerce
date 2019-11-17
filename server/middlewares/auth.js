@@ -8,6 +8,7 @@ module.exports = {
   authentication (req, res, next) {
     try {
       if(req.headers.token) {
+        console.log(req.headers.token)
         const decode = decodeToken(req.headers.token);
         User.findOne({ email: decode.email })
           .then(user => {
@@ -15,7 +16,7 @@ module.exports = {
               req.loggedUser = decode;
               next()
             } else {
-              next({ status: 400, msg: 'bad request' })
+              next({ status: 400, msg: 'Invalid Token' })
             }
           })
       } else {
@@ -26,25 +27,8 @@ module.exports = {
       next(err)
     }
   },
-  confirmTransaction (req, res, next) {
-    try {
-      Transaction.findById(req.params.id)
-        .then(transaction => {
-          if(transaction.UserId == req.loggedUser.id) {
-            next()
-          } else {
-            next({status: 400, msg: 'dont have access'})
-          }
-        })
-        .catch(next)
-    }
-    catch(err){
-      next(err)
-    }
-  },
   updateStatusTransaction (req, res, next) {
     try{
-      console.log(req.params.id)
       Transaction.findById(req.params.id)
         .then(transaction => {
           if(transaction.confirm) {
@@ -86,6 +70,25 @@ module.exports = {
         .then(cart => {
           req.CartId = cart
           next()
+        })
+        .catch(next)
+    }
+    catch(err){
+      next(err)
+    }
+  },
+  isAdmin (req, res, next) {
+    try {
+      console.log('masuk middlewar isAdmin')
+      console.log(req.loggedUser)
+      User.findById(req.loggedUser.id)
+        .then(user => {
+          console.log(user)
+          if(user.role == 'admin') {
+            next()
+          } else {
+            next({status: 400, msg: 'dont have access'})
+          }
         })
         .catch(next)
     }

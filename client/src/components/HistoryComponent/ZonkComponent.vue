@@ -1,13 +1,13 @@
 <template>
   <div class='imageZonk'>
-    <h3 class="textZonk">OOPS. There is no process here</h3>
+    <h3 class="textZonk">OOPS. There is no {{action}} here</h3>
     <img src='https://images-na.ssl-images-amazon.com/images/I/61BgBdxg9DL._SY355_.png'>
   </div>
 </template>
 
 <script>
 export default {
-
+  props: ['action']
 }
 </script>
 

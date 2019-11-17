@@ -58,6 +58,7 @@ describe('UserRoutes', function () {
           .post(link)
           .send(newUser)
           .end(function(err,res) {
+            console.log('masuk')
             expect(err).to.be.null
             expect(res).to.have.status(201)
             expect(res.body).to.be.an('object').to.have.any.keys('user', 'token', 'msg')
@@ -258,7 +259,7 @@ describe('UserRoutes', function () {
   //           done()
   //         })
   //     })
-  //     it('should send an error with 400 because invalid token', function (done) {
+  //     it('should send an error with 400 because Authentication Error', function (done) {
   //       chai.request(app)
   //         .post(link)
   //         .send(email)
@@ -267,7 +268,7 @@ describe('UserRoutes', function () {
   //           expect(err).to.be.null;
   //           expect(res).to.have.status(400)
   //           expect(res.body).to.be.an('object').to.have.any.keys('msg')
-  //           expect(res.body.msg).to.equal('Invalid Token')
+  //           expect(res.body.msg).to.equal('Authentication Error')
   //           done()
   //         })
   //     })
@@ -289,8 +290,96 @@ describe('UserRoutes', function () {
   // })
 
 
+  describe('GET /users', function () {
+    let link ='/users'
+    describe('success process', function () {
+      it('should send an object (user, msg) with 200 status code', function (done) {
+        chai.request(app)
+          .get(link)
+          .set('token', initialToken)
+          .end(function (err,res) {
+            expect(err).to.be.null;
+            expect(res).to.have.status(200)
+            expect(res.body).to.be.an('object').to.have.any.keys('user', 'msg')
+            expect(res.body.msg).to.equal('Online')
+            done()
+          })
+      })
+    })
+
+    describe('error process', function () {
+      it('should send an error with 400 status code because Authentication Error', function(done) {
+        chai.request(app)
+          .get(link)
+          .set('token', falseToken)
+          .end(function (err,res) {
+            expect(err).to.be.null
+            expect(res).to.have.status(400)
+            expect(res.body).to.be.an('object').to.have.any.keys('msg')
+            expect(res.body.msg).to.equal('Authentication Error')
+            done()
+          })
+      })
+      it('should send an error with status 403 because token is undefined', function (done) {
+        chai.request(app)
+          .get(link)
+          .end(function (err,res) {
+            expect(err).to.be.null
+            expect(res).to.have.status(403)
+            expect(res.body).to.be.an('object').to.have.any.keys('msg')
+            expect(res.body.msg).to.equal('Authentication Error')
+            done()
+          })
+      })
+    })
+  })
 
 
+  describe('PATCH /users/upload', function () {
+    let link = '/users/upload'
+    describe('success process', function () {
+      it('Should return status 201 after success creating product', function (done) {
+        chai.request(app)
+            .patch(link)
+            .set('token', initialToken)
+            .attach('image', '../newslRoadster.jpg')
+            .end(function (err, res) {
+                expect(err).to.be.null
+                expect(res).to.have.status(201)
+                expect(res).to.be.an('object').to.have.any.keys('user', 'msg')
+                expect(res.body.msg).to.equal('uploading success')
+                done()
+            })
+      })
+    })
+    describe('error process', function () {
+      it('Should send error with 400 status code because token is undefined', function (next) {
+        chai.request(app)
+          .patch(link)
+          .attach('image', '../newslRoadster.jpg')
+          .end(function (err,res) {
+            expect(err).to.be.null
+            expect(res).to.have.status(403)
+            expect(res.body).to.be.an('object').to.have.any.keys('msg')
+            expect(res.body.msg).to.equal('Authentication Error')
+            done()
+          })
+      })
+      it('should send an error with 400 status code because Authentication Error', function(next) {
+        chai.request(app)
+          .patch(link)
+          .attach('image', '../newslRoadster.jpg')
+          .set('token', falseToken)
+          .end(function (err,res) {
+            expect(err).to.be.null
+            expect(res).to.have.status(400)
+            expect(res.body).to.be.an('object').to.have.any.keys('msg')
+            expect(res.body.msg).to.equal('Authentication Error')
+            done()
+          })
+      })
+    })
+  })
 
   const updateAddress = {
     address: 'jl.radial'
@@ -307,7 +396,7 @@ describe('UserRoutes', function () {
             expect(err).to.be.null
             expect(res).to.have.status(201)
             expect(res.body).to.be.an('object').to.have.any.keys('user')
-            expect(res.body.user.address).to.equal(updateAddress.address)
+            expect(res.body.user.address).that.includes(updateAddress.address)
             done()
           })
       })
@@ -339,7 +428,7 @@ describe('UserRoutes', function () {
             done()
           })
       })
-      it('should send an error with status 400 because invalid token', function (done) {
+      it('should send an error with status 400 because Authentication Error', function (done) {
         chai.request(app)
           .patch(link)
           .send(updateAddress)
@@ -348,7 +437,7 @@ describe('UserRoutes', function () {
             expect(err).to.be.null
             expect(res).to.have.status(400)
             expect(res.body).to.be.an('object').to.have.any.keys('msg')
-            expect(res.body.msg).to.equal('Invalid Token')
+            expect(res.body.msg).to.equal('Authentication Error')
             done()
           })
       })
@@ -392,7 +481,7 @@ describe('UserRoutes', function () {
   //           done()
   //         })
   //     })
-  //     it('should send an error with status 400 because invalid token', function (done) {
+  //     it('should send an error with status 400 because Authentication Error', function (done) {
   //       chai.request(app)
   //         .patch(link)
   //         .send(verifyCode)
@@ -401,7 +490,7 @@ describe('UserRoutes', function () {
   //           expect(err).to.be.null
   //           expect(res).to.have.status(400)
   //           expect(res.body).to.be.an('object').to.have.any.keys('msg')
-  //           expect(res.body.msg).to.equal('Invalid Token')
+  //           expect(res.body.msg).to.equal('Authentication Error')
   //           done()
   //         })
   //     })

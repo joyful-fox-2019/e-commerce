@@ -178,6 +178,10 @@ export default {
         .catch(err => {
           this.awn.warning(err)
         })
+        
+      setTimeout(() => {
+        this.$store.dispatch('checkSignIn')
+      }, 2000);
     }
   }
 

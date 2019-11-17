@@ -108,137 +108,140 @@
 import axios from '@/apis/server.js'
 
 export default {
-    data() {
-      return {
-        username: null,
-        email: null,
-        passwordSignup: null,
-        request: null,
-        password: null,
-        isSignin: false
-      }
+  data() {
+    return {
+      username: null,
+      email: null,
+      passwordSignup: null,
+      request: null,
+      password: null,
+      isSignin: false,
+    }
+  },
+  methods: {
+    toCartPage () {
+      this.$router.push({ name: 'cart' });
     },
-    methods: {
-      toCartPage () {
-        this.$router.push({ name: 'cart' });
-      },
-      goMain () {
-        this.$router.push('/home');
-      },
-      signout () {
-        localStorage.removeItem('token')
-        this.goMain();
-        this.$awn.success(`See you again ${this.$store.state.userSignin.username}`)
-        setTimeout(() => {
-          this.$store.commit('SIGN_OUT')
-          this.isSignin = false
-        }, 1000);
-      },
-      signin () {
-        this.$awn.asyncBlock(
-          this.signinAction(),
-          null
-        )
-          .then(msg => {
-            setTimeout(() => {
-              this.$awn.success(msg)
-              this.isSignin = true;
-            }, 2000);
-          })
-          .catch(err => {
-            this.$awn.warning(err)
-          })
-      },
-      signup () {
-        this.$awn.asyncBlock(
-          this.signupAction(),
-          null
-        )
-          .then(msg => {
-            setTimeout(() => {
-              this.$awn.success(msg)
-            }, 1000);
-          })
-          .catch(err => {
-            this.$awn.warning(err)
-          })
-      },
-      signinAction () {
-        return new Promise ((resolve, reject) => {
-          axios({
-            method: 'post',
-            url: '/users/signin',
-            data: {
-              request: this.request,
-              password: this.password
-            }
-          })
-            .then(({data}) => {
-              localStorage.setItem('token', data.token)
-              setTimeout(() => {
-                this.$store.dispatch('checkSignIn')
-                this.request = '';
-                this.password = ''
-              }, 1000);
-              resolve(data.msg)
-            })
-            .catch(err => {
-              this.$awn.warning(err.response.data.msg)
-              reject(err.response.data.msg)
-            })
-        })
-      },
-      signupAction () {
-        return new Promise ((resolve, reject) => {
-          axios({
-            method: 'post',
-            url: '/users/signup',
-            data: {
-              username: this.username,
-              email: this.email,
-              password: this.passwordSignup
-            }
-          })
-            .then(({data}) => {
-              localStorage.setItem('token', data.token)
-              setTimeout(() => {
-                this.$store.dispatch('checkSignin')
-                this.username = '';
-                this.email = '';
-                this.passwordSignup = '';
-              }, 1000);
-              resolve(data.msg)
-            })
-            .catch(err => {
-              reject(err.response.data.msg)
-            })
-        })
-      }
+    goMain () {
+      this.$router.push('/home');
     },
-    watch: {
-      isSignin: {
-        handler (val) {
-          this.isSignin = val
-        }
-      },
-      userCart: {
-        handler (val) {
-          if(val) {
-            this.userCart = val;
+    signout () {
+      localStorage.removeItem('token')
+      this.goMain();
+      this.$awn.success(`See you again ${this.$store.state.userSignin.username}`)
+      setTimeout(() => {
+        this.$store.commit('SIGN_OUT')
+        this.isSignin = false
+      }, 1000);
+    },
+    signin () {
+      this.$awn.asyncBlock(
+        this.signinAction(),
+        null
+      )
+        .then(msg => {
+          setTimeout(() => {
+            this.$awn.success(msg)
+            this.isSignin = true;
+          }, 2000);
+        })
+        .catch(err => {
+          this.$awn.warning(err)
+        })
+    },
+    signup () {
+      this.$awn.asyncBlock(
+        this.signupAction(),
+        null
+      )
+        .then(msg => {
+          setTimeout(() => {
+            this.$awn.success(msg)
+          }, 1000);
+        })
+        .catch(err => {
+          this.$awn.warning(err)
+        })
+    },
+    signinAction () {
+      return new Promise ((resolve, reject) => {
+        axios({
+          method: 'post',
+          url: '/users/signin',
+          data: {
+            request: this.request,
+            password: this.password
           }
-        }
-      }
+        })
+          .then(({data}) => {
+            localStorage.setItem('token', data.token)
+            setTimeout(() => {
+              this.$store.dispatch('checkSignIn')
+              this.request = '';
+              this.password = ''
+            }, 1000);
+            resolve(data.msg)
+          })
+          .catch(err => {
+            this.$awn.warning(err.response.data.msg)
+            reject(err.response.data.msg)
+          })
+      })
     },
-    computed: {
-      userCart () {
+    signupAction () {
+      return new Promise ((resolve, reject) => {
+        axios({
+          method: 'post',
+          url: '/users/signup',
+          data: {
+            username: this.username,
+            email: this.email,
+            password: this.passwordSignup
+          }
+        })
+          .then(({data}) => {
+            localStorage.setItem('token', data.token)
+            setTimeout(() => {
+              this.$store.dispatch('checkSignin')
+              this.username = '';
+              this.email = '';
+              this.passwordSignup = '';
+            }, 1000);
+            resolve(data.msg)
+          })
+          .catch(err => {
+            reject(err.response.data.msg)
+          })
+      })
+    }
+  },
+  computed: {
+    userCart () {
+      if(this.$store.state.userCart.product) {
         return this.$store.state.userCart.product.length
       }
-    },
-    created () {
-      setTimeout(() => {
-        this.isSignin = this.$store.state.isSignin
-      }, 1000);
     }
+  },
+  watch: {
+    isSignin: {
+      handler (val) {
+        this.isSignin = val
+      }
+    },
+    userCart: {
+      handler (val) {
+        if(val) {
+          this.userCart = val;
+        }
+      }
+    }
+  },
+  created () {
+    setTimeout(() => {
+      this.isSignin = this.$store.state.isSignin
+    }, 3000);
+    console.log(this.$store.state.userCart.product.length)
+  }
 }
 </script>
 

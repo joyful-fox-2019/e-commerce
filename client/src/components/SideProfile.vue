@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="profile">
-      <div class="topProfile border">
+      <div class="topProfile ">
         <div class="imgProfile">
           <img :src='image'>
         </div>
@@ -9,14 +9,14 @@
           <h3 class='textProfile' @click='profilePage'>{{ name }}</h3>
         </div>
       </div>
-      <div class="footProfile mt-4 border">
+      <div class="footProfile mt-4 ">
         <div class="nostore" v-if='!store'>
           <small>You don't have a store yet</small>
           <router-link to='/store/create'><button class="btn btn-success btnStore btn-sm">Open Shop</button></router-link>
           <small><v-icon name='bar-chart' class='vicon'></v-icon>Make a store for free</small>
         </div>
       </div>
-      <div class='storeProfile border' v-if='store'>
+      <div class='storeProfile ' v-if='store'>
         <div class="topProfile">
           <div class="nostore">
             <div class="imgProfile">
@@ -31,7 +31,7 @@
           <small>Location: </small>{{store.location}}
         </div>
       </div>
-      <div class="border mt-3">
+      <div class=" mt-3">
         <h5>My Profile </h5>
         <div class='mt-2 ml-3'>
           <b-button class='link' @click='seeWishList' style='width: 180px'>
@@ -45,13 +45,13 @@
           </b-button>
         </div>
       </div>
-      <div class="border mt-3" v-if='store'>
-        <h5>My Store</h5>
+      <div class=" mt-3" v-if='store'>
+        <h5>My Store</h5> {{pageAdmin}}
         <div class='mt-2 ml-3'>
           <router-link to='/product/create' class='link'><v-icon name='plus' class='vicon'></v-icon>Create Product</router-link>
         </div>
-        <div class='mt-2 ml-3'>
-          Admin Page
+        <div class='mt-2 ml-3' v-if='pageAdmin'>
+          <router-link to='/admin/list'>Admin Page</router-link>
         </div>
       </div>
     </div>
@@ -60,6 +60,11 @@
 
 <script>
 export default {
+  data () {
+    return {
+      pageAdmin: false
+    }
+  },
   methods: {
     seeHistory () {
       this.$router.push('/history/list')
@@ -118,7 +123,11 @@ export default {
     }
   },
   created () {
-    console.log(this.$store.state.userSignin)
+    setTimeout(() => {
+      if(this.userr.role == 'admin') {
+        this.pageAdmin = true;
+      }
+    }, 1000);
   }
 }
 </script>

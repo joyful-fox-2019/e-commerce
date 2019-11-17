@@ -29,7 +29,8 @@ module.exports = {
   },
   getOwnerStore (req, res, next) {
     const Owner = req.loggedUser.id;
-    Store.findOne({ Owner }).populate('ProductId')
+    Store.findOne({ Owner })
+      .populate('ProductId')
       .then(store => {
         if(!store) next({status: 404, msg: 'You no have shop'})
         else res.status(200).json({ store })

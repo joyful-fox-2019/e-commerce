@@ -45,6 +45,20 @@ const sendUploadToGCS = (req, res, next) => {
   stream.end(req.file.buffer)
 }
 
+async function deleteFileFromGCS(url) {
+  if (!url) return
+  let filename = url.split('/').pop()
+  try {
+    await storage
+      .bucket(CLOUD_BUCKET)
+      .file(filename)
+      .delete()
+  }
+  catch (err) {
+    throw err
+  }
+}
+
 const Multer = require('multer'),
       multer = Multer({
         storage: Multer.MemoryStorage,
@@ -57,5 +71,6 @@ const Multer = require('multer'),
 module.exports = {
   getPublicUrl,
   sendUploadToGCS,
-  multer
+  multer,
+  deleteFileFromGCS
 }

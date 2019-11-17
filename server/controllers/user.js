@@ -51,8 +51,9 @@ module.exports = {
     const { address } = req.body;
     if(!address) next({status: 400, msg:'cannot send empty value address' })
     else {
-      User.findByIdAndUpdate(req.loggedUser.id, { address }, {new: true})
+      User.findByIdAndUpdate(req.loggedUser.id, { $push: { address } }, {new: true})
         .then(user => {
+          console.log(user)
           res.status(201).json({user})
         })
         .catch(next)
@@ -94,7 +95,7 @@ module.exports = {
   },
   getLogin (req, res, next) {
     const id = req.loggedUser.id;
-    User.findById(id).populate('History').populate('WishList').populate('StoreId')
+    User.findById(id).populate('History').populate('WishList').populate({path: 'StoreId', model: 'stores', populate: {path: 'ProductId', model: 'products'}})
       .then(user => {
         if(!user) next({status: 400, msg: 'bad request'})
         else {

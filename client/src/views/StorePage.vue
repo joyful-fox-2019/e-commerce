@@ -1,7 +1,7 @@
 <template>
 <div>
     <img :src="storeP.background_image" alt="" class='imageA'>
-  <div class='container contentContainer border'>
+  <div class='container contentContainer'>
     <div class='mt-3' v-if='status'>
       <b-alert show variant="success">
         <h4 class="alert-heading">Your account has been verified</h4>
@@ -11,7 +11,7 @@
       </b-alert>
     </div>
 
-    <div class="card border cardStore mt-5">
+    <div class="card cardStore mt-5">
       <div class='col-2'>
         <img :src="storeP.store_image" alt="">
       </div>
@@ -26,11 +26,15 @@
       </div>
       <div class="col-5">
         <div>
-          {{ storeP }}
         </div>
-        <div>
-          {{ storeP }}
+        <div style='display: flex; justify-content: center; align-items: center; height: 5vw; width: 100%; font-size: 30px'>
+          Welcome {{ userO.username }}
         </div>
+      </div>
+    </div>
+    <div class="card cardStore2 mt-5">
+      <div v-for='(product, i) in storeP.ProductId' :key='i'>
+        <ProductComponentStore :get-product='product'></ProductComponentStore>
       </div>
     </div>
   </div>
@@ -38,13 +42,27 @@
 </template>
 
 <script>
+import ProductComponentStore from '@/components/ProductComponent/ProductComponentStore.vue'
+
 export default {
+  components: {
+    ProductComponentStore
+  },
   computed: {
     storeP () {
       return this.$store.state.userStore
     },
     userO () {
       return this.$store.state.userSignin
+    }
+  },
+  watch: {
+    storeP: {
+      handler (val){
+        if(val) {
+          this.storeP = val
+        }
+      }
     }
   }
 }
@@ -64,6 +82,14 @@ export default {
   height: 8vw;
   display: flex;
   flex-direction: row;
+}
+.cardStore2 {
+  border-radius: 20px;
+  height: 39vw;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: auto
 }
 .cardStore img {
   width: 6vw;

@@ -1,6 +1,6 @@
 <template>
   <div id='product'>
-    <div class="headProduct border">
+    <div class="headProduct">
         <textra :data='words' :timer="3.1" :infinite='true' filter="scale"/>
     </div>
     <div class='card mt-3'>
@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-      <div class="card border mt-3" id='nestedMainPage'>
+      <div class="card mt-3" id='nestedMainPage'>
         <router-view />
       </div>
   </div>

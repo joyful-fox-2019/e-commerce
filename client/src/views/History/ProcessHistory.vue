@@ -20,7 +20,7 @@
     </div>
   </div>
   <div v-else >
-    <ZonkComponent />
+    <ZonkComponent :action='nameAction'/>
   </div>
 </div>
 </template>
@@ -70,6 +70,9 @@ export default {
   computed: {
     history () {
       return this.$store.state.userSignin.History
+    },
+    nameAction () {
+      return this.$route.name
     }
   },
   created () {

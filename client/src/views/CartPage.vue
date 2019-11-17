@@ -1,7 +1,7 @@
 <template>
-  <div class="container cartPage border">
+  <div class="container cartPage ">
     <div class="cartPage">
-      <div class="col-9 border">
+      <div class="col-9 ">
         
         <div class="title">
           <b-alert variant="success" show>check your groceries</b-alert>
@@ -14,7 +14,7 @@
 
 
       </div>
-      <div class="col-3 border">
+      <div class="col-3 ">
         <div class="container2">
           <div class="row valign-wrapper">
             <div class="col s6 offset-s3 valign">
@@ -78,7 +78,15 @@ export default {
         'Creating Transaction'
       )
         .then(transaction => {
+          console.log('ini dari transaction')
+          console.log(transaction)
           this.getTransaction = transaction;
+          return this.$store.dispatch('getUserCart')
+        })
+        .then(() => {
+          return this.$store.dispatch('checkSignIn')
+        })
+        .then(() => {
           setTimeout(() => {
             this.showModal()
           }, 1000);
@@ -123,6 +131,13 @@ export default {
       handler (val) {
         if(val) {
           this.status = val;
+        }
+      }
+    },
+    carts: {
+      handler (val) {
+        if(val) {
+          this.carts = val
         }
       }
     }

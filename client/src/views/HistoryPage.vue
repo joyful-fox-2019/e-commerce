@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="headStatus border mt-2 ml-2">
+    <div class="headStatus mt-2 ml-2">
       <div class="filter">
         <button class="btn-outline-primary btn-md btn" @click='stayTransaction'>All</button>
         <button class="btn-outline-primary btn-md btn ml-4" @click='sendNestedTransaction("confirm")'>Wait Confirm</button>
@@ -8,7 +8,7 @@
         <button class="btn-outline-primary btn-md btn ml-4" @click='sendNestedTransaction("sent")'>Received</button>
       </div>
     </div>
-    <div class="bodyHistory mt-3 ml-2 border">
+    <div class="bodyHistory mt-3 ml-2">
       <router-view />
     </div>
   </div>

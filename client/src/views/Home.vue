@@ -1,8 +1,8 @@
 <template>
   <div class="home">
-    <div class="container border">
+    <div class="container">
       <div class="mainPage">
-        <div class="col-2 border side" v-if='signin'>
+        <div class="col-2 side" v-if='signin'>
           <SideProfile />
         </div>
         <div :class='bar' class='rightside'>
@@ -38,9 +38,9 @@ export default {
     signin: {
       handler (val) {
         if(!val) {
-          this.bar = 'col-12 border';
+          this.bar = 'col-12';
         } else {
-          this.bar = 'col-10 border'
+          this.bar = 'col-10'
         }
       }
     }

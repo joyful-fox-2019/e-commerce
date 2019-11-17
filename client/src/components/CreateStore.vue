@@ -79,7 +79,7 @@ export default {
         .then(msg => {
           setTimeout(() => {
             this.$awn.success(msg);
-            this.$router.push('/');
+            this.$router.push('/home');
           }, 1000);
         })
         .catch(err => {

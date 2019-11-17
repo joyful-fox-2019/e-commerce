@@ -10,14 +10,13 @@ module.exports = {
       model: 'users'
     })
       .then(cart => {
-        console.log(cart)
         res.status(200).json({ cart })
       })
       .catch(next)
   },
   addToCart (req, res, next) {
-    const { product_image, description, name, price, id, count, storeName, stock } = req.body
-    const payload = { product_image, description, name, price, id, count, storeName, stock};
+    const { product_image, description, name, price, id, count, storeName, stock, storeId } = req.body
+    const payload = { product_image, description, name, price, id, count, storeName, stock, storeId};
     const UserId = req.loggedUser.id;
     let pass = true;
     let maxCount = true;

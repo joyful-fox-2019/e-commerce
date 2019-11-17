@@ -155,7 +155,6 @@ export default new Vuex.Store({
       })
     },
     createProduct (context, payload) {
-      console.log('action')
       return new Promise ((resolve, reject) => {
         axios({
           method: 'post',
@@ -166,8 +165,6 @@ export default new Vuex.Store({
           }
         })
           .then(({data}) => {
-            console.log('dari store action');
-            console.log(data)
             context.commit('CREATE_PRODUCT', data)
             resolve(data.msg)
           })

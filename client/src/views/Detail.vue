@@ -58,7 +58,8 @@ export default {
           id: this.product._id,
           count: this.count,
           storeName: this.product.StoreId.name,
-          stock: this.product.stock
+          stock: this.product.stock,
+          storeId: this.product.StoreId._id
         },
         headers: {
           token: localStorage.getItem('token')
@@ -86,8 +87,10 @@ export default {
         }
       })
         .then(({data}) => {
-          this.$store.dispatch('checkSignIn')
-          this.$awn.success(data.msg)
+          return this.$store.dispatch('checkSignIn')
+        })
+        .then(() => {
+          this.$awn.success('success add to WishList')
         })
         .catch(err => {
           if(err.response.data.msg == 'Authentication Error') {

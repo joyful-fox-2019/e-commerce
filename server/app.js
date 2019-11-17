@@ -1,7 +1,7 @@
-if(process.env.NODE_ENV){
+if(process.env.NODE_ENV == 'development'){
   require('dotenv').config()
 }
-console.log(process.env.NODE_ENV)
+
 const express = require('express');
 const PORT = process.env.PORT || 3000;
 const cors = require('cors');

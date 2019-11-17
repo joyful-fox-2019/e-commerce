@@ -8,7 +8,13 @@ const TransSchema = new Schema({
   UserId: {
     type: Schema.Types.ObjectId,
     ref: 'users'
-  }
+  },
+  StoreId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'products'
+    }
+  ]
 }, {timestamps: true})
 
 TransSchema.pre('save', function (next) {

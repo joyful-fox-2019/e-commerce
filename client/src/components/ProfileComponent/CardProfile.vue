@@ -67,6 +67,7 @@ export default {
       )
         .then(msg => {
           this.$awn.success(msg)
+          this.$store.dispatch('checkSignIn')
         })
         .catch(err => {
           this.$awn.warning(err)
@@ -87,7 +88,6 @@ export default {
           .then(({data}) => {
             this.user = data.user.profile_image;
             this.$store.commit('CHANGE_PICTURE', data.user.profile_image)
-            this.$router.push('/profile')
             resolve(data.msg)
           })
           .catch(err => {

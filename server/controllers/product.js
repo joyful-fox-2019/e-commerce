@@ -1,6 +1,7 @@
 const Product = require('../models/product');
 const User = require('../models/user');
 const Store = require('../models/Store');
+const { deleteFileFromGCS } = require('../helpers/images');
 
 
 module.exports = {
@@ -21,7 +22,17 @@ module.exports = {
   },
   addToWishList (req, res, next) {
     const id = req.params.id;
-    User.findByIdAndUpdate(req.loggedUser.id, {$push: {WishList: id}}, {new: true})
+    User.findById(req.loggedUser.id) 
+      .then(user => {
+        let pass = true;
+        user.WishList.forEach((el, i) => {
+          if(el == id) pass = false;
+        })
+        if(!pass) next({status: 400, msg: 'This product is already listed on your wishlist'})
+        else {
+          return User.findByIdAndUpdate(req.loggedUser.id, {$push: {WishList: id}}, {new: true})
+        }
+      })
       .then(user => {
         res.status(200).json({user})
       })
@@ -70,6 +81,7 @@ module.exports = {
     let tempStoreId
     Product.findById(id)
       .then(product => {
+        deleteFileFromGCS(product.product_image)
         tempStoreId = product.StoreId
         return Product.findByIdAndDelete(id)
       })

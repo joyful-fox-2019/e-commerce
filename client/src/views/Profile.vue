@@ -27,7 +27,10 @@
                             Address :
                           </div>
                           <div class='ml-3'>
-                            {{ address[0] }}
+                            <ul>
+                              <li style='display: block' v-for='(address, i) in address' :key='i'>{{i+1}} &nbsp;{{ address }}</li>
+                            </ul>
+                            
                           </div>
                         </div>
                       </div>
@@ -63,10 +66,11 @@
                           <div class='mr-3'>
                             Address :
                           </div>
-                          <div class='ml-3'>
-                            {{ address[0] }}
-                          </div>
-                          <div><button class="btn-outline-success btn btn-sm ml-4">Change</button></div>
+                            <button class="btn-outline-success btn btn-sm ml-4" v-if='!isAddress' @click='isAdress'>Change</button>
+                            <div v-if='isAddress'>
+                              <input type="text" placeholder="Add Address" v-model='newAddress'>
+                            <button class="btn-outline-success btn btn-sm ml-4" v-if='isAddress' @click='saveAddress'>Save</button>
+                            </div>
                         </div>
                       </div>
                     </div>
@@ -74,7 +78,7 @@
               </b-card-text>
             </b-tab>
             <b-tab title="Tab 2">
-              <b-card-text>Tab contents 2</b-card-text>
+              <b-card-text>Coming Soon</b-card-text>
             </b-tab>
           </b-tabs>
         </b-card>
@@ -95,10 +99,37 @@ export default {
       textBtn: 'Verify Now',
       inputCode: false,
       secret: '',
-      btnVerify: false
+      btnVerify: false,
+      newAddress: '',
+      isAddress: false
     }
   },
   methods: {
+    saveAddress () {
+      const address = this.newAddress;
+      axios({
+        method: 'patch',
+        url: '/users',
+        data: {
+          address
+        },
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+        .then(({data}) => {
+          return this.$store.dispatch('checkSignIn')
+        })
+        .then(() => {
+          this.$awn.success('success update address')
+        })
+        .catch(err => {
+          this.$awn.warning(err.response.data.msg)
+        })
+    },
+    isAdress () {
+      this.isAddress = true
+    },
     makeToast(variant = null, data) {
       this.$bvToast.toast(data.msg, {
         title: data.title,
@@ -143,7 +174,7 @@ export default {
         }
       })
         .then(({data}) => {
-          this.$router.push('/')
+          this.$router.push('/home')
           this.$awn.success(data.msg)
         })
         .catch(err => {
