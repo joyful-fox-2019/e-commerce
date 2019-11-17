@@ -22,8 +22,15 @@ const userSchema = new Schema({
     },
     cart: [
         {
-            type: Schema.Types.ObjectId,
-            ref: 'Product'
+            product_id: {
+                type: Schema.Types.ObjectId,
+                ref: 'Product'
+            },
+            product_name: String,
+            product_price: Number,
+            product_stock: Number,
+            product_image: String,
+            quantity: Number
         }
     ],
     isAdmin: {

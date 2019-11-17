@@ -1,14 +1,15 @@
 const router = require('express').Router()
 const ProductController = require('../controllers/product')
-const { authentication, authorization } = require('../middlewares/auth')
+const { authentication, adminAuthorization } = require('../middlewares/auth')
 const multer = require('../middlewares/multer')
 const gcs = require('../middlewares/gcs')
 
-router.use(authentication)
 router.get('/', ProductController.findAll)
-router.use(authorization)
+router.get('/:id', ProductController.findOne)
+router.use(authentication)
+router.use(adminAuthorization)
 router.post('/', multer.single('image'), gcs, ProductController.addProduct)
-router.delete('/:id', authorization, ProductController.delete)
-router.patch('/:id', authorization, multer.single('image'), gcs, ProductController.updateField)
+router.delete('/:id', adminAuthorization, ProductController.delete)
+router.patch('/:id', adminAuthorization, multer.single('image'), gcs, ProductController.updateField)
 
 module.exports = router

@@ -16,7 +16,7 @@ describe('User Routes', function () {
     }
 
     after(function (done) {
-        User.deleteMany({})
+        User.deleteManyn({})
             .then(result => done())
             .catch(console.log)
     })

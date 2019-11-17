@@ -1,16 +1,17 @@
-const Product = require('../models/product')
+const { Product } = require('../models')
 const toUpdate = require('../helpers/updateField')
 const gcsDelete = require('../helpers/gcsdelete')
 
 class ProductController {
     static addProduct(req, res, next) {
+        console.log(req.body, 'masuk-===========================');
         let { name, stock, description, price } = req.body
         Product.create({
             name: name,
             stock: stock,
             description: description,
             price: price,
-            category: req.body.categories.split(','),
+            category: req.body.category.split(','),
             image: req.file ? req.file.cloudStoragePublicUrl : 'https://discountseries.com/wp-content/uploads/2017/09/default.jpg'
         })
             .then(newProduct => {

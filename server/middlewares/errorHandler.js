@@ -1,6 +1,6 @@
 module.exports = {
     errorHandler: function (err, req, res, next) {
-        // console.log(err);
+        console.log(err);
         if (err.name === "CastError") {
             let message = 'Not found'
             res.status(404).json({ message })

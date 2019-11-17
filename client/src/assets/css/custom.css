@@ -1,0 +1,14 @@
+a {
+    cursor: pointer;
+}
+
+.btn-responsive {
+    white-space: normal !important;
+    word-wrap: break-word;
+}
+
+.btn-clear {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
