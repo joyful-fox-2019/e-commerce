@@ -28,7 +28,12 @@
           <a class="cart" href="#">
             <span class="price">{{ price }}</span>
             <span class="add-to-cart">
-              <span class="txt">Edit</span>
+              <span class="txt" @click='updateStock' v-if='!restock'>Update Stock</span>
+              <div v-else>
+                <input type='number' v-model='stock'>
+                <span class="txt" @click='reStock(getProduct._id)' v-if='restock'>Save</span>
+              </div>
+
               <button class="btn-sm btn-outline-danger btn ml-4" @click='deleteProduct(getProduct._id)'>delete</button>
             </span>
           </a>
@@ -46,11 +51,37 @@ import axios from '@/apis/server.js'
 export default {
   data () {
     return {
-      isWish: false
+      isWish: false,
+      restock: false,
+      stock: null
     }
   },
   props: ['getProduct'],
   methods: {
+    updateStock () {
+      this.restock = true;
+    },
+    reStock(id) {
+      axios({
+        method: 'patch',
+        url: `/products/stock/${id}`,
+        data: {
+          stock: this.stock
+        },
+        headers :{
+          token: localStorage.getItem('token')
+        }
+      })
+        .then(({data}) => {
+          return this.$store.dispatch('checkSignIn')
+        })
+        .then(() => {
+          this.$awn.success('update success')
+        })
+        .catch(err => {
+          this.$awn.warning(err.response.data.msg)
+        })
+    },
     deleteAction (id) {
       return new Promise ((resolve, reject) => {
           axios({

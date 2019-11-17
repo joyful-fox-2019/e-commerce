@@ -45,8 +45,11 @@ module.exports = {
   },
   authorCrudProduct (req, res, next) {
     try {
+      console.log('dari crud ', req.params.id)
       Store.findOne({Owner: req.loggedUser.id})
         .then(store => {
+          console.log(store)
+          console.log(req.params.id)
           let pass = false;
           store.ProductId.forEach((el, i) => {
             if(el == req.params.id) {

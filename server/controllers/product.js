@@ -76,6 +76,14 @@ module.exports = {
       })
       .catch(next)
   },
+  updateStock (req, res, next) {
+    const stock = req.body.stock;
+    Product.findByIdAndUpdate(req.params.id, { stock })
+      .then(product => {
+        res.status(200).json({product})
+      })
+      .catch(next)
+  },
   deleteProduct (req, res, next) {
     const id = req.params.id
     let tempStoreId
