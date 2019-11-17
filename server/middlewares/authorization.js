@@ -1,12 +1,13 @@
-const Product = require('../models/product')
+const User = require('../models/user')
+
 
 module.exports = (req, res, next) => {
-    Product.findById(req.params.id)
-        .then(product => {
-            if (product && product.seller == req.decoded.id) {
+    User.findById(req.decoded.id)
+        .then(user => {
+            if (user.role === 'Admin') {
                 next()
             } else {
-                throw 'Product not found'
+                throw '403'
             }
         })
         .catch(next)

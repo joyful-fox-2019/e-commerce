@@ -12,23 +12,26 @@ class UserController {
             name,
             email,
             password,
-            full_address
+            full_address,
+            role
         } = req.body
         User.create({
                 name,
                 email,
                 password,
-                full_address
+                full_address,
+                role
             })
             .then(user => {
                 res.status(201).json({
-                    message: 'Success creating user'
+                    message: 'Successfull registration'
                 })
             })
             .catch(next)
     }
     static login(req, res, next) {
         if (!req.body.password) {
+            console.log(req.body)
             throw '404'
         }
         const {
@@ -48,10 +51,10 @@ class UserController {
                             id: user._id
                         }
                         let token = getToken(payload)
-                        // console.log(token)
                         res.status(200).json({
                             message: 'Successfull login',
-                            token
+                            token,
+                            role: user.role
                         })
                     } else {
                         throw 'WRONG'

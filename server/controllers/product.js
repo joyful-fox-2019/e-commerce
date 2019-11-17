@@ -1,10 +1,8 @@
 const Product = require('../models/product')
-const User = require('../models/user')
 
 class ProductController {
     static showAllProduct(req, res, next) {
         Product.find({})
-            .populate('seller')
             .then(products => {
                 res.status(200).json({
                     message: 'Success fetching all products',
@@ -15,9 +13,6 @@ class ProductController {
     }
 
     static createProduct(req, res, next) {
-        // console.log(req.file)
-        // console.log('aaaaaaaaaaaaaaa')
-        let productData = null
         if (!req.file) {
             req.body.image = null
         } else {
@@ -25,23 +20,15 @@ class ProductController {
         }
         Product.create({
                 name: req.body.name,
-                price: req.body.price,
-                stock: req.body.stock,
+                price: Number(req.body.price),
+                stock: Number(req.body.stock),
                 image: req.body.image,
-                seller: req.decoded.id
+                description: req.body.description
             })
             .then(product => {
-                productData = product
-                return User.findByIdAndUpdate(req.decoded.id, {
-                    $push: {
-                        product_on_sell: product._id
-                    }
-                })
-            })
-            .then(result => {
                 res.status(201).json({
                     message: 'Product successfully created',
-                    productData
+                    product
                 })
             })
             .catch(next)
@@ -54,13 +41,15 @@ class ProductController {
                 name: req.body.name,
                 price: req.body.price,
                 stock: req.body.stock,
-                image: req.file.cloudStoragePublicUrl
+                image: req.file.cloudStoragePublicUrl,
+                description: req.body.description
             }
         } else {
             objUpdate = {
                 name: req.body.name,
                 price: req.body.price,
-                stock: req.body.stock
+                stock: req.body.stock,
+                description: req.body.description
             }
         }
         Product.findByIdAndUpdate(req.params.id, objUpdate)

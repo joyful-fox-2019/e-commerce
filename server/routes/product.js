@@ -4,13 +4,20 @@ const authorize = require('../middlewares/authorization')
 const productController = require('../controllers/product')
 const images = require('../helpers/uploadimage')
 
+
+// read all product
 router.get('/', productController.showAllProduct)
 
-router.post('/', images.multer.single('image'), images.sendUploadToGCS, authenticate, productController.createProduct)
+router.use(authenticate)
+router.use(authorize)
+// create product ===> admin only
+router.post('/', images.multer.single('image'), images.sendUploadToGCS, productController.createProduct)
 
-router.put('/:id', images.multer.single('image'), images.sendUploadToGCS, authenticate, authorize, productController.updateProduct)
+// update product ===> admin only
+router.put('/:id', images.multer.single('image'), images.sendUploadToGCS, productController.updateProduct)
 
-router.delete('/:id', authenticate, authorize, productController.deleteProduct)
+// delete product ===> admin only
+router.delete('/:id', productController.deleteProduct)
 
 
 module.exports = router

@@ -38,11 +38,12 @@ const userSchema = new Schema({
         required: [true, 'Please input your home address'],
         minlength: [5, 'Looks like you give an invalid home address']
     },
-    product_on_sell: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Product'
-    }]
-
+    role: {
+        type: String,
+        required: true,
+        enum: ['Admin', 'Customer'],
+        default: 'Customer'
+    }
 })
 
 userSchema.pre('save', function (next) {

@@ -1,5 +1,5 @@
 module.exports = (err, req, res, next) => {
-    // console.log('errrrrrrrr', err)
+    console.log('=============', err)
     if (err.name === 'ValidationError') {
         res.status(400).json({
             message: err.message

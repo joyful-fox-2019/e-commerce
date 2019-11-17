@@ -5,5 +5,7 @@ router.post('/login', userController.login)
 
 router.post('/register', userController.register)
 
+// google
+
 
 module.exports = router

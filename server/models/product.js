@@ -9,7 +9,7 @@ const productSchema = new Schema({
         required: [true, 'Please input your product name'],
         validate: {
             validator: function (name) {
-                return /^[A-Za-z]+$/.test(name)
+                return /^[a-zA-z][a-zA-Z\s]*$/.test(name)
             },
             message: props => `${props.value} is not a valid name`
         }
@@ -28,10 +28,9 @@ const productSchema = new Schema({
         type: String,
         required: [true, 'Please input your product image']
     },
-    seller: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+    description: {
+        type: String,
+        required: [true, 'Please give a description of your product']
     }
 })
 

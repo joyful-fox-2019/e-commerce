@@ -31,7 +31,6 @@ after(function (done) {
             console.log(err)
         })
 })
-
 describe('CRUD Users', function () {
     describe('Register User', function () {
         describe('success', function () {

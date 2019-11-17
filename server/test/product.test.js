@@ -3,6 +3,7 @@ const chaiHttp = require('chai-http')
 const expect = chai.expect
 const app = require('../app')
 const Product = require('../models/product')
+const User = require('../models/user')
 
 chai.use(chaiHttp)
 
@@ -10,12 +11,31 @@ let productId = ''
 let newProduct = {
     name: 'Keripik',
     price: 10000,
-    stock: 10
+    stock: 10,
+    description: 'keripik kentang tanpa MSG tanpa pengawet'
 }
-let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkYzk2NGFhOWZlOTZkNDU5N2U4NGJjZCIsImlhdCI6MTU3MzQ3OTU5NSwiZXhwIjoxNTczNTY1OTk1fQ.eTCixQaKe_U1wbY_cjYb5l9zmBYpqJEfSBGaD266NHg'
+let token = ''
+before(function () {
+    User.create({
+            name: 'dexter',
+            email: 'dex@dex.com',
+            password: '1234567',
+            full_address: 'jalan kenari',
+            role: 'Admin'
+        })
+        .then(user => {
+            console.log('success creating user')
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
 
 after(function (done) {
-    Product.deleteMany({})
+    User.deleteMany({})
+        .then(_ => {
+            return Product.deleteMany({})
+        })
         .then(_ => {
             console.log('delete success')
             done()
@@ -25,6 +45,23 @@ after(function (done) {
         })
 })
 describe('CRUD Products', function () {
+    describe('login user to get token', function () {
+        it('should return 200 with token', function (done) {
+            chai
+                .request(app)
+                .post('/users/login')
+                .send({
+                    email: 'dex@dex.com',
+                    password: '1234567'
+                })
+                .end(function (err, res) {
+                    expect(err).to.be.null
+                    expect(res).to.have.status(200)
+                    token = res.body.token
+                    done()
+                })
+        })
+    })
     describe('Get all products', function () {
         describe('success', function () {
             it('Should return status 200 with array data as a return', function (done) {
@@ -42,8 +79,7 @@ describe('CRUD Products', function () {
     })
     describe('Create a product', function () {
         describe('success', function () {
-            // Kadang bisa kadang gabisa.....???
-            // https://storage.googleapis.com/image-upload-miniwp/1573482052410Screenshot from 2019-11-02 11-55-05.png
+            // Harus sudo service mongod start lalu LANGSUNG jalanin test baru bisa success (entah kenapa ... ?)
             it('Should return status 201 after success creating product', function (done) {
                 chai
                     .request(app)
@@ -69,7 +105,8 @@ describe('CRUD Products', function () {
                     .field({
                         name: 'Keripik',
                         price: 10000,
-                        stock: 10
+                        stock: 10,
+                        description: 'keripik kentang tanpa MSG tanpa pengawet'
                     })
                     // .attach('image', '../../Screenshot from 2019-08-10 18-00-50.png')
                     .end(function (err, res) {
@@ -86,7 +123,8 @@ describe('CRUD Products', function () {
                     .set('token', token)
                     .field({
                         price: 10000,
-                        stock: 10
+                        stock: 10,
+                        description: 'keripik kentang tanpa MSG tanpa pengawet'
                     })
                     .attach('image', '../../Screenshot from 2019-08-10 18-00-50.png')
                     .end(function (err, res) {
@@ -103,7 +141,8 @@ describe('CRUD Products', function () {
                     .set('token', token)
                     .field({
                         name: 'Keripik',
-                        stock: 10
+                        stock: 10,
+                        description: 'keripik kentang tanpa MSG tanpa pengawet'
                     })
                     .attach('image', '../../Screenshot from 2019-08-10 18-00-50.png')
                     .end(function (err, res) {
@@ -121,6 +160,25 @@ describe('CRUD Products', function () {
                     .field({
                         name: 'Keripik',
                         price: 10000,
+                        description: 'keripik kentang tanpa MSG tanpa pengawet'
+                    })
+                    .attach('image', '../../Screenshot from 2019-08-10 18-00-50.png')
+                    .end(function (err, res) {
+                        expect(err).to.be.null
+                        expect(res).to.have.status(400)
+                        expect(res.body).to.be.an('object')
+                        done()
+                    })
+            })
+            it('Should return status 400 because empty description field', function (done) {
+                chai
+                    .request(app)
+                    .post('/products/')
+                    .set('token', token)
+                    .field({
+                        name: 'Keripik',
+                        price: 10000,
+                        stock: 10
                     })
                     .attach('image', '../../Screenshot from 2019-08-10 18-00-50.png')
                     .end(function (err, res) {
@@ -196,7 +254,8 @@ describe('CRUD Products', function () {
                     .field({
                         name: 'coba',
                         price: 20000,
-                        stock: 2
+                        stock: 2,
+                        description: 'waduh'
                     })
                     .end(function (err, res) {
                         expect(err).to.be.null
@@ -214,7 +273,7 @@ describe('CRUD Products', function () {
                     .end(function (err, res) {
                         expect(err).to.be.null
                         expect(res).to.have.status(403)
-                        expect(res.body.message).to.be.an('object')
+                        expect(res.body).to.be.an('object')
                         done()
                     })
             })
@@ -243,7 +302,7 @@ describe('CRUD Products', function () {
                     .end(function (err, res) {
                         expect(err).to.be.null
                         expect(res).to.have.status(403)
-                        expect(res.body.message).to.be.an('object')
+                        expect(res.body).to.be.an('object')
                         done()
                     })
             })
