@@ -20,13 +20,41 @@
         <div class="d-flex justify-content-center p-2">
           <p class="m-0">Sold By <span class="font-weight-bold">{{itemData.ProductId.seller}}</span></p>
         </div>
+        <button @click="decreaseAmount(itemData.ProductId._id)" class="btn btn-danger w-75 align-self-center mb-2">Decrease amount</button>
       </div>
     </div>
 </template>
 
 <script>
+import axios from '../../myaxios/axios'
+import Swal from 'sweetalert2'
 export default {
-    props : ['itemData']
+  props: ['itemData'],
+  methods: {
+    decreaseAmount (id) {
+      axios.patch('/products/remove/' + id, {}, {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+        .then(({ data }) => {
+          // console.log(data)
+          console.log(this.itemData.amount, 'belom swal')
+          if (this.itemData.amount <= 1) {
+            console.log(this.itemData.amount, 'masuk swal')
+            Swal.fire({
+              icon: 'warning',
+              title: 'Item removed from cart',
+              text: `${this.itemData.ProductId.name} removed from your cart`
+            })
+          }
+          this.$emit('fetchCart')
+        })
+        .catch(err => {
+          console.log(err.response.data.message)
+        })
+    }
+  }
 }
 </script>
 

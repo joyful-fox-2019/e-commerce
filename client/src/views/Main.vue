@@ -3,11 +3,10 @@
     <div>
       <div v-if="!$route.params.id" id="banner" style="height:50vh" class="jumbotron rounded-0 m-0 text-center">
         <div class="container text-white">
-          <h1 class="jumbotron-heading">E-COM example</h1>
-          <p class="lead">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
+          <h1 class="jumbotron-heading">Welcome to E-COM</h1>
+          <p class="lead">Enjoy and see what products you need in here</p>
           <div class="d-flex justify-content-between">
-            <a class="btn btn-primary my-2">Main call to action</a>
-            <a class="btn btn-secondary my-2">Secondary action</a>
+            <!-- write some if necessary -->
           </div>
         </div>
       </div>
@@ -16,19 +15,31 @@
       <router-view
       :detailProduct="detailProduct"
       @fetchCart="fetchCart"
+      :role="role"
       />
+      <div v-if="listProductsNow.length>0" class="album py-5 bg-light">
 
-      <div class="album py-5 bg-light">
-            <nav class="d-flex justify-content-center" aria-label="Page navigation example">
-              <ul class="pagination">
-                <li v-if="page>1" @click="fetchBack(); changePage-=1" class="page-item"><a class="page-link" style="cursor:pointer">Previous</a></li>
-                <li  v-for="(num, index) in maxPage" :key="index"
-                @click="fetchPagination(index+1); changePage=index"
-                :class="{'page-item':true, active:changePage == index}">
-                <a class="page-link" style="cursor:pointer">{{index + 1}}</a></li>
-                <li v-if="page !== maxPage" @click="fetchNext(); changePage+=1" class="page-item"><a class="page-link" style="cursor:pointer">Next</a></li>
-              </ul>
-            </nav>
+        <div class="px-3">
+          <form @submit.prevent="searchProducts" id="searchProducts">
+            <div class="form-group">
+              <div class="input-group">
+                  <input v-model="search" type="text" class="form-control form-control-lg" id="searchBox" aria-describedby="searchBox" placeholder="Search Products">
+                  <span class="input-group-text"><img src="https://image.flaticon.com/icons/svg/149/149852.svg" alt="searchIcon" height="20" width="30"></span>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <nav v-if="notSearch" class="d-flex justify-content-center" aria-label="Page navigation example">
+          <ul class="pagination">
+            <li v-if="page>1" @click="fetchBack(); changePage-=1" class="page-item"><a class="page-link" style="cursor:pointer">Previous</a></li>
+            <li  v-for="(num, index) in maxPage" :key="index"
+            @click="fetchPagination(index+1); changePage=index"
+            :class="{'page-item':true, active:changePage == index}">
+            <a class="page-link" style="cursor:pointer">{{index + 1}}</a></li>
+            <li v-if="page !== maxPage" @click="fetchNext(); changePage+=1" class="page-item"><a class="page-link" style="cursor:pointer">Next</a></li>
+          </ul>
+        </nav>
 
         <!--List Products -->
         <div class="container">
@@ -44,7 +55,7 @@
           </div>
         </div>
 
-            <nav class="d-flex justify-content-center" aria-label="Page navigation example">
+            <nav v-if="notSearch"  class="d-flex justify-content-center" aria-label="Page navigation example">
               <ul class="pagination">
                 <li v-if="page>1" @click="fetchBack(); changePage-=1" class="page-item"><a class="page-link" style="cursor:pointer">Previous</a></li>
                 <li  v-for="(num, index) in maxPage" :key="index"
@@ -55,6 +66,20 @@
               </ul>
             </nav>
       </div>
+
+      <div v-else class="" style="background-color:grey; height:35vh">
+        <div class="px-3 pt-5">
+          <form @submit.prevent="searchProducts" id="searchProducts">
+            <div class="form-group">
+              <div class="input-group">
+                  <input v-model="search" type="text" class="form-control form-control-lg" id="searchBox" aria-describedby="searchBox" placeholder="Search Products">
+                  <span class="input-group-text"><img src="https://image.flaticon.com/icons/svg/149/149852.svg" alt="searchIcon" height="20" width="30"></span>
+              </div>
+            </div>
+          </form>
+        </div>
+          <h1 class="text-center text-white font-weight-bold">No Products Found</h1>
+        </div>
 
     </div>
   </div>
@@ -74,7 +99,9 @@ export default {
       page: 1,
       maxPage: 1,
       changePage: 0,
-      detailProduct: ''
+      detailProduct: '',
+      search : '',
+      notSearch : true
     }
   },
   components: {
@@ -127,9 +154,29 @@ export default {
     detailPayload (payload) {
       this.detailProduct = payload
     },
-    fetchCart(){
+    fetchCart () {
       this.$emit('fetchCart')
-    }
+    },
+    searchProducts(){
+      if(this.search === ''){
+        this.page = 1
+        this.fetchPagination(this.page)
+        this.notSearch = true
+      }else{
+        axios.get(`/products/search?filter=${this.search}`,{
+          headers :{
+            token : localStorage.getItem('token')
+          }
+        })
+        .then(({data})=>{
+          this.notSearch = false
+          this.listProductsNow= data
+        })
+        .catch(err=>{
+          console.log(err.response.data.message)
+        })
+      }
+    },
   },
   created () {
     this.fetchAllProducts()

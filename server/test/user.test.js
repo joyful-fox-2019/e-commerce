@@ -7,6 +7,7 @@ const Cart = require('../models/cart')
 const Transaction = require('../models/transaction')
 const {generateToken} = require('../helpers/jwt')
 const expect = chai.expect
+const fs = require('fs')
 
 chai.use(chaiHttp)
 
@@ -488,6 +489,24 @@ describe('Users Routes Testing', function(){
             })
         })
     })
+    describe('PATCH/users/topup', function(){
+        describe('Success responses', function(){
+            it('add user balance and send status 200', function(done){
+                let balance = 10000
+                chai.request(app)
+                .patch('/users/topup')
+                .send({balance})
+                .set('token', buyerToken)
+                .end(function(err, res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(200)
+                    expect(res.body).to.be.an('object')
+                    expect(res.body).to.any.keys('balance','msg')
+                    done()
+                })
+            })
+        })
+    })
     describe('PATCH/users/:id', function(){
         describe('Success responses', function(){
             it('should send status 200 and show updated users product if the role is seller', function(done){
@@ -575,6 +594,23 @@ describe('Users Routes Testing', function(){
                     expect(res).to.have.status(200)
                     expect(res.body).to.be.an('object')
                     expect(res.body).to.any.keys('msg','data')
+                    done()
+                })
+            })
+        })
+    })
+    describe('POST/users/upload', function(){
+        describe('Success responses', function(){
+            it('should send status 200 and show uploaded image link', function(done){
+                chai.request(app)
+                .post('/users/upload')
+                .attach('image', fs.readFileSync('./test/test.jpg'), 'test.jpg')
+                .set('token', token)
+                .end(function(err, res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(200)
+                    expect(res.body).to.be.an('object')
+                    expect(res.body).to.any.keys('msg','link')
                     done()
                 })
             })

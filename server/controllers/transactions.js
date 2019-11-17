@@ -32,61 +32,6 @@ class TransactionController{
         .catch(next)
     }
     
-    // static createTransaction(req, res, next){
-    //     let listedItem = []
-    //     let updatedProducts = []
-    //     let dataTransaction
-    //     let total = 0
-    //     Cart.find({UserId : req.loggedUser.id}).populate('UserId').populate('ProductId')
-    //     .then(data=>{
-    //         data.forEach((element)=>{
-    //             if(element.ProductId.stock >= element.amount){
-    //                 let cost = element.ProductId.price * element.amount
-    //                 listedItem.push({name : element.ProductId.name, amount : element.amount, cost, seller: element.ProductId.seller})
-    //                 total += cost
-    //                 let bulkUpdate = {
-    //                     updateOne : {
-    //                         filter : {_id: element.ProductId._id},
-    //                         update : {stock : element.ProductId.stock - element.amount}
-    //                     }
-    //                 }
-    //                 updatedProducts.push(bulkUpdate)
-    //                 return Product.bulkWrite(updatedProducts)
-    //             }else{
-    //                 throw({
-    //                     status : 400,
-    //                     message : 'transaction failed, not enough quantity stock for the items'
-    //                 })
-    //             }
-    //         })
-    //     })
-    //     .then(_=>{
-    //         if(listedItem.length > 0){
-    //             let transaction = {
-    //                 UserId : req.loggedUser.id,
-    //                 Products : listedItem,
-    //                 date : Date.now(),
-    //                 status : false,
-    //                 total : total
-    //             }
-    //             return Transaction.create(transaction)
-    //         }else{
-    //             throw({
-    //                 status : 400,
-    //                 message : 'transaction failed no items in your cart'
-    //             })
-    //         }
-    //     })
-    //     .then(data=>{
-    //         dataTransaction = data
-    //         return Cart.deleteMany({UserId : req.loggedUser.id}) 
-    //     })
-    //     .then(_=>{
-    //         res.status(201).json({msg : 'success checkout', dataTransaction})
-    //     })
-    //     .catch(next)
-    // }
-
     static createTransaction(req, res, next){
         let listedItem = []
         let updatedProducts = []
@@ -113,7 +58,9 @@ class TransactionController{
                         updateOne : {
                             filter : {username: element.ProductId.seller},
                             update : {
-                                balance : element.amount*element.ProductId.price
+                                $inc : {
+                                    balance : element.amount*element.ProductId.price
+                                }
                             }
                         }
                     }
@@ -129,7 +76,6 @@ class TransactionController{
             return User.findOne({_id:req.loggedUser.id})
         })
         .then(data=>{
-            console.log(data)
             if(data.balance>=total){
                 balanceNow = data.balance -total
                 return User.findOneAndUpdate({_id:req.loggedUser.id}, {balance : balanceNow}, {new : true})
@@ -190,6 +136,7 @@ class TransactionController{
                     TransactionId : transaction._id,
                     UserId : transaction.UserId,
                     status : transaction.status,
+                    date : transaction.date,
                     sold : []
                 }
                 transaction.Products.forEach(item=>{
@@ -200,6 +147,15 @@ class TransactionController{
                 soldItem.push(product)
             })
             res.status(200).json(soldItem)
+        })
+        .catch(next)
+    }
+
+    static statusTransaction(req, res, next){
+        const transId = req.params.id
+        Transaction.findOneAndUpdate({_id : transId},{status : true}, {new : true})
+        .then(data=>{
+            res.status(200).json({msg : 'success change status', data})
         })
         .catch(next)
     }

@@ -2,6 +2,7 @@ const User = require('../models/user')
 const {comparePassword} = require('../helpers/hash')
 const {generateToken} = require('../helpers/jwt')
 const Product = require('../models/product')
+const Cart = require('../models/cart')
 
 class UserController{
 
@@ -50,8 +51,8 @@ class UserController{
 
     static createProduct(req,res,next){
         let productData
-        const {seller, name, image, price, stock} = req.body
-        Product.create({seller, name, image, price, stock})
+        const {seller, name, description, image, price, stock} = req.body
+        Product.create({seller, name, description, image, price, stock})
         .then(data=>{
             productData = data
             return User.findOneAndUpdate({_id:req.loggedUser.id}, {$push : {ProductsId : data._id}})
@@ -64,8 +65,8 @@ class UserController{
 
     static editProduct(req,res,next){
         let productId = req.params.id
-        const {name, image, price, stock} = req.body
-        Product.findOneAndUpdate({_id : productId}, {name, image, price, stock}, {runValidators : true, new : true, omitUndefined : true})
+        const {name, image, description, price, stock} = req.body
+        Product.findOneAndUpdate({_id : productId}, {name, image, price, description, stock}, {runValidators : true, new : true, omitUndefined : true})
         .then(data=>{
             res.status(200).json({msg : 'sucessfully updated', data})
         })
@@ -79,6 +80,9 @@ class UserController{
         .then(data=>{
             deletedData = data
             return User.findOneAndUpdate({_id : req.loggedUser.id}, {$pull : {ProductsId : productId}})
+        })
+        .then(_=>{
+            return Cart.deleteMany({ProductId : productId})
         })
         .then(_=>{
             res.status(200).json({msg : 'sucessfully deleted', data : deletedData})
@@ -95,9 +99,15 @@ class UserController{
             return User.findOneAndUpdate({_id:req.loggedUser.id}, {balance : newBalance}, {new:true})
         })
         .then(data=>{
-            res.status(200).json(data)
+            res.status(200).json({msg : 'success top up', balance : data.balance})
         })
         .catch(next)
+    }
+    static upload(req, res){
+        res.status(200).json({
+            msg: 'Your file is successfully uploaded',
+            link: req.file.cloudStoragePublicUrl
+          })
     }
 }
 

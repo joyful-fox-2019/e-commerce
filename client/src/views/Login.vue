@@ -51,6 +51,13 @@ export default {
           this.$emit('statusLogin', true)
           this.$emit('statusRole', data.payload.role)
           this.$emit('getProfile')
+          if (data.payload.role === 'buyer') {
+            this.$emit('getCart')
+            this.$emit('getTransactionsBuyer')
+          } else {
+            this.$emit('getOwnProducts')
+            this.$emit('getTransactionsSeller')
+          }
           this.$router.push('/')
         })
         .catch(err => {

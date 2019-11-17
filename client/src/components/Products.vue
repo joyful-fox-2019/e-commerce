@@ -1,5 +1,5 @@
 <template>
-    <div @click="getDetail(productData._id)" class="col-md-4">
+    <div v-if="productData.stock>0" @click="getDetail(productData._id)" class="col-md-4">
       <div class="card mb-4 box-shadow">
         <img class="card-img-top"
         style="object-fit:contain"
@@ -19,7 +19,6 @@
         </div>
         <div class="d-flex justify-content-center p-2">
           <p class="m-0">Sold By <span class="font-weight-bold">{{productData.seller}}</span></p>
-          <button v-if="productData.seller === user.username" type="button" class="btn btn-sm btn-outline-secondary ml-auto">Edit</button>
         </div>
       </div>
     </div>
@@ -28,13 +27,13 @@
 <script>
 import axios from '../../myaxios/axios'
 export default {
-  props: ['productData', 'role','user'],
+  props: ['productData', 'role', 'user'],
   methods: {
     getDetail (id) {
       axios.get('/products/' + id)
         .then(({ data }) => {
           this.$emit('detailPayload', data)
-          this.$router.push('/products/' + id)
+          this.$router.push('/products/' + id).catch(err => {})
         })
         .catch(err => {
           console.log(err.response.data.message)
@@ -43,6 +42,7 @@ export default {
   },
   watch: {
     $route (to, from) {
+      // console.log('WATCHER')
       const id = this.$route.params.id
       this.getDetail(id)
     }

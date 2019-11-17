@@ -7,13 +7,15 @@
         :src="detailProduct.image"
         alt="Card image cap" width="400" height="300">
         </div>
-        <div class="col p-2 d-flex flex-column position-static">
-          <strong class="d-inline-block mb-2">Price : {{detailProduct.price}}</strong>
-          <strong class="d-inline-block mb-2">Stock : {{detailProduct.stock}}</strong>
-          <h3 class="mb-0">{{detailProduct.name}}</h3>
-          <div class="mb-1 text-muted">Seller : {{detailProduct.seller}}</div>
-          <p class="mb-auto">{{detailProduct.description}}</p>
-          <button @click="toCart(detailProduct._id)" class="btn btn-info w-75 align-self-center">Add to Cart</button>
+        <div class="col m-5 p-5 d-flex flex-column align-items-center">
+          <div class="align-self-start">
+            <h3 class="mb-2">Product Name : {{detailProduct.name}}</h3>
+            <p><strong class="mb-2">Price : {{detailProduct.price}}</strong></p>
+            <p><strong class="mb-2">Stock : {{detailProduct.stock}}</strong></p>
+            <p class="mb-2">Description : {{detailProduct.description}}</p>
+            <div class="mb-1 text-muted">Seller : {{detailProduct.seller}}</div>
+          </div>
+          <button v-if="role==='buyer'" @click="toCart(detailProduct._id)" class="btn btn-info w-75 align-self-center">Add to Cart</button>
         </div>
         <div>
             <button @click="toHome" class="btn btn-link">close</button>
@@ -25,26 +27,31 @@
 
 <script>
 import axios from '../../myaxios/axios'
+import Swal from 'sweetalert2'
 export default {
-  props: ['detailProduct'],
+  props: ['detailProduct', 'role'],
   methods: {
     toHome () {
       this.$router.push('/')
     },
     toCart (id) {
-      console.log('NI FUNSI TO CART')
-      axios.patch('products/add/'+id,{},
-      {
-        headers : {
-          token : localStorage.getItem('token')
-        }
-      })
-      .then(({data})=>{
-        this.$emit('fetchCart')
-      })
-      .catch(err=>{
-        console.log(err.response.data.message)
-      })
+      axios.patch('products/add/' + id, {},
+        {
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        .then(({ data }) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Successfully Add to Cart',
+            text: `${this.detailProduct.name} added to your cart`
+          })
+          this.$emit('fetchCart')
+        })
+        .catch(err => {
+          console.log(err.response.data.message)
+        })
     }
   }
 

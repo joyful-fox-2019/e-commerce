@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <Navbar
-    class="flex-fill"
+    style="height:10vh"
+    class="bg-info"
     :isLogin="isLogin"
     :role="role"
     @statusLogin="statusLogin"
@@ -9,6 +10,8 @@
     :carts="cartItem"
     :user="user"
     @userOut="userOut"
+    :ownProducts="ownProducts"
+    @getProfile="getProfile"
     />
     <router-view
     style="height:85vh"
@@ -21,6 +24,15 @@
     @fetchCart="getCart"
     :user="user"
     @getProfile="getProfile"
+    :ownProducts="ownProducts"
+    @getCart="getCart"
+    @getOwnProducts="getOwnProducts"
+    @checkingOut="checkingOut"
+    :checkOutData="checkOutData"
+    :buyerTransactions="buyerTransactions"
+    :sellerTransactions="sellerTransactions"
+    @getTransactionsBuyer="getTransactionsBuyer"
+    @getTransactionsSeller="getTransactionsSeller"
     />
     <Footer
     style="height:5vh"/>
@@ -41,24 +53,27 @@ export default {
       isLogin: false,
       role: '',
       detailProduct: '',
-      cartItem:'',
-      user : ''
-
+      cartItem: '',
+      ownProducts: [],
+      user: '',
+      checkOutData: '',
+      buyerTransactions: [],
+      sellerTransactions: []
     }
   },
   methods: {
-    getProfile(){
-      axios.get('users/profile',{
-        headers : {
-          token : localStorage.getItem('token')
+    getProfile () {
+      axios.get('users/profile', {
+        headers: {
+          token: localStorage.getItem('token')
         }
       })
-      .then(({data})=>{
-        this.user = data
-      })
-      .catch(err=>{
-        console.log(err.response.data.message)
-      })
+        .then(({ data }) => {
+          this.user = data
+        })
+        .catch(err => {
+          console.log(err.response.data.message)
+        })
     },
     statusLogin (status) {
       this.isLogin = status
@@ -66,22 +81,80 @@ export default {
     statusRole (status) {
       this.role = status
     },
-    getCart(){
+    getCart () {
       console.log('<<<<<<<<<<<JALAANNN')
-      axios.get('/carts',{
-        headers : {
-          token : localStorage.getItem('token')
+      axios.get('/carts', {
+        headers: {
+          token: localStorage.getItem('token')
         }
       })
-      .then(({data})=>{
-        this.cartItem = data
-      })
-      .catch(err=>{
-        console.log(err.response.data.message)
-      })
+        .then(({ data }) => {
+          this.cartItem = data
+        })
+        .catch(err => {
+          console.log(err.response.data.message)
+        })
     },
-    userOut(payload){
-      this.user=payload
+    getOwnProducts () {
+      axios.get('/users', {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+        .then(({ data }) => {
+          this.ownProducts = []
+          data.forEach(element => {
+            this.ownProducts.unshift(element)
+          })
+          // this.ownProducts = data
+        })
+        .catch(err => {
+          console.log(err.response.data.message)
+        })
+    },
+    getTransactionsSeller () {
+      console.log('TRIGGER TRANS SELL')
+      this.buyerTransactions = []
+      this.sellerTransactions = []
+      axios.get('/transactions/sold', {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+        .then(({ data }) => {
+          data.forEach(element => {
+            this.sellerTransactions.unshift(element)
+          })
+        })
+        .catch(err => {
+          console.log(err.response.data.message)
+        })
+    },
+    getTransactionsBuyer () {
+      console.log('TRIGGER TRANS BUY')
+      this.buyerTransactions = []
+      this.sellerTransactions = []
+      axios.get('/transactions/purchased', {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+        .then(({ data }) => {
+          data.forEach(element => {
+            this.buyerTransactions.unshift(element)
+          })
+        })
+        .catch(err => {
+          console.log(err.response.data.message)
+        })
+    },
+    checkingOut (payload) {
+      // console.log('MASUK')
+      // console.log(payload, 'sini berikutnya')
+      this.checkOutData = payload
+    },
+    userOut (payload) {
+      this.user = payload
     }
   },
   created () {
@@ -89,7 +162,14 @@ export default {
       this.isLogin = true
       this.role = localStorage.getItem('role')
       this.getProfile()
+    }
+    if (localStorage.getItem('role') === 'buyer') {
       this.getCart()
+      this.getTransactionsBuyer()
+    }
+    if (localStorage.getItem('role') === 'seller') {
+      this.getOwnProducts()
+      this.getTransactionsSeller()
     }
   }
 }

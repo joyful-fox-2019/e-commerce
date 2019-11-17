@@ -5,8 +5,14 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Detail from '../views/Detail.vue'
 import Cart from '../views/Cart.vue'
+import MyProducts from '../views/MyProducts.vue'
+import AddProducts from '../views/AddProducts'
+import EditProduct from '../views/EditProduct'
+import Checkout from '../views/Checkout'
+import Transaction from '../views/Transaction'
 
 Vue.use(VueRouter)
+
 
 const routes = [
   {
@@ -16,6 +22,7 @@ const routes = [
     children: [
       {
         path: '/products/:id',
+        name: 'Detail',
         component: Detail
       }
     ]
@@ -34,10 +41,72 @@ const routes = [
     name: 'Register',
     component: Register
   },
-  { 
+  {
     path: '/cart',
     name: 'Cart',
-    component: Cart
+    component: Cart,
+    beforeEnter(to, from, next){
+      if(!localStorage.getItem('token')){
+        next('/login')
+      }
+      else{
+        next()
+      }
+    }
+  },
+  {
+    path: '/myProducts',
+    name: 'MyProducts',
+    component: MyProducts,
+    children: [
+      {
+        path: '/myProducts/add',
+        name: 'AddProducts',
+        component: AddProducts
+      },
+      {
+        path: '/myProducts/edit/:id',
+        name: 'EditProduct',
+        component: EditProduct
+      }
+    ],
+    beforeEnter(to, from, next){
+      if(!localStorage.getItem('token')){
+        next('/login')
+      }
+      else if (localStorage.getItem('role') === 'buyer'){
+        next('/')
+      }
+      else{
+        next()
+      }
+    }
+  },
+  {
+    path: '/checkout',
+    name: 'Checkout',
+    component: Checkout,
+    beforeEnter(to, from, next){
+      if(!localStorage.getItem('token')){
+        next('/login')
+      }
+      else{
+        next()
+      }
+    }
+  },
+  {
+    path: '/transactions',
+    name: 'Transactions',
+    component: Transaction,
+    beforeEnter(to, from, next){
+      if(!localStorage.getItem('token')){
+        next('/login')
+      }
+      else{
+        next()
+      }
+    }
   }
 ]
 

@@ -40,37 +40,6 @@ class ProductController{
         .catch(next)
     }
 
-    // static addProduct(req,res,next){
-    //     let productId = req.params.id 
-    //     Cart.findOneAndUpdate({UserId : req.loggedUser.id}, {$push : {ProductsId : productId}}, {new : true})
-    //     .then(data=>{
-    //         if(data){
-    //             res.status(200).json({msg : 'success add to cart', data})
-    //         }else{
-    //             next({
-    //                 status : 400,
-    //                 message : 'cart have not been made'
-    //             })
-    //         }
-    //     })
-    //     .catch(next)
-    // }
-    // static removeProduct(req,res,next){
-    //     let productId = req.params.id 
-    //     Cart.findOneAndUpdate({UserId : req.loggedUser.id}, {$pull : {ProductsId : productId}}, {new : true})
-    //     .then(data=>{
-    //         if(data){
-    //             res.status(200).json({msg : 'success remove  cart', data})
-    //         }else{
-    //             next({
-    //                 status : 400,
-    //                 message : 'cart have not been made'
-    //             })
-    //         }
-    //     })
-    //     .catch(next)
-    // }
-
     static addProduct(req,res,next){
         let productId = req.params.id 
         Cart.findOne({UserId : req.loggedUser.id, ProductId : productId})

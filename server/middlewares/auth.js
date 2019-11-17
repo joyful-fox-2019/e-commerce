@@ -45,21 +45,6 @@ function roleCheck(req, res, next){
     .catch(next)
 }
 
-// function cartAuthorization(req,res,next){
-//     let cartId = req.params.id
-//     Cart.findOne({_id : cartId})
-//     .then(data=>{
-//         if(data.UserId == req.loggedUser.id){
-//             next()
-//         }else{
-//             next({
-//                 status : 403,
-//                 message : 'Not Authorized'
-//             })
-//         }
-//     })
-//     .catch(next)
-// }
 
 
 
