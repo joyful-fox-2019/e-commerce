@@ -76,7 +76,7 @@ describe("User Routing Tests", function() {
                 .end( function (err, res) {
                     expect(err).to.be.null;
                     expect(res).to.have.status(201);
-                    expect(res.body).to.be.an("object").to.have.any.keys("jwt_token");
+                    expect(res.body).to.be.an("object").to.have.any.keys("user_data","jwt_token");
                     done();
                 });
             });
@@ -229,7 +229,7 @@ describe("User Routing Tests", function() {
                 .end( function (err, res) {
                     expect(err).to.be.null;
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("object").to.have.any.keys("jwt_token");
+                    expect(res.body).to.be.an("object").to.have.any.keys("user_data","jwt_token");
                     done();
                 });
             });

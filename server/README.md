@@ -47,7 +47,14 @@ Success Response :
   * **JSON Response :**
   ```html
   {
-    "jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGM5MzRhMjdiMjFhYTNlYzA2MGM4ZTAiLCJuYW1lIjoiRWRpc29uIiwiZW1haWwiOiJlZGlyYXRlc0BnbWFpbC5jb20iLCJpYXQiOjE1NzM0NjcyOTh9.cII_ny6qr65EcuUTbmdUGsDiHMnxGA9NyfwLvHc0ryg"
+    "user_data": {
+        "_id": "5dcf60b170fcc15b1d95fabf",
+        "name": "Jon Snow",
+        "email": "jon@snow.com",
+        "address": "Winterfell",
+        "phone_number": "0898987788"
+    },
+    "jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGNmNjBiMTcwZmNjMTViMWQ5NWZhYmYiLCJuYW1lIjoiSm9uIFNub3ciLCJlbWFpbCI6ImpvbkBzbm93LmNvbSIsImlhdCI6MTU3Mzg3MTc5M30.q0bXluxT1FqcmQYLdIpwKgtq3bbfvAC-oDtspRGpwjI"
   }
   ```
 Error Response : 
@@ -84,7 +91,14 @@ Success Response :
   * **JSON Response :**
   ```html
   {
-    "jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGM5MzUwZTdiMjFhYTNlYzA2MGM4ZTEiLCJuYW1lIjoiRWRpc29uIiwiZW1haWwiOiJlZGlyYXRlc0BnbWFpbC5jb20iLCJpYXQiOjE1NzM0Njc0MTF9.TVc--XWPhvI-t6Nx1EcCOiUSQMY2zmuKrEpgvUumdCw"
+    "user_data": {
+        "_id": "5dcf60b170fcc15b1d95fabf",
+        "name": "Jon Snow",
+        "email": "jon@snow.com",
+        "address": "Winterfell",
+        "phone_number": "0898987788"
+    },
+    "jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGNmNjBiMTcwZmNjMTViMWQ5NWZhYmYiLCJuYW1lIjoiSm9uIFNub3ciLCJlbWFpbCI6ImpvbkBzbm93LmNvbSIsImlhdCI6MTU3Mzg3MjA3NH0.LuMeQaeJkeu8qBDEz_b4MJVTvjyEndJGCyok-dOxMco"
   }
   ```
 Error Response : 

@@ -12,8 +12,9 @@ class UserController {
             phone_number: req.body.phone_number
         })
         .then((user) => {
+            const user_data = { _id: user._id, name: user.name, email: user.email, address: user.address, phone_number: user.phone_number, balance: user.balance };
             const jwt_token = jwt.generate({ _id: user._id, name: user.name, email: user.email });
-            res.status(201).json({ jwt_token: jwt_token });
+            res.status(201).json({ user_data: user_data, jwt_token: jwt_token });
         })
         .catch((err) => {
             next(err);
@@ -26,8 +27,9 @@ class UserController {
         .then((user) => {
             if (user) {
                 if (bcrypt.compare(req.body.password, user.password)) {
+                    const user_data = { _id: user._id, name: user.name, email: user.email, address: user.address, phone_number: user.phone_number, balance: user.balance };
                     const jwt_token = jwt.generate({ _id: user._id, name: user.name, email: user.email });
-                    res.status(200).json({ jwt_token: jwt_token });
+                    res.status(200).json({ user_data: user_data, jwt_token: jwt_token });
                 } else {
                     let err = { status: 400, message: `Password not match` };
                     next(err);

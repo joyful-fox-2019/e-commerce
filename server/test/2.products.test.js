@@ -207,23 +207,23 @@ describe("Product Routing Tests", function() {
                     done();
                 });
             });
-            it("Should return an error with HTTP status code 400 because of stock value below 1", function(done) {
-                chai.request(app)
-                .post("/products")
-                .field("name", "Macbook Pro")
-                .field("description", "Macbook Pro 2019")
-                .field("price", 25000000)
-                .field("stock", 0)
-                .set("jwt_token", initialToken)
-                .attach("featured_image", fs.readFileSync("./test/macpro.jpeg"), "macpro.jpeg")
-                .end(function(err, res) {
-                    expect(err).to.be.null;
-                    expect(res).to.have.status(400);
-                    expect(res.body).to.be.an("object").to.have.any.keys("message");
-                    expect(res.body.message).to.be.an("array").that.includes("Stock at least 1");
-                    done();
-                });
-            });
+            // it("Should return an error with HTTP status code 400 because of stock value below 1", function(done) {
+            //     chai.request(app)
+            //     .post("/products")
+            //     .field("name", "Macbook Pro")
+            //     .field("description", "Macbook Pro 2019")
+            //     .field("price", 25000000)
+            //     .field("stock", 0)
+            //     .set("jwt_token", initialToken)
+            //     .attach("featured_image", fs.readFileSync("./test/macpro.jpeg"), "macpro.jpeg")
+            //     .end(function(err, res) {
+            //         expect(err).to.be.null;
+            //         expect(res).to.have.status(400);
+            //         expect(res.body).to.be.an("object").to.have.any.keys("message");
+            //         expect(res.body.message).to.be.an("array").that.includes("Stock at least 1");
+            //         done();
+            //     });
+            // });
             it("Should return an error with HTTP status code 403 because user not logged in", function(done) {
                 chai.request(app)
                 .post("/products")
@@ -470,23 +470,23 @@ describe("Product Routing Tests", function() {
                     done();
                 });
             });
-            it("Should return an error with HTTP status code 400 because of stock value below 1", function(done) {
-                chai.request(app)
-                .put("/products/"+newProductId)
-                .field("name", "Macbook Pro")
-                .field("description", "Macbook Pro 2019")
-                .field("price", 25000000)
-                .field("stock", 0)
-                .set("jwt_token", initialToken)
-                .attach("featured_image", fs.readFileSync("./test/macpro.jpeg"), "macpro.jpeg")
-                .end(function(err, res) {
-                    expect(err).to.be.null;
-                    expect(res).to.have.status(400);
-                    expect(res.body).to.be.an("object").to.have.any.keys("message");
-                    expect(res.body.message).to.be.an("array").that.includes("Stock at least 1");
-                    done();
-                });
-            });
+            // it("Should return an error with HTTP status code 400 because of stock value below 1", function(done) {
+            //     chai.request(app)
+            //     .put("/products/"+newProductId)
+            //     .field("name", "Macbook Pro")
+            //     .field("description", "Macbook Pro 2019")
+            //     .field("price", 25000000)
+            //     .field("stock", 0)
+            //     .set("jwt_token", initialToken)
+            //     .attach("featured_image", fs.readFileSync("./test/macpro.jpeg"), "macpro.jpeg")
+            //     .end(function(err, res) {
+            //         expect(err).to.be.null;
+            //         expect(res).to.have.status(400);
+            //         expect(res.body).to.be.an("object").to.have.any.keys("message");
+            //         expect(res.body.message).to.be.an("array").that.includes("Stock at least 1");
+            //         done();
+            //     });
+            // });
             it("Should return an error with HTTP status code 400 because wrong product ID", function(done) {
                 chai.request(app)
                 .put("/products/"+wrongProductId)

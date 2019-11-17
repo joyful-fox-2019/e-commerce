@@ -4,6 +4,7 @@ const gcsDelete = require("../middlewares/gcsdelete.js");
 class ProductController {
     static findAll (req, res, next) {
         Product.find()
+        .populate("UserId", "-password")
         .sort({
             createdAt: "DESC"
         })

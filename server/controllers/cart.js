@@ -7,7 +7,13 @@ class CartController {
         Cart.find({
             UserId: req.user._id
         })
-        .populate("ProductId")
+        .populate({ 
+            path: "ProductId",
+            populate: {
+                path: "UserId",
+                model: "User"
+            }
+         })
         .then((carts) => {
             res.status(200).json(carts);
         })
@@ -113,6 +119,13 @@ class CartController {
             UserId: req.user._id
         })
         .populate("ProductId")
+        .populate({ 
+            path: "ProductId",
+            populate: {
+                path: "UserId",
+                model: "User"
+            }
+         })
         .then((carts) => {
             if (carts.length === 0) {
                 let err = { status: 404, message: `Product not found please add to cart` };
@@ -122,14 +135,29 @@ class CartController {
                 for (let i = 0; i < carts.length; i++) {
                     if (carts[i].qty > carts[i].ProductId.stock) {
                         outStock.push(`Insufficient stock for ${carts[i].ProductId.name}`);
-                    } else {
+                    } 
+                    else if (carts[i].qty === carts[i].ProductId.stock) {
                         products.push({
                             _id: carts[i].ProductId._id,
                             name: carts[i].ProductId.name,
                             price: carts[i].ProductId.price,
                             stock: carts[i].ProductId.stock,
                             qty: carts[i].qty,
-                            SellerId: carts[i].ProductId.UserId
+                            status: false,
+                            SellerId: carts[i].ProductId.UserId._id,
+                            SellerName: carts[i].ProductId.UserId.name
+                        });
+                    }
+                    else {
+                        products.push({
+                            _id: carts[i].ProductId._id,
+                            name: carts[i].ProductId.name,
+                            price: carts[i].ProductId.price,
+                            stock: carts[i].ProductId.stock,
+                            qty: carts[i].qty,
+                            status: true,
+                            SellerId: carts[i].ProductId.UserId._id,
+                            SellerName: carts[i].ProductId.UserId.name
                         });
                     }
                 }
@@ -153,7 +181,8 @@ class CartController {
                     Product.updateOne({
                         _id: products[i]._id
                     }, { $set: {
-                        stock: products[i].stock - products[i].qty
+                        stock: products[i].stock - products[i].qty,
+                        status: products[i].status
                     }}, { 
                         omitUndefined: true, 
                         runValidators: true 

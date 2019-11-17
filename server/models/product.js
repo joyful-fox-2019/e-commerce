@@ -20,7 +20,7 @@ const productSchema = new Schema({
     stock: {
         type: Number,
         required: [true, `Stock is required`],
-        min: [1, `Stock at least 1`]
+        // min: [1, `Stock at least 1`]
     },
     featured_image: {
         type: String,
