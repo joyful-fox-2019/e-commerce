@@ -31,6 +31,9 @@
 | 404  | Not Found             | The requested resource could not be found |
 | 500  | Internal Server Error | We had a problem with our server          |
 
+**READ ME FIRST!**
+----
+
 All API requests that require you to login, need to include token in their header.
 
 ```
