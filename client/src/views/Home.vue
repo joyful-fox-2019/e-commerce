@@ -35,7 +35,7 @@ export default {
           const token = query.split('token=')[1].split('&')[0]
           localStorage.setItem('token',token)
           localStorage.setItem('gitSuccess','success login with github')
-          window.location = 'http://localhost:8080'
+          window.location = 'https://myecommerce.nadhiljanitra.xyz'
            this.$q.notify({
             color: 'green-4',
             textColor: 'white',
@@ -45,7 +45,7 @@ export default {
         } else {
           const msg = query.split('msg=')[1].split('%27')[1].split('%20').join(' ')
           localStorage.setItem('msg',msg)
-          window.location = 'http://localhost:8080'
+          window.location = 'https://myecommerce.nadhiljanitra.xyz'
         }
       }
     },
