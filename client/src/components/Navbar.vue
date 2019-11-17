@@ -1,7 +1,7 @@
 <template>
   <div>
   <b-navbar toggleable="lg" type="dark" variant="info">
-    <b-navbar-brand href="/">Bubblebeam</b-navbar-brand>
+    <b-navbar-brand @click.prevent="goToHomePage">Bubblebeam</b-navbar-brand>
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">

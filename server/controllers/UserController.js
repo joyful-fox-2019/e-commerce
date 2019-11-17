@@ -42,7 +42,11 @@ class UserController {
                             role: user.role
                         }
                         let token = generateToken(payload)
-                        res.status(200).json({ token })
+                        let userData = {
+                            token: token,
+                            role: user.role
+                        }
+                        res.status(200).json(userData)
                     } else {
                         next(invalidLoginError)
                     }
@@ -52,15 +56,15 @@ class UserController {
     }
 
     static addToCart(req, res, next) {
-        let { product_id, product_name, product_image, quantity } = req.body
+        let { product_id, product_name, product_price, product_image, quantity } = req.body
         let user_id = req.loggedUser.id
         let newItem = {
             product_id,
             product_name,
+            product_price,
             product_image,
             quantity
         }
-        console.log(newItem);
         User.updateOne({ _id: user_id }, { $push: { cart: newItem }})
             .then(result => {
                 res.status(200).json(result)

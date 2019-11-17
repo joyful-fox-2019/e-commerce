@@ -10,7 +10,7 @@ router.get('/:id', ProductController.readOne)
 
 router.use(adminAuthorization)
 router.post('/', multer.single('image'), gcs, ProductController.create)
-router.put('/:id', authorization, ProductController.updateField)
+router.put('/:id', authorization, multer.single('image'), gcs, ProductController.updateField)
 router.delete('/:id', authorization, ProductController.deleteProduct)
 
 module.exports = router

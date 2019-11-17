@@ -13,6 +13,8 @@ const errorHandler = require('./middlewares/errorHandler')
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
+console.log(process.env.URL_MONGOOSE)
+
 if(process.env.NODE_ENV === 'testing') {
     mongoose.connect('mongodb://localhost/E-Commerce-testing', { useNewUrlParser: true, useUnifiedTopology: true, useUnifiedTopology: true, useCreateIndex: true }, function(err) {
         if(err) console.log(`Failed to connect to db ಠ_ಠ`)
@@ -20,7 +22,7 @@ if(process.env.NODE_ENV === 'testing') {
     })
 } else {
     mongoose.connect(process.env.URL_MONGOOSE, { useNewUrlParser: true, useUnifiedTopology: true, useUnifiedTopology: true, useCreateIndex: true }, function(err) {
-        if(err) console.log(`Failed to connect to db ಠ_ಠ`)
+        if(err) console.log(err)
         else console.log(`(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ Connected to db `);
     })
 }

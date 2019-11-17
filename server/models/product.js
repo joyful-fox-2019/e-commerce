@@ -6,7 +6,7 @@ const productSchema = new Schema ({
         required: [true, 'Product Name is required']
     },
     price: {
-        type: String,
+        type: Number,
         required: [true, 'Price is required']
     },
     stock: {

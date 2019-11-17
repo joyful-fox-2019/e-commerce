@@ -25,7 +25,32 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/CartPage.vue')
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage.vue')
+  },
+  {
+    path: '/admin/addProduct',
+    name: 'AddProduct',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/AddProductPage.vue')
+  },
+  {
+    path: '/admin/updateProduct',
+    name: 'UpdateProduct',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/UpdateProductPage.vue')
   }
+
 ]
 
 const router = new VueRouter({

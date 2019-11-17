@@ -4,7 +4,7 @@ class ProductController {
     static create(req, res, next) {
         let { name, price, stock } = req.body
         let image = req.file.cloudStoragePublicUrl
-        Product.create({ name, price, stock, image })
+        Product.create({ name, price: Number(price), stock, image })
             .then(result => {
                 res.status(201).json(result)
             })
@@ -32,7 +32,8 @@ class ProductController {
     static updateField(req, res, next) {
         let { id } = req.params
         let { name, price, stock } = req.body
-        Product.findByIdAndUpdate({ _id:id }, {  name, price, stock })
+        let image = req.file.cloudStoragePublicUrl
+        Product.findByIdAndUpdate({ _id:id }, {  name, price: Number(price), stock, image })
             .then(result => {
                 res.status(200).json(result)
             })

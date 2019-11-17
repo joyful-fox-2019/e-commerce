@@ -5,8 +5,10 @@
       <div class="row">
 
         <div class="col-lg-3">
-          <h1 class="my-4">Bubblebeam</h1>
-          <b-button variant="info" @click="viewCart"> <i class="fas fa-shopping-cart"></i> View Cart </b-button>
+          <div class=" container brandBubblebeam">
+            <img style="width: 90%;" src="../assets/bubblebeam-logo.png" alt="Logo" />
+          </div>
+          <b-button variant="info" @click.prevent="viewCart"> <i class="fas fa-shopping-cart"></i> View Cart </b-button>
         </div>
 
         <div class="col-lg-9">
@@ -31,10 +33,9 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import Carousel from '../components/Carousel'
 import ProductCard from '../components/ProductCard'
-// import axios from 'axios'
+import Swal from 'sweetalert2'
 
 export default {
   name: 'home',
@@ -50,7 +51,15 @@ export default {
   },
   methods: {
     viewCart () {
-      this.$router.push('/cart')
+      if (this.$store.isLogin) {
+        this.$router.push('/cart')
+      } else {
+        Swal.fire({
+          title: 'You need to login first',
+          showConfirmButton: true
+        })
+        this.$router.push('/login')
+      }
     }
   },
   created () {
@@ -58,3 +67,5 @@ export default {
   }
 }
 </script>
+<style scoped>
+</style>

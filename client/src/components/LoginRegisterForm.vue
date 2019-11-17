@@ -2,7 +2,7 @@
   <div class="sign-box rounded shadow">
     <div class="d-flex justify-content-center" style="position: relative;top: -100px;">
       <div class="logo-box d-flex justify-content-center align-items-center shadow m-0">
-        <img style="width: 90%;" src="../assets/milotic-logo.png" alt="Logo" />
+        <img style="width: 90%;" src="../assets/bubblebeam-logo.png" alt="Logo" />
       </div>
     </div>
     <div
@@ -42,7 +42,7 @@
         <div>
           <h4>
             Need an account ?
-            <a href="#" @click.prevent="goRegister()"> Register here </a>
+            <a href="#" @click.prevent="toRegister"> Register here </a>
           </h4>
         </div>
       </div>
@@ -92,7 +92,7 @@
         <div>
           <h4>
             Already a member ?
-            <a href="#" @click.prevent="goLogin()">Login here</a>
+            <a href="#" @click.prevent="toLogin">Login here</a>
           </h4>
         </div>
       </div>
@@ -116,11 +116,11 @@ export default {
     }
   },
   methods: {
-    goLogin () {
+    toLogin () {
       this.signUp = false
       this.signIn = true
     },
-    goRegister () {
+    toRegister () {
       this.signUp = true
       this.signIn = false
     },
@@ -174,7 +174,11 @@ export default {
             showConfirmButton: false,
             timer: 1500
           })
-          this.$router.push('/')
+          if (data.role === 'customer') {
+            this.$router.push('/')
+          } else if (data.role === 'admin') {
+            this.$router.push('/admin')
+          }
         })
         .catch(err => {
           console.log(err)

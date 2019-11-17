@@ -1,27 +1,47 @@
 <template>
-  <div class="card mb-3" style="max-width: 540px;">
-  <div class="row no-gutters">
-    <div class="col-md-4">
-      <img :src=ItemInCart.product_image class="card-img" alt="...">
-    </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        <h5 class="card-title">{{ ItemInCart.product_name }}</h5>
-        <span> quantity: {{ ItemInCart.quantity }} </span>
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-      </div>
-    </div>
-  </div>
-</div>
+      <tbody>
+        <tr>
+          <th scope="row" class="border-0">
+            <div class="p-2">
+              <img
+                :src=ItemInCart.product_image
+                alt
+                width="70"
+                class="img-fluid rounded shadow-sm"
+              />
+              <div class="ml-3 d-inline-block align-middle">
+                <h5 class="mb-0">
+                  <span class="text-dark d-inline-block align-middle">{{ ItemInCart.product_name }}</span>
+                </h5>
+              </div>
+            </div>
+          </th>
+          <td class="border-0 align-middle">
+            <strong> Rp. {{ ItemInCart.product_price }} </strong>
+          </td>
+          <td class="border-0 align-middle">
+            <strong> {{ ItemInCart.quantity }} </strong>
+          </td>
+          <td class="border-0 align-middle">
+            <b-button @click.prevent="removeFromCart(ItemInCart._id)">
+              <i class="fa fa-trash"></i>
+            </b-button>
+          </td>
+        </tr>
+      </tbody>
 </template>
 
 <script>
 export default {
   name: 'CartItem',
-  props: ['ItemInCart']
+  props: ['ItemInCart'],
+  methods: {
+    removeFromCart (ItemInCartId) {
+      this.$store.dispatch('removeFromCart', ItemInCartId)
+    }
+  }
 }
 </script>
 
 <style>
-
 </style>

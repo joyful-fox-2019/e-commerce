@@ -12,7 +12,12 @@
         <h6>Stock: {{ ProductData.stock }}</h6>
       </div>
       <div class="card-footer" v-if="$store.state.isLogin">
-        <small class="text-muted"><b-button @click.prevent="addToCart({product_id: ProductData._id, product_name: ProductData.name, product_image: ProductData.image })"> <i class="fas fa-shopping-basket"></i> Buy now </b-button></small>
+        <div v-if="ProductData.stock > 0">
+          <small class="text-muted"><b-button @click.prevent="addToCart({ product_id: ProductData._id, product_name: ProductData.name, product_price: ProductData.price, product_image: ProductData.image })"> <i class="fas fa-shopping-basket"></i> Add to cart </b-button></small>
+        </div>
+        <div v-if="ProductData.stock <= 0">
+          <small class="text-muted"><b-button @click.prevent="addToCart({ product_id: ProductData._id, product_name: ProductData.name, product_price: ProductData.price, product_image: ProductData.image })" disabled> <i class="fas fa-shopping-basket"></i> Add to cart </b-button></small>
+        </div>
       </div>
     </div>
   </div>
@@ -24,7 +29,6 @@ export default {
   props: ['ProductData'],
   methods: {
     addToCart (objProduct) {
-      console.log(objProduct)
       this.$store.dispatch('addToCart', objProduct)
     }
   }

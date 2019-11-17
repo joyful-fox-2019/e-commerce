@@ -28,6 +28,7 @@ const userSchema = new Schema ({
                 ref: 'Product'
             },
             product_name: String,
+            product_price: Number,
             product_image: String,
             quantity: Number
         }
