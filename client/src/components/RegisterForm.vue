@@ -48,43 +48,45 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+
 export default {
-  data() {
+  data () {
     return {
-      name: "",
-      email: "",
-      password: "",
-      city: ""
-    };
+      name: '',
+      email: '',
+      password: '',
+      city: ''
+    }
   },
   methods: {
-    registerUser() {
+    registerUser () {
       let payload = {
         name: this.name,
         email: this.email,
         password: this.password,
         city: this.city
-      };
-      this.$store.dispatch("registerUser", payload)
+      }
+      this.$store.dispatch('registerUser', payload)
         .then(response => {
           if (response) {
-            this.name = "";
-            this.email = "";
-            this.password = "";
-            this.city = "";
-            this.$router.push("/auth/login");
+            this.name = ''
+            this.email = ''
+            this.password = ''
+            this.city = ''
+            this.$router.push('/auth/login')
           }
         })
         .catch(err => {
           Swal.fire({
-            type: "error",
-            title: "Error",
+            type: 'error',
+            title: 'Error',
             text: `${err.response.data.message}`
-          });
-        });
+          })
+        })
     }
   }
-};
+}
 </script>
 
 <style>

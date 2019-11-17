@@ -78,40 +78,40 @@
 </template>
 
 <script>
-import server from "../api/server";
-import Swal from "sweetalert2";
-import { mapState } from "vuex";
+import server from '../api/server'
+import Swal from 'sweetalert2'
+import { mapState } from 'vuex'
 export default {
-  data() {
+  data () {
     return {
-      name: "",
-      stock: "",
-      price: "",
+      name: '',
+      stock: '',
+      price: '',
       imageLink:
-        "https://i2.wp.com/www.scribblesandcrumbs.com/wp-content/plugins/penci-portfolio//images/no-thumbnail.jpg?w=1170",
-      img: ""
-    };
+        'https://i2.wp.com/www.scribblesandcrumbs.com/wp-content/plugins/penci-portfolio//images/no-thumbnail.jpg?w=1170',
+      img: ''
+    }
   },
   methods: {
-    toCheckout() {
-      this.$router.push("/user/cart");
+    toCheckout () {
+      this.$router.push('/user/cart')
     },
-    checkHistory() {
-      this.$router.push("/admin");
+    checkHistory () {
+      this.$router.push('/admin')
     },
-    checkTransaction() {
-      this.$router.push("/user/transaction");
+    checkTransaction () {
+      this.$router.push('/user/transaction')
     },
-    userSignout() {
-      this.$store.dispatch("userSignout");
-      this.$router.push("/");
+    userSignout () {
+      this.$store.dispatch('userSignout')
+      this.$router.push('/')
     },
-    addProduct() {
+    addProduct () {
       server({
-        method: "post",
-        url: "/products",
+        method: 'post',
+        url: '/products',
         headers: {
-          access_token: localStorage.getItem("access_token")
+          access_token: localStorage.getItem('access_token')
         },
         data: {
           name: this.name,
@@ -121,59 +121,59 @@ export default {
         }
       })
         .then(({ data }) => {
-          this.$store.dispatch("getProducts");
-          this.name = "";
-          this.price = "";
-          this.stock = "";
-          this.img = "";
+          this.$store.dispatch('getProducts')
+          this.name = ''
+          this.price = ''
+          this.stock = ''
+          this.img = ''
           this.imageLink =
-            "https://i2.wp.com/www.scribblesandcrumbs.com/wp-content/plugins/penci-portfolio//images/no-thumbnail.jpg?w=1170";
+            'https://i2.wp.com/www.scribblesandcrumbs.com/wp-content/plugins/penci-portfolio//images/no-thumbnail.jpg?w=1170'
         })
         .catch(err => {
-          console.log(err.response.data.message);
-        });
+          console.log(err.response.data.message)
+        })
     },
-    uploadImage(event) {
-      this.img = event.target.files[0];
-      let bodyFormData = new FormData();
+    uploadImage (event) {
+      this.img = event.target.files[0]
+      let bodyFormData = new FormData()
       if (this.img) {
         Swal.fire({
-          title: "wait a minute to upload data",
+          title: 'wait a minute to upload data',
           allowOutsideClick: true
-        });
-        Swal.showLoading("Please wait..");
+        })
+        Swal.showLoading('Please wait..')
       } else {
         Swal.fire({
-          icon: "error",
-          title: "No Image Selected"
-        });
+          icon: 'error',
+          title: 'No Image Selected'
+        })
       }
-      bodyFormData.append("image", this.img);
+      bodyFormData.append('image', this.img)
       server({
-        method: "post",
-        url: "upload",
+        method: 'post',
+        url: 'upload',
         data: bodyFormData,
         headers: {
-          access_token: localStorage.getItem("access_token")
+          access_token: localStorage.getItem('access_token')
         }
       })
         .then(({ data }) => {
-          this.imageLink = data.link;
-          Swal.close();
+          this.imageLink = data.link
+          Swal.close()
           Swal.fire({
-            icon: "success",
-            title: "Image Uploaded"
-          });
+            icon: 'success',
+            title: 'Image Uploaded'
+          })
         })
         .catch(err => {
-          console.log(err.response.data.message);
-        });
+          console.log(err.response.data.message)
+        })
     }
   },
   computed: {
-    ...mapState(["isAdmin", "isLogin"])
+    ...mapState(['isAdmin', 'isLogin'])
   }
-};
+}
 </script>
 
 <style scoped>

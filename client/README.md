@@ -5,7 +5,7 @@
 #### **How To**
 
 ```
-HOSTING URL: 
+HOSTING URL: http://project-e-commerce.lukywinata.com
 
 1. npm install in server and client folder
 2. npm run dev in server folder

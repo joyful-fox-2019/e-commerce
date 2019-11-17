@@ -49,79 +49,79 @@
 </template>
 
 <script>
-import server from "../api/server";
+import server from '../api/server'
 export default {
-  data() {
+  data () {
     return {
       transactions: [],
-      code: ""
-    };
+      code: ''
+    }
   },
   methods: {
-    getTransactions() {
+    getTransactions () {
       server({
-        method: "get",
-        url: "/transactions/",
+        method: 'get',
+        url: '/transactions/',
         headers: {
-          access_token: localStorage.getItem("access_token")
+          access_token: localStorage.getItem('access_token')
         }
       })
         .then(({ data }) => {
-          this.transactions = data;
+          this.transactions = data
         })
         .catch(err => {
-          console.log(err.response.data.message);
-        });
+          console.log(err.response.data.message)
+        })
     },
-    paidItem(transactionId) {
-      if (this.code === "HACKTIV8PHASE2") {
+    paidItem (transactionId) {
+      if (this.code === 'HACKTIV8PHASE2') {
         server({
-          method: "patch",
+          method: 'patch',
           url: `/transactions/${transactionId}`,
           headers: {
-            access_token: localStorage.getItem("access_token")
+            access_token: localStorage.getItem('access_token')
           },
           data: {
-            status: "paid"
+            status: 'paid'
           }
         })
           .then(({ data }) => {
-            this.getTransactions();
+            this.getTransactions()
           })
           .catch(err => {
-            console.log(err.response.data.message);
-          });
+            console.log(err.response.data.message)
+          })
       }
     },
-    acceptItem(transactionId) {
+    acceptItem (transactionId) {
       server({
-        method: "patch",
+        method: 'patch',
         url: `/transactions/${transactionId}`,
         headers: {
-          access_token: localStorage.getItem("access_token")
+          access_token: localStorage.getItem('access_token')
         },
         data: {
-          status: "accepted"
+          status: 'accepted'
         }
       })
         .then(({ data }) => {
-          this.getTransactions();
+          this.getTransactions()
         })
         .catch(err => {
-          console.log(err.response.data.message);
-        });
+          console.log(err.response.data.message)
+        })
     },
-    rupiah(price) {
-      return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR"
-      }).format(price);
+    rupiah (price) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR'
+      }).format(price)
     }
   },
-  created() {
-    this.getTransactions();
+  created () {
+    this.getTransactions()
   }
-};
+}
 </script>
 
 <style scoped>

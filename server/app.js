@@ -5,7 +5,6 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'
 const mongoose = require('mongoose')
 const express = require('express');
 const cors = require('cors')
-const logger = require('morgan')
 
 const PORT = process.env.PORT
 let MONGO_DB = process.env.MONGODB_URL
@@ -17,7 +16,6 @@ const app = express();
 app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(logger('dev'))
 
 if (process.env.NODE_ENV === 'testing') {
   MONGO_DB = process.env.MONGODB_TEST

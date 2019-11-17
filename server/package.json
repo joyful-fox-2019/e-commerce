@@ -4,7 +4,6 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "pm2 start app.js",
     "test": "NODE_ENV=testing npx mocha --exit",
     "dev": "NODE_ENV=development nodemon app.js"
   },

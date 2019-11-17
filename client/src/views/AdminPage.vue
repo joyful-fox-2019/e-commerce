@@ -44,58 +44,58 @@
 </template>
 
 <script>
-import server from "../api/server";
+import server from '../api/server'
 export default {
-  data() {
+  data () {
     return {
       transactions: []
-    };
-  },
-  methods: {
-    getTransactions() {
-      server({
-        method: "get",
-        url: "/transactions/admin",
-        headers: {
-          access_token: localStorage.getItem("access_token")
-        }
-      })
-        .then(({ data }) => {
-          this.transactions = data;
-        })
-        .catch(err => {
-          console.log(err.response.data.message);
-        });
-    },
-    deliverItem(transactionId) {
-      server({
-        method: "patch",
-        url: `/transactions/admin/${transactionId}`,
-        headers: {
-          access_token: localStorage.getItem("access_token")
-        },
-        data: {
-          status: "delivered"
-        }
-      })
-        .then(({ data }) => {
-          this.getTransactions();
-        })
-        .catch(err => {
-          console.log(err.response.data.message);
-        });
-    },
-    rupiah(price) {
-      return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR"
-      }).format(price);
     }
   },
-  created() {
-    this.getTransactions();
+  methods: {
+    getTransactions () {
+      server({
+        method: 'get',
+        url: '/transactions/admin',
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      })
+        .then(({ data }) => {
+          this.transactions = data
+        })
+        .catch(err => {
+          console.log(err.response.data.message)
+        })
+    },
+    deliverItem (transactionId) {
+      server({
+        method: 'patch',
+        url: `/transactions/admin/${transactionId}`,
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        },
+        data: {
+          status: 'delivered'
+        }
+      })
+        .then(({ data }) => {
+          this.getTransactions()
+        })
+        .catch(err => {
+          console.log(err.response.data.message)
+        })
+    },
+    rupiah (price) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR'
+      }).format(price)
+    }
+  },
+  created () {
+    this.getTransactions()
   }
-};
+}
 </script>
 
 <style scoped>

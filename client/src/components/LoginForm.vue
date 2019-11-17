@@ -40,30 +40,30 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
-      email: "",
-      password: ""
-    };
+      email: '',
+      password: ''
+    }
   },
   methods: {
-    loginUser() {
+    loginUser () {
       let payload = {
         email: this.email,
         password: this.password
-      };
+      }
       this.$store
-        .dispatch("loginUser", payload)
+        .dispatch('loginUser', payload)
         .then(response => {
           if (response) {
-            this.$router.push("/");
-            this.email = "";
-            this.password = "";
+            this.$router.push('/')
+            this.email = ''
+            this.password = ''
           }
         })
     }
   }
-};
+}
 </script>
 
 <style>

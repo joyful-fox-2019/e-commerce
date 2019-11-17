@@ -94,61 +94,61 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   methods: {
-    subtotal(quantity, price) {
-      return quantity * price;
+    subtotal (quantity, price) {
+      return quantity * price
     },
-    rupiah(price) {
-      return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR"
-      }).format(price);
+    rupiah (price) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR'
+      }).format(price)
     },
-    updateCart(cartId, productId) {
+    updateCart (cartId, productId) {
       let payload = {
         cartId,
         productId,
         quantity: event.target.value
-      };
-      this.$store.dispatch("updateCart", payload);
+      }
+      this.$store.dispatch('updateCart', payload)
     },
-    removeCart(cartId) {
+    removeCart (cartId) {
       let payload = {
         cartId
-      };
-      this.$store.dispatch("removeCart", payload);
+      }
+      this.$store.dispatch('removeCart', payload)
     },
-    backToHome() {
-      this.$router.push("/");
+    backToHome () {
+      this.$router.push('/')
     },
-    checkOut() {
-      this.$store.dispatch("checkOut").then(response => {
-        this.$store.dispatch("getProducts");
-        this.$router.push("/");
-      });
+    checkOut () {
+      this.$store.dispatch('checkOut').then(response => {
+        this.$store.dispatch('getProducts')
+        this.$router.push('/')
+      })
     }
   },
   computed: {
     ...mapState({
-      carts: "carts"
+      carts: 'carts'
     }),
-    total() {
-      let totalPrice = 0;
+    total () {
+      let totalPrice = 0
       for (let i = 0; i < this.carts.length; i++) {
-        totalPrice += this.carts[i].quantity * this.carts[i].product.price;
+        totalPrice += this.carts[i].quantity * this.carts[i].product.price
       }
-      return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR"
-      }).format(totalPrice);
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR'
+      }).format(totalPrice)
     }
   },
-  created() {
-    this.$store.dispatch("getCarts");
+  created () {
+    this.$store.dispatch('getCarts')
   }
-};
+}
 </script>
 
 <style>

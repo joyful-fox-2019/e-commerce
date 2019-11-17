@@ -13,28 +13,28 @@ export default new Vuex.Store({
     products: []
   },
   mutations: {
-    IS_ADMIN(state, payload) {
+    IS_ADMIN (state, payload) {
       state.isAdmin = true
     },
-    IS_LOGIN(state, payload) {
+    IS_LOGIN (state, payload) {
       state.isLogin = true
     },
-    IS_LOGOUT(state, payload) {
+    IS_LOGOUT (state, payload) {
       state.isLogin = false
       state.isAdmin = false
     },
-    SET_PRODUCTS(state, payload) {
+    SET_PRODUCTS (state, payload) {
       state.products = payload
     },
-    SET_CARTS(state, payload) {
+    SET_CARTS (state, payload) {
       state.carts = payload
     },
-    EMPTY_CARTS(state, payload) {
+    EMPTY_CARTS (state, payload) {
       state.carts = []
     }
   },
   actions: {
-    registerUser(context, payload) {
+    registerUser (context, payload) {
       return server({
         method: 'post',
         url: '/users/register',
@@ -47,18 +47,18 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          Swal.fire("Success", "Succesfully registered, please login");
+          Swal.fire('Success', 'Succesfully registered, please login')
           return 'Register Success'
         })
         .catch((err) => {
           Swal.fire({
-            icon: "error",
-            title: "Error",
+            icon: 'error',
+            title: 'Error',
             text: `${err.response.data.errors.join(', ')}`
-          });
+          })
         })
     },
-    loginUser(context, payload) {
+    loginUser (context, payload) {
       return server({
         method: 'post',
         url: '/users/login',
@@ -78,13 +78,13 @@ export default new Vuex.Store({
         })
         .catch((err) => {
           Swal.fire({
-            icon: "error",
-            title: "Error",
+            icon: 'error',
+            title: 'Error',
             text: `${err.response.data.message}`
-          });
+          })
         })
     },
-    getProducts(context, payload) {
+    getProducts (context, payload) {
       server({
         method: 'get',
         url: '/products'
@@ -96,7 +96,7 @@ export default new Vuex.Store({
           console.log(err.response.data.message)
         })
     },
-    addToCart(context, payload) {
+    addToCart (context, payload) {
       return server({
         method: 'post',
         url: '/carts',
@@ -116,7 +116,7 @@ export default new Vuex.Store({
           console.log(err.response.data.message)
         })
     },
-    getCarts(context, payload) {
+    getCarts (context, payload) {
       server({
         method: 'get',
         url: '/carts',
@@ -131,7 +131,7 @@ export default new Vuex.Store({
           console.log(err.response.data.message)
         })
     },
-    updateCart(context, payload) {
+    updateCart (context, payload) {
       server({
         method: 'put',
         url: `carts/${payload.cartId}`,
@@ -151,7 +151,7 @@ export default new Vuex.Store({
           console.log(err.response.data.message)
         })
     },
-    removeCart(context, payload) {
+    removeCart (context, payload) {
       server({
         method: 'delete',
         url: `carts/${payload.cartId}`,
@@ -166,7 +166,7 @@ export default new Vuex.Store({
           console.log(err.response.data.message)
         })
     },
-    checkOut(context, payload) {
+    checkOut (context, payload) {
       let promises = []
       let productsList = []
       let totalCost = 0
@@ -217,7 +217,7 @@ export default new Vuex.Store({
           console.log(err)
         })
     },
-    userSignout(context, payload) {
+    userSignout (context, payload) {
       localStorage.clear()
       context.commit('IS_LOGOUT')
     }
