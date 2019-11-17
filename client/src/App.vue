@@ -22,13 +22,13 @@ export default {
 
 <style>
 
-body, html {
-  height: 100vh;
+html {
+  background-color: #F6EEE2 !important;
+  min-height: 100% !important;
   margin: 0;
 }
 
 #app {
-  background-color: #F6EEE2;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -3,8 +3,7 @@ const { Schema, model } = require('mongoose')
 const cartSchema = new Schema({
   user : {
     type :  Schema.Types.ObjectId,
-    ref: 'User',
-    required : [true, `User cannot be empty`]
+    ref: 'User'
   },
   product : {
     type :  Schema.Types.ObjectId,
@@ -16,7 +15,8 @@ const cartSchema = new Schema({
     required : [true, `Amount cannot be empty`]
   }
 }, {
-  versionKey : false
+  versionKey : false,
+  timestamps: true
 })
 
 const Cart = model('Cart', cartSchema)

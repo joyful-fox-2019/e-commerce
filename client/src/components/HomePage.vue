@@ -3,15 +3,11 @@
     <section class="PageHome_ImageTextSection PageHome_NewCollection">
       <div class="PageHomeTitleContainer text">
         <h4 class="text title t-title t-titile--big Appear AppearText words splitting Appear-appeared" style="--word-total:3; padding-right: 150px;">
-          <p><strong>
-              a<br>
-              fine play<br>
-              of the clay <br>
-              soft and sift moistened<br>
-              turns malleable gathered<br>
-              comes out a beautiful craft
-          </strong></p>
         </h4>
+      <!-- <p><strong>
+              a fine play of the clay soft and sift moistened<br>
+              turns malleable gathered comes out a beautiful craft
+          </strong></p> -->
       </div>
     </section>
   </div>
@@ -26,13 +22,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Zilla+Slab+Highlight&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display&display=swap');
 
 .PageHome_ImageTextSection {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-end;
-  flex-direction: row;
+  flex-direction: column;
   margin-right: 490px;
+  text-align: center;
 }
 
 .PageHomeTitleContainer{
@@ -42,15 +40,18 @@ export default {
   background-size: contain;
   height:800px;
   width: 1200px;
-  justify-content: flex-end;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 p {
-  font-family: 'Zilla Slab Highlight', cursive;
+  font-family: 'Playfair Display', serif;
   font-size: 30px;
-  text-align: right;
-  /* letter-spacing: 7px; */
+  text-align: center;
+  letter-spacing: 3px;
+  display: flex;
+  justify-content: center;
 }
 
 h3 {

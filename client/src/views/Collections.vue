@@ -1,10 +1,13 @@
 <template>
   <div class="about">
-    <h1>This is a collection list page</h1>
-    <div v-for="(product, index) in productList" :key="index" class="product-card">
-    <ProductCard :product="product" />
+    <div  class="container">
+      <div class="columns is-multiline is-mobile">
+        <div v-for="(product, index) in productList" :key="index" class="column is-half">
+          <ProductCard :product="product" />
+        </div>
+      </div>
     </div>
-    {{productList}}
+    <!-- {{productList}} -->
   </div>
 </template>
 
@@ -22,7 +25,7 @@ export default {
   },
   methods: {
     fetchProduct () {
-      this.axios('/products')
+      this.axios.get('/products')
         .then(({ data }) => {
           console.log(data)
           this.productList = data

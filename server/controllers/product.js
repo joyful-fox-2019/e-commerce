@@ -2,7 +2,7 @@ const Product = require('../models/product')
 
 class ProductController {
   static find(req, res, next) {
-    Product.find()
+    Product.find().sort({ createdAt : 'desc' })
       .then(products => {
         res.status(200).json(products)
       })
@@ -17,8 +17,8 @@ class ProductController {
       .catch(next)
   }
   static create(req, res, next) {
-    const { name, imageSource, price, description, stock } = req.body
-    Product.create({ name, imageSource, price, description, stock }) 
+    const { name, file, price, description, stock } = req.body
+    Product.create({ name, imageSource: file, price, description, stock }) 
       .then(product => {
         res.status(201).json(product)
       })

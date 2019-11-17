@@ -16,6 +16,9 @@ class UserController {
           id : user._id,
           email : user.email
         })
+        // if (user.role === `admin`) {
+        //   localStorage.setItem('isAdmin')
+        // }
         res.status(201).json({message : `register success`, token, user})
       })
       .catch(next)
@@ -40,6 +43,9 @@ class UserController {
               id : user._id,
               email : user.email
             })
+            // if (user.role === `admin`) {
+            //   localStorage.setItem('isAdmin')
+            // }
             res.status(200).json({message : `login success`, token})
           } else {
             throw { status : 400, message : `username/password wrong`}

@@ -1,12 +1,12 @@
 const Cart = require('../models/cart')
-console.log('kehalaman car')
+// console.log('kehalaman cart')
 
 class CartController {
   static find(req, res, next) {
     // Cart.findOneAndUpdate({})
-    console.log('kesini')
-    console.log(req.loggedUser)
-    Cart.find()
+    console.log('kesini cart')
+    console.log(req.loggedUser, "loggedUser")
+    Cart.find({ user: req.loggedUser._id}).sort({ createdAt : 'desc'})
     .populate('user')//field mana yg akan di populate
     .populate('product')
       .then(cart => {
@@ -23,7 +23,9 @@ class CartController {
       .catch(next)
   }
   static create(req, res, next) {
-    const { user, product, amount } = req.body
+    console.log(req.loggedUser, "loggedUser")
+    const { product, amount } = req.body
+    const user = req.loggedUser._id
     Cart.create({ user, product, amount })
       .then(cart => {
         res.status(201).json(cart)
@@ -32,8 +34,8 @@ class CartController {
   }
   static update(req, res, next) {
     let id = req.params.id
-    const { user, product, amount } = req.body
-    Cart.findByIdAndUpdate(id, { user, product, amount }, { omitUndefined: true, new: true, runValidators: true, useFindAndModify: false })
+    const { amount } = req.body
+    Cart.findByIdAndUpdate(id, { amount }, { omitUndefined: true, new: true, runValidators: true, useFindAndModify: false })
       .then(cart => {
         res.status(200).json(cart)
       })

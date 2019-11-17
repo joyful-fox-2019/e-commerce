@@ -1,21 +1,11 @@
 <template>
-  <div class="container-product">
-      <div class="card">
-        <div class="card-image">
-          <figure class="image is-4by3">
-            <img @click="redirect(product._id)" :src="product.imageSource" alt="Product image">
-          </figure>
-        </div>
-        <div class="card-content">
-          <div class="media">
-            <div class="media-content">
-              <p class="title is-12">{{product.name}}</p>
-              <p class="subtitle is-6">IDR {{product.price.toLocaleString()}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="productList">
+      <figure class="image is-3by4">
+      <img @click="redirect(product._id)" :src="product.imageSource" alt="Product image">
+      </figure>
+      <h4>{{product.name}}</h4>
+      <p>{{itemPrice}}</p>
+  </div>
 </template>
 
 <script>
@@ -25,10 +15,20 @@ export default {
     redirect (id) {
       this.$router.push(`/collections/${id}`)
     }
+  },
+  computed: {
+    itemPrice () {
+      return `IDR ${this.product.price.toLocaleString()}`
+    }
   }
 }
 </script>
 
 <style>
+.container-product {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 
 </style>

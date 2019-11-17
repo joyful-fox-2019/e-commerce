@@ -5,7 +5,7 @@ const authentication = (req, res, next) => {
   console.log(req.headers)
   User.findById(decodeToken(req.headers.token).id) //mengambil id obj yg telah di decode
     .then(user => {
-      console.log(user, "dr middlewareeeeeeee")
+      // console.log(user, "dr middlewareeeeeeee")
       if (!user) {
         throw {status : 401, message : `you have to login first`}
       } else {

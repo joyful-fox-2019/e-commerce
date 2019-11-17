@@ -22,7 +22,8 @@ const productSchema = new Schema({
     required : [true, 'Image source cannot be empty']
   }
 }, {
-  versionKey : false
+  versionKey : false,
+  timestamps: true
 })
 
 const Product = model('Product', productSchema)

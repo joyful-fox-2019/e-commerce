@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "poterieindulgence",
+  "private_key_id": "f981b7c70eee301bc0ce161778358ce94aaa8b9c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDKBnbjGS18wUnW\nYLyQ19jV1h9FZNuM6URKeYFlD0CyvSbO8yaQS9FRxVnP0n+UWF5AR/FtKc6c7wnq\nrlRXD1d6U+O2P9j6rVUmpnRoQIOC5q28Aw9LMjMHgPIlQ9bPXHuWIHgyp3Ni5PXa\ngWlt2XntpNvUFdipQDAaNv6+StGQHlm7jUXVq0NtfMYIRtSMtsBCR0FpkE5vZ7Oa\nhWputdctq5jrSAgERl7qOW9HKQP6J0Wk7EicQCNFgrmAT9VOajIK7OidVC/u1OoN\n5qzC8pzaiuVjBntTGGTL/N2XbbrS+s0t8uO7f61m4Cgr6V47boZl3ge1Fsy0vd9i\n5YlMZ9MzAgMBAAECggEAX0iZPhcb6yFG8AOELFSBgqmQ6ivdmSJUAUQ5kS6Wdzbb\nXPQ1lg0MVqLb7zb60T60hWDpL3Fub3oWlUdPpBgqTBnQ5p5KekDSTn5nnNwAqvad\nrnVK+05b3wgkLQtH/1lBONdrmYh81YHjqwEqdpMB/OGqhOcg3wLVLSgPEjU7jdrL\n70dU0hUtvOoCUvkzs68qU4k3Sm9bzZfoIK2GtiPs0pKqew1lraX2fBt26EjfgvEE\nkgnEqwKnB/V4pLIvOz9DEdHu6vAF/IUHp0E9UaV4HXkvCl4mm4MQ3JgN6iTaxHrZ\n7sJbwPRKe3GHYBKpwq3kjrbxQtNQ2/s9P+RD8cHscQKBgQDvQv1WphbfIgCU2bDF\n2bG8pGmRD3/4JFtvP4Try9J0/ar8XBxLTPhOv5gI6DDd0r03dF3MKlOtCAJC0uFZ\nHBN5475KBgK+OgAzsRTshoXks+7HbmCRdmOthjEl0so4RpoH2wtbuY0w60s9fAEE\nHi702DVaFhRheo484xPrO7pZPQKBgQDYKJilcmIWdXYA32FHOcMnmtrmNHlm5jDX\n1qPfZAFS3IoedUxty6HYB6F1LnRdpUgJXFl9x7+fSAQT79Bp1OVZ6QZcwfaU7xhs\n6hrPmay5t3QCwsvnXR1MnlLtZsNOQrhXp8btu/JKytMohlCGmDlUhpcSFcUmghcs\n//ruEfRFLwKBgQCPm33DjF0eAKKotSDNICT2PRi/4LXGksvusgluHiBr5/XBEuhI\nqiI/4e+3KOZrvhmkN0w1RxKCQNRal4h6m8d02aVVeNYcp2OHozoT3YpwAy/GtBFy\nPcUGWg0Vzrdhn77ECE2A+JYuTowSk2NovVUh0MP1FluVRqIpGYLTJj5rYQKBgD2I\nUOvIA+Qgy9azwB1mdAdyLZ4akfSY0o6eq0eMUFQmM6s3+OnIbenxQiT5dGa0Bi2j\n/FWx5vqQpZiHS+zUjfVqQEVncaoz5eAbREaUmHbFomCm0ySpfQ2yhCjQeAhvNcq+\nGALU3cQsuK9wjLvD2Y4WQisDx3uOzMoilGvw8HhBAoGADSva/izDE72VO+QEb5rt\nU/G2biu4AgQzSLfhVODukQICImnzTggPsEyDuXm2YfZsiAjZjm4565R5cjDlnR5m\nGSmoqRpK7iVea3LzDi7yPXCLDatwTHydPgYPOl1S+nC6VXM2NwnsmZdmqRpBd9V6\nr826J5ey8RuPcXo02N5SnzI=\n-----END PRIVATE KEY-----\n",
+  "client_email": "poterieindulgence@poterieindulgence.iam.gserviceaccount.com",
+  "client_id": "116889977748429384153",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/poterieindulgence%40poterieindulgence.iam.gserviceaccount.com"
+}
