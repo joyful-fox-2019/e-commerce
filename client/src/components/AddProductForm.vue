@@ -14,7 +14,6 @@
     </div>
     <div class="form-group">
       <b-col>
-        <div class="mt-3">Selected file: {{ productImage }}</div>
           <b-form-file v-model="productImage" :state="Boolean(productImage)" placeholder="Choose a file or drop it here..." drop-placeholder="Drop file here..."></b-form-file>
     </b-col>
     </div>

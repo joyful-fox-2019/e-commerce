@@ -51,9 +51,10 @@ export default {
   },
   methods: {
     viewCart () {
-      if (this.$store.isLogin) {
+      console.log(this.$store)
+      if (this.$store.state.isLogin) {
         this.$router.push('/cart')
-      } else {
+      } else if (!this.$store.state.isLogin) {
         Swal.fire({
           title: 'You need to login first',
           showConfirmButton: true

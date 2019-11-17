@@ -4,11 +4,15 @@ class ProductController {
     static create(req, res, next) {
         let { name, price, stock } = req.body
         let image = req.file.cloudStoragePublicUrl
-        Product.create({ name, price: Number(price), stock, image })
-            .then(result => {
-                res.status(201).json(result)
-            })
-            .catch(next)
+        if(!name || !price || !stock || !image) {
+            res.send(400).json({ message: 'bad request'})
+        } else {
+            Product.create({ name, price: Number(price), stock, image })
+                .then(result => {
+                    res.status(201).json(result)
+                })
+                .catch(next)
+        }
     }
 
     static readAll(req, res, next) {
@@ -33,11 +37,15 @@ class ProductController {
         let { id } = req.params
         let { name, price, stock } = req.body
         let image = req.file.cloudStoragePublicUrl
-        Product.findByIdAndUpdate({ _id:id }, {  name, price: Number(price), stock, image })
-            .then(result => {
-                res.status(200).json(result)
-            })
-            .catch(next)
+        if(!name || !price || !stock || !image) {
+            res.status(400).json({ message: 'bad request'})
+        } else {
+            Product.findByIdAndUpdate({ _id:id }, {  name, price: Number(price), stock, image })
+                .then(result => {
+                    res.status(200).json(result)
+                })
+                .catch(next)
+        }
     }
 
     static deleteProduct(req, res, next) {

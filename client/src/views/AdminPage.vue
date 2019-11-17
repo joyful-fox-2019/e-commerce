@@ -5,7 +5,9 @@
       <div class="row">
 
         <div class="col-lg-3">
-          <h1 class="my-4">Bubblebeam</h1>
+          <div class=" container brandBubblebeam">
+            <img style="width: 90%;" src="../assets/bubblebeam-logo.png" alt="Logo" />
+          </div>
           <b-button variant="info" @click.prevent="addProduct"> <i class="far fa-plus-square"></i> Add A Product </b-button>
         </div>
 

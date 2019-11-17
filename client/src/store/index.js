@@ -51,9 +51,6 @@ export default new Vuex.Store({
         method: 'PATCH',
         data: {
           product_id: payload.product_id,
-          product_name: payload.product_name,
-          product_price: payload.product_price,
-          product_image: payload.product_image,
           quantity: 1
         },
         headers: {
@@ -82,6 +79,7 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
+          console.log(data)
           commit('setCart', data)
         })
         .catch(err => {

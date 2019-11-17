@@ -56,36 +56,43 @@ class UserController {
     }
 
     static addToCart(req, res, next) {
-        let { product_id, product_name, product_price, product_image, quantity } = req.body
+        let { product_id, quantity } = req.body
         let user_id = req.loggedUser.id
         let newItem = {
             product_id,
-            product_name,
-            product_price,
-            product_image,
             quantity
         }
-        User.updateOne({ _id: user_id }, { $push: { cart: newItem }})
-            .then(result => {
-                res.status(200).json(result)
-            })
-            .catch(next)
+        if(!product_id || !quantity) {
+            res.status(400).json({ message: 'bad request' })
+        } else {
+            User.updateOne({ _id: user_id }, { $push: { cart: newItem }})
+                .then(result => {
+                    res.status(200).json(result)
+                })
+                .catch(next)
+        }
     }
 
     static removeFromCart(req, res, next) {
         const user_id = req.loggedUser.id
         const { cart_id } = req.body
-        User.updateOne({ _id: user_id }, { $pull: { cart: { _id: cart_id }}})
-            .then(result => {
-                res.status(200).json(result)
-            })
-            .catch(next)
+        if(!cart_id) {
+            res.status(400).json({ message: 'bad request' })
+        } else {
+            User.updateOne({ _id: user_id }, { $pull: { cart: { _id: cart_id }}})
+                .then(result => {
+                    res.status(200).json(result)
+                })
+                .catch(next)
+        }
     }
 
     static viewCart(req, res, next) {
         const user_id = req.loggedUser.id
         User.findById({ _id: user_id })
+            .populate('cart.product_id')
             .then(result => {
+                console.log(result)
                 res.status(200).json(result.cart)
             })
             .catch(next)
