@@ -90,7 +90,6 @@ export default {
       this.$store.dispatch('register', payload)
     },
     toLogin () {
-      console.log('to login')
       this.$emit('setForm', 'login')
     }
   }

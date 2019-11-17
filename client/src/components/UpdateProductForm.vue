@@ -134,7 +134,6 @@ export default {
       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
     },
     initiateValue () {
-      console.log('initiated')
       const { name, description, price, stock, published, writer, penciler } = this.product
       this.name = name
       this.description = description

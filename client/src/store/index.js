@@ -78,10 +78,8 @@ export default new Vuex.Store({
   },
   actions: {
     register ({ commit }, payload) {
-      console.log('register')
       axios.post('/users/register', payload)
         .then(({ data }) => {
-          console.log(data)
           let user = {
             _id: data._id,
             name: data.name,
@@ -98,10 +96,8 @@ export default new Vuex.Store({
         .catch(alert)
     },
     login ({ commit }, payload) {
-      console.log('login')
       axios.post('/users/login', payload)
         .then(({ data }) => {
-          console.log(data)
           let user = {
             _id: data._id,
             name: data.name,
@@ -139,8 +135,6 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log(data)
-          console.log('harusnya tutup loading')
           commit('SET_LOADING', false)
           router.push('/')
           alertSuccess('New comic added!')
@@ -149,15 +143,12 @@ export default new Vuex.Store({
     },
     updateProduct ({ commit }, payload) {
       commit('SET_LOADING', true)
-      console.log('masukssss')
-      console.log(payload)
       axios.patch(`/products/${payload._id}`, payload, {
         headers: {
           access_token: localStorage.getItem('access_token')
         }
       })
         .then(({ data }) => {
-          console.log(data)
           commit('SET_LOADING', false)
           router.push('/')
           alertSuccess('Comic updated!')
@@ -172,7 +163,6 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log(data)
           commit('SET_LOADING', false)
           router.push('/')
           alertSuccess('Comic deleted!')
@@ -180,22 +170,18 @@ export default new Vuex.Store({
         .catch(alert)
     },
     getProducts ({ commit }, payload) {
-      console.log('masuk get products')
       // commit('SET_LOADING', true)
       axios.get('/products')
         .then(({ data }) => {
-          console.log(data)
           commit('SET_PRODUCTS', data)
           // commit('SET_LOADING', false)
         })
         .catch(alert)
     },
     getProduct ({ commit }, payload) {
-      console.log('masuk get product')
       // commit('SET_LOADING', true)
       axios.get(`/products/${payload}`)
         .then(({ data }) => {
-          console.log(data)
           commit('SET_PRODUCT', data)
           // commit('SET_LOADING', false)
         })
@@ -209,7 +195,6 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log(data)
           commit('SET_LOADING', false)
           commit('SET_ADD_CART_DIALOG', true)
         })
@@ -223,7 +208,6 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log(data)
           commit('SET_CARTS', data)
           commit('SET_LOADING', false)
         })
@@ -238,7 +222,6 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log(data)
           dispatch('getCarts')
         })
         .catch(alert)
@@ -250,7 +233,6 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log(data)
           router.push('/transactions')
         })
         .catch(alert)
@@ -262,7 +244,6 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log(data)
           dispatch('getCarts')
         })
         .catch(alert)
@@ -274,7 +255,6 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log(data)
           commit('SET_TRANSACTIONS', data)
         })
         .catch(alert)
@@ -286,7 +266,6 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log(data)
           commit('SET_TRANSACTION', data)
         })
         .catch(alert)
@@ -298,7 +277,6 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log(data)
           dispatch('getTransactions')
         })
         .catch(alert)

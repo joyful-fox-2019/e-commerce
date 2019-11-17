@@ -27,7 +27,12 @@ export default {
   created () {
     this.getTransaction()
   },
-  computed: mapState(['transaction'])
+  computed: mapState(['transaction']),
+  watch: {
+    '$route.params.id' () {
+      this.getTransaction()
+    }
+  }
 }
 </script>
 

@@ -56,13 +56,11 @@ export default {
   },
   methods: {
     incrementQty () {
-      console.log(this.cart.qty, this.cart.product.stock)
       if (this.cart.qty < this.cart.product.stock) {
         let payload = {
           cartId: this.cart._id,
           qty: this.cart.qty + 1
         }
-        console.log('masuk')
         this.$store.dispatch('updateQty', payload)
       }
     },
