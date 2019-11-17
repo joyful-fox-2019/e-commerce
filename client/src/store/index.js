@@ -33,7 +33,16 @@ export default new Vuex.Store({
       penciler: ''
     },
     addCartDialog: false,
-    carts: []
+    carts: [],
+    transactions: [],
+    transaction: {
+      _id: '',
+      carts: [],
+      customer: {
+        email: ''
+      },
+      total: 0
+    }
   },
   mutations: {
     SET_USER (state, payload) {
@@ -59,6 +68,12 @@ export default new Vuex.Store({
     },
     SET_CARTS (state, payload) {
       state.carts = payload
+    },
+    SET_TRANSACTIONS (state, payload) {
+      state.transactions = payload
+    },
+    SET_TRANSACTION (state, payload) {
+      state.transaction = payload
     }
   },
   actions: {
@@ -239,8 +254,54 @@ export default new Vuex.Store({
           router.push('/transactions')
         })
         .catch(alert)
+    },
+    deleteCart ({ dispatch }, payload) {
+      axios.delete(`/carts/${payload}`, {
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          dispatch('getCarts')
+        })
+        .catch(alert)
+    },
+    getTransactions ({ commit }, payload) {
+      axios.get('/transactions', {
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          commit('SET_TRANSACTIONS', data)
+        })
+        .catch(alert)
+    },
+    getTransaction ({ commit }, payload) {
+      axios.get(`/transactions/${payload}`, {
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          commit('SET_TRANSACTION', data)
+        })
+        .catch(alert)
+    },
+    updateStatus ({ dispatch }, payload) {
+      axios.patch(`/transactions/${payload}`, {}, {
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          dispatch('getTransactions')
+        })
+        .catch(alert)
     }
-  },
-  modules: {
   }
 })

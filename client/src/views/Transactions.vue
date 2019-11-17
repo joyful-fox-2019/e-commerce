@@ -7,29 +7,35 @@
             Transactions
           </div>
           <hr style="margin: 0;" class="mt-3">
-          transaksi
+          <Transaction v-for="transaction in transactions" :key="transaction._id" :transaction="transaction">
+          </Transaction>
         </v-col>
-        <!-- <v-col lg="4" md="4" cols="12">
-          <div class="header f-fancy">
-            Products
-          </div>
-          <hr style="margin: 0;" class="mt-3">
-          <div class="mt-1" style="text-align: center;">
-            Total Price:
-            <div class="t-secondary" style="font-size: 25px;">
-            </div>
-            <v-btn class="full-width bg-secondary mt-5">BUY</v-btn>
-          </div>
-        </v-col> -->
+        <v-col lg="4" md="4" cols="12">
+          <router-view></router-view>
+        </v-col>
       </v-row>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import Transaction from '../components/Transaction'
 
 export default {
-  name: 'Transactions'
+  name: 'Transactions',
+  components: {
+    Transaction
+  },
+  methods: {
+    getTransactions () {
+      this.$store.dispatch('getTransactions')
+    }
+  },
+  computed: mapState(['transactions']),
+  created () {
+    this.getTransactions()
+  }
 }
 </script>
 

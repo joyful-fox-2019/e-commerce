@@ -20,7 +20,14 @@
             align="center"
             justify="center"
           >
-            <div class="display-3">Slide {{ i + 1 }}</div>
+            <div class="display-3">
+              <v-img
+              :src="products[i].image"
+              width="100%"
+              gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)"
+              >
+              </v-img>
+            </div>
           </v-row>
         </v-sheet>
       </v-carousel-item>
@@ -34,16 +41,19 @@ export default {
     return {
       colors: [
         'primary',
-        'secondary',
-        'yellow darken-2',
         'red',
-        'orange'
+        'primary',
+        'red',
+        'primary'
       ],
       model: 0,
       showArrows: true,
       hideDelimiters: false,
       cycle: true
     }
+  },
+  props: {
+    products: Array
   }
 }
 </script>

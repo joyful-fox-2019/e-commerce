@@ -24,6 +24,7 @@
                 </v-icon>
                 NEW COMIC
               </v-btn>
+              <v-btn @click="$router.push('/transactions')" v-if="$store.state.user._id && $store.state.user.isAdmin" class="ml-3 bg-secondary nav-button"><v-icon>mdi-account</v-icon></v-btn>
             </div>
           </v-col>
         </v-row>

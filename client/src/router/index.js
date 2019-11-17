@@ -38,7 +38,14 @@ const routes = [
   {
     path: '/transactions',
     name: 'transactions',
-    component: () => import('../views/Transactions.vue')
+    component: () => import('../views/Transactions.vue'),
+    children: [
+      {
+        path: ':id',
+        name: 'transaction-detail',
+        component: () => import('../components/TransactionDetail.vue')
+      }
+    ]
   }
 ]
 

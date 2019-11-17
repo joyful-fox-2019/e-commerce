@@ -7,9 +7,12 @@
             Shopping Cart
           </div>
           <hr style="margin: 0;" class="mt-3">
+          <div v-if="carts.length === 0">
+            No products.
+          </div>
           <Cart v-for="cart in carts" :key="cart._id" :cart="cart"></Cart>
         </v-col>
-        <v-col lg="4" md="4" cols="12">
+        <v-col lg="4" md="4" cols="12" v-if="carts.length > 0">
           <div class="header f-fancy">
             Shopping Summary
           </div>

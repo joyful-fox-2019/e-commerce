@@ -26,5 +26,12 @@ module.exports = {
         res.status(200).json(cart)
       })
       .catch(next)
+  },
+  delete: (req, res, next) => {
+    Cart.findByIdAndDelete(req.params.id)
+      .then(cart => {
+        res.status(200).json(cart)
+      })
+      .catch(next)
   }
 }

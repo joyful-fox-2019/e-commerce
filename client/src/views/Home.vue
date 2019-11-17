@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <FeaturedProduct></FeaturedProduct>
+    <FeaturedProduct v-if="products.length >= 5" :products="products"></FeaturedProduct>
     <div class="mt-10">
     </div>
     <v-row class="text-center ma-2">

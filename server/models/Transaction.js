@@ -8,8 +8,7 @@ const transactionSchema = new Schema({
     default: 'Waiting for confirmation'
   },
   carts: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Cart'
+    type: Object
   }],
   customer: {
     type: Schema.Types.ObjectId,

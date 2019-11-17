@@ -10,7 +10,7 @@
       <div class="stock">
         Stock: {{ product.stock }}
       </div>
-      <div class="bg-secondary pl-3 pr-3 pt-1 pb-1 mt-2" style="border-radius: 5px;">
+      <div v-if="$store.state.user._id && !$store.state.user.isAdmin" class="bg-secondary pl-3 pr-3 pt-1 pb-1 mt-2" style="border-radius: 5px;">
       <v-slider
         v-model="qty"
         class="align-center"
