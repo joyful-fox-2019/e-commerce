@@ -2,12 +2,9 @@
 
 ## Getting Started
 ---
-Welcome to E-commerce! <br/>
-You can use the API for user and product management.<br/>
+Welcome to E-Commerce! <br/>
+You can use the API for user, product, cart and transaction management.<br/>
 All API access is performed over HTTP and accessed from the http://ecommerce.server.edirates.xyz.<br/>
-You can do CRUD operation for products by accessing to http://ecommerce.server.edirates.xyz/products.<br/>
-Of course, you must login first and register a new user in order to be able to do CRUD operation.<br/>
-Registering a new user or login with existing user can be done by accessing to http://ecommerce.server.edirates.xyz/users.
 
 API Base URL :
 ```html
@@ -39,8 +36,6 @@ Request Body :
 | **name**                      | `<your full name>`     |
 | **address**                   | `<your address>`       |
 | **phone_number**              | `<your phone number>`  |
-| **balance**                   | `<your balance>`       |
-| **privilege**                 | `<admin> || <user>`    |
 
 Success Response :
   * **HTTP Code :** 201 (Created)
@@ -52,7 +47,8 @@ Success Response :
         "name": "Jon Snow",
         "email": "jon@snow.com",
         "address": "Winterfell",
-        "phone_number": "0898987788"
+        "phone_number": "0898987788",
+        "balance": "0"
     },
     "jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGNmNjBiMTcwZmNjMTViMWQ5NWZhYmYiLCJuYW1lIjoiSm9uIFNub3ciLCJlbWFpbCI6ImpvbkBzbm93LmNvbSIsImlhdCI6MTU3Mzg3MTc5M30.q0bXluxT1FqcmQYLdIpwKgtq3bbfvAC-oDtspRGpwjI"
   }
@@ -96,7 +92,8 @@ Success Response :
         "name": "Jon Snow",
         "email": "jon@snow.com",
         "address": "Winterfell",
-        "phone_number": "0898987788"
+        "phone_number": "0898987788",
+        "balance": "0"
     },
     "jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGNmNjBiMTcwZmNjMTViMWQ5NWZhYmYiLCJuYW1lIjoiSm9uIFNub3ciLCJlbWFpbCI6ImpvbkBzbm93LmNvbSIsImlhdCI6MTU3Mzg3MjA3NH0.LuMeQaeJkeu8qBDEz_b4MJVTvjyEndJGCyok-dOxMco"
   }
@@ -110,45 +107,12 @@ Error Response :
   }
   ```
 
-**3. Google Sign In**
-----
-Sign in with Google Account :
-| Syntax                        | Description          |
-| ----------------------------- | -------------------- |
-| **URL**                       | `/gsignin`           |
-| **Method**                    | `POST`               |
-| **Authentication Required**   | NO                   |
-| **Authorization Required**    | NO                   |
-
-Request Body :
-| Field Name                    | Value                   |
-| ----------------------------- | ----------------------- |
-| **CLIENT_ID**                 | `<Google Client ID>`    |
-
-Success Response :
-  * **HTTP Code :** 200 (OK)
-  * **JSON Response :**
-  ```html
-  {
-    "jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGJjZTFmOWFiYTE0OGMzNDZhYWQ3YmUiLCJlbWFpbCI6ImVkaXJhdGVzQGdtYWlsLmNvbSIsImlhdCI6MTU3MjY2NjU2MX0.DcYLScfR9RAz0-RgnfhWsFLTnfB7a1jyFvON9OagR6o"
-  }
-  ```
-Error Response : 
-  * **HTTP Code :** 500 (Internal Server Error)
-  * **JSON Response :**
-  ```html
-  {
-    "message": "Internal Server Error."
-  }
-  ```
-
-
 ---
 # Products
 
 **1. Show All Products**
 ----
-Show all active products from database :
+Show all products from all users in database :
 | Syntax                        | Description       |
 | ----------------------------- | ----------------- |
 | **URL**                       | `/products/`      |
@@ -200,7 +164,7 @@ Error Response :
 
 **2. Show My Products**
 ----
-Show all products from logged in user :
+Show all products from logged-in user :
 | Syntax                        | Description       |
 | ----------------------------- | ----------------- |
 | **URL**                       | `/products/user`  |
@@ -431,5 +395,409 @@ Error Response :
   ```html
   {
     "message": "You are not authorized."
+  }
+  ```
+
+---
+# Cart
+
+**1. Show All Products in User Cart**
+----
+Show all products of logged-in user cart in database :
+| Syntax                        | Description       |
+| ----------------------------- | ----------------- |
+| **URL**                       | `/cart/`          |
+| **Method**                    | `GET`             |
+| **Authentication Required**   | YES               |
+| **Authorization Required**    | NO                |
+
+Request Headers :
+| Field Name                    | Value                |
+| ----------------------------- | -------------------- |
+| **jwt_token**                 | `<your JWT Token>`   |
+
+Success Response :
+  * **HTTP Code :** 200 (OK)
+  * **JSON Response :**
+  ```html
+  [
+    {
+        "_id": "5dd0c991423f9c15e9fd929c",
+        "UserId": "5dc9350e7b21aa3ec060c8e1",
+        "ProductId": {
+            "featured_image": "https://storage.googleapis.com/miniwp.images.edirates.xyz/1573469727561macpro.jpeg",
+            "status": true,
+            "_id": "5dc93e20274f784242aedf80",
+            "name": "Macbook Pro",
+            "description": "Beautiful thing",
+            "price": 25000000,
+            "stock": 3,
+            "UserId": {
+                "balance": 75000000,
+                "privilege": "user",
+                "_id": "5dc93a5ee83877415641a0e1",
+                "email": "arya@gmail.com",
+                "password": "$2a$10$3SZHRVB9oRReVkFFik94LeAsbQMD/BNGmON3cUWMXns3wG8I.rtTG",
+                "name": "Arya Stark",
+                "address": "Winterfell",
+                "phone_number": "081174898989",
+                "createdAt": "2019-11-11T10:39:26.597Z",
+                "updatedAt": "2019-11-17T08:03:52.077Z",
+                "__v": 0
+            },
+            "createdAt": "2019-11-11T10:55:28.451Z",
+            "updatedAt": "2019-11-16T15:47:37.949Z",
+            "__v": 0
+        },
+        "qty": 1,
+        "createdAt": "2019-11-17T04:16:17.677Z",
+        "updatedAt": "2019-11-17T04:16:17.677Z",
+        "__v": 0
+    }
+  ]
+  ```
+Error Response : 
+  * **HTTP Code :** 403 (Forbidden)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "You must log in first."
+  }
+  ```
+  
+**2. Add A Product into Cart**
+----
+Add a product in logged-in user cart :
+| Syntax                        | Description   |
+| ----------------------------- | ------------- |
+| **URL**                       | `/cart`       |
+| **Method**                    | `POST`        |
+| **Authentication Required**   | YES           |
+| **Authorization Required**    | NO            |
+
+Request Headers :
+| Field Name                    | Value                |
+| ----------------------------- | -------------------- |
+| **jwt_token**                 | `<your JWT Token>`   |
+
+Request Body :
+| Field Name                    | Value                             |
+| ----------------------------- | --------------------------------- |
+| **ProductId**                 | `<product ID>`                    |
+| **qty**                       | `<qty of product>`                |
+
+Success Response :
+  * **HTTP Code :** 201 (Created)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "Added to the cart"
+  }
+  ```
+Error Response : 
+  * **HTTP Code :** 403 (Forbidden)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "You must log in first."
+  }
+  ```
+
+**3. Update A Product in Cart**
+----
+Update a specific product in logged-in user cart :
+| Syntax                        | Description       |
+| ----------------------------- | ----------------- |
+| **URL**                       | `/cart/:id`       |
+| **Method**                    | `PUT`             |
+| **Authentication Required**   | YES               |
+| **Authorization Required**    | YES               |
+
+Request Headers :
+| Field Name                    | Value                |
+| ----------------------------- | -------------------- |
+| **jwt_token**                 | `<your JWT Token>`   |
+
+Request Params :
+| Field Name                    | Value                 |
+| ----------------------------- | --------------------- |
+| **id**                        | `<product ID>`        |
+
+Request Body :
+| Field Name                    | Value                             |
+| ----------------------------- | --------------------------------- |
+| **qty**                       | `<qty of product>`                |
+
+Success Response :
+  * **HTTP Code :** 200 (OK)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "Updated qty in cart"
+  }
+  ```
+Error Response : 
+  * **HTTP Code :** 403 (Forbidden)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "You are not authorized."
+  }
+  ```
+
+**4. Delete A Product in Cart**
+----
+Delete a specific product in logged-in user cart :
+| Syntax                        | Description          |
+| ----------------------------- | -------------------- |
+| **URL**                       | `/cart/:id`          |
+| **Method**                    | `DELETE`             |
+| **Authentication Required**   | YES                  |
+| **Authorization Required**    | YES                  |
+
+Request Headers :
+| Field Name                    | Value                |
+| ----------------------------- | -------------------- |
+| **jwt_token**                 | `<your JWT Token>`   |
+
+Request Params :
+| Field Name                    | Value                 |
+| ----------------------------- | --------------------- |
+| **id**                        | `<product ID>`        |
+
+Success Response :
+  * **HTTP Code :** 200 (OK)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "Removed product from cart"
+  }
+  ```
+Error Response : 
+  * **HTTP Code :** 403 (Forbidden)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "You are not authorized."
+  }
+  ```
+
+**5. Checkout Cart**
+----
+Checkout all products in logged-in user cart :
+| Syntax                        | Description          |
+| ----------------------------- | -------------------- |
+| **URL**                       | `/cart/checkout`     |
+| **Method**                    | `POST`               |
+| **Authentication Required**   | YES                  |
+| **Authorization Required**    | YES                  |
+
+Request Headers :
+| Field Name                    | Value                |
+| ----------------------------- | -------------------- |
+| **jwt_token**                 | `<your JWT Token>`   |
+
+Success Response :
+  * **HTTP Code :** 200 (OK)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "Checkout success"
+  }
+  ```
+Error Response : 
+  * **HTTP Code :** 403 (Forbidden)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "You must log in first."
+  }
+  ```
+
+---
+# Transactions
+
+**1. Show All User Transactions**
+----
+Show all transactions of logged-in user in database :
+| Syntax                        | Description       |
+| ----------------------------- | ----------------- |
+| **URL**                       | `/transactions/`  |
+| **Method**                    | `GET`             |
+| **Authentication Required**   | YES               |
+| **Authorization Required**    | NO                |
+
+Request Headers :
+| Field Name                    | Value                |
+| ----------------------------- | -------------------- |
+| **jwt_token**                 | `<your JWT Token>`   |
+
+Success Response :
+  * **HTTP Code :** 200 (OK)
+  * **JSON Response :**
+  ```html
+  [
+    {
+        "products": [
+            {
+                "_id": "5dc93a80e83877415641a0e2",
+                "name": "Macbook Air",
+                "price": 15000000,
+                "stock": 10,
+                "qty": 5,
+                "SellerId": "5dc93a5ee83877415641a0e1"
+            }
+        ],
+        "_id": "5dc9811e9e981a5337f819e9",
+        "BuyerId": "5dc9350e7b21aa3ec060c8e1",
+        "address": "Hacktiv8",
+        "status": "done",
+        "createdAt": "2019-11-11T15:41:18.323Z",
+        "updatedAt": "2019-11-17T08:03:52.067Z",
+        "__v": 0
+    },
+    {
+        "products": [
+            {
+                "_id": "5dc93a80e83877415641a0e2",
+                "name": "Macbook Air",
+                "price": 15000000,
+                "stock": 5,
+                "qty": 5,
+                "SellerId": "5dc93a5ee83877415641a0e1"
+            }
+        ],
+        "_id": "5dc9817af20eb753856b3aea",
+        "BuyerId": "5dc9350e7b21aa3ec060c8e1",
+        "address": "Hacktiv8",
+        "status": "done",
+        "createdAt": "2019-11-11T15:42:50.440Z",
+        "updatedAt": "2019-11-12T01:33:53.209Z",
+        "__v": 0
+    },
+    {
+        "products": [
+            {
+                "_id": "5dc93a80e83877415641a0e2",
+                "name": "Macbook Air",
+                "price": 15000000,
+                "stock": 30,
+                "qty": 10,
+                "status": true,
+                "SellerId": "5dc93a5ee83877415641a0e1",
+                "SellerName": "Arya Stark"
+            }
+        ],
+        "_id": "5dd10c5ee27b28301c8bba3e",
+        "BuyerId": "5dc9350e7b21aa3ec060c8e1",
+        "address": "Hacktiv8",
+        "status": "paid",
+        "createdAt": "2019-11-17T09:01:18.142Z",
+        "updatedAt": "2019-11-17T09:01:18.142Z",
+        "__v": 0
+    }
+  ]
+  ```
+Error Response : 
+  * **HTTP Code :** 403 (Forbidden)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "You must log in first."
+  }
+  ```
+  
+**2. Show One Transaction Detail**
+----
+Show a specific transaction detail :
+| Syntax                        | Description               |
+| ----------------------------- | ------------------------- |
+| **URL**                       | `/transactions/:id`       |
+| **Method**                    | `GET`                     |
+| **Authentication Required**   | YES                       |
+| **Authorization Required**    | NO                        |
+
+Request Headers :
+| Field Name                    | Value                |
+| ----------------------------- | -------------------- |
+| **jwt_token**                 | `<your JWT Token>`   |
+
+Request Params :
+| Field Name                    | Value                 |
+| ----------------------------- | --------------------- |
+| **id**                        | `<transaction ID>`    |
+
+Success Response :
+  * **HTTP Code :** 200 (OK)
+  * **JSON Response :**
+  ```html
+  {
+    "products": [
+        {
+            "_id": "5dc93a80e83877415641a0e2",
+            "name": "Macbook Air",
+            "price": 15000000,
+            "stock": 5,
+            "qty": 5,
+            "SellerId": "5dc93a5ee83877415641a0e1"
+        }
+    ],
+    "_id": "5dc9817af20eb753856b3aea",
+    "BuyerId": "5dc9350e7b21aa3ec060c8e1",
+    "address": "Hacktiv8",
+    "status": "done",
+    "createdAt": "2019-11-11T15:42:50.440Z",
+    "updatedAt": "2019-11-12T01:33:53.209Z",
+    "__v": 0
+  }
+  ```
+Error Response : 
+  * **HTTP Code :** 403 (Forbidden)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "You must log in first."
+  }
+  ```
+
+**3. Update Status of A Transaction**
+----
+Update the status of a specific transaction of logged-in user :
+| Syntax                        | Description          |
+| ----------------------------- | -------------------- |
+| **URL**                       | `/transactions/:id`  |
+| **Method**                    | `PATCH`              |
+| **Authentication Required**   | YES                  |
+| **Authorization Required**    | YES                  |
+
+Request Headers :
+| Field Name                    | Value                |
+| ----------------------------- | -------------------- |
+| **jwt_token**                 | `<your JWT Token>`   |
+
+Request Params :
+| Field Name                    | Value                 |
+| ----------------------------- | --------------------- |
+| **id**                        | `<transaction ID>`    |
+
+Request Body :
+| Field Name                    | Value                             |
+| ----------------------------- | --------------------------------- |
+| **status**                    | `<done> || <cancel>`              |
+
+Success Response :
+  * **HTTP Code :** 200 (OK)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "Transaction finished"
+  }
+  ```
+Error Response : 
+  * **HTTP Code :** 403 (Forbidden)
+  * **JSON Response :**
+  ```html
+  {
+    "message": "Unable to change transaction"
   }
   ```

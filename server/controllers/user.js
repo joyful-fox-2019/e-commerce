@@ -43,32 +43,32 @@ class UserController {
             next(err);
         });
     }
-    static gsignin (req, res, next) {
-        User.findOne({
-            email: req.user.email
-        })
-        .then((user) => {
-            if (user) {
-                return user;
-            } else {
-                return User.create({
-                    email: req.body.email,
-                    password: process.env.DEFAULT_PASSWORD,
-                    name: req.user.name,
-                    address: "-",
-                    phone_number: "-",
-                    privelege: "user"
-                });
-            }
-        })
-        .then((verified) => {
-            const jwt_token = jwt.generate({ _id: verified._id, name: verified.name, email: verified.email });
-            res.status(200).json({ jwt_token: jwt_token });
-        })
-        .catch((err) => {
-            next(err);
-        });
-    }
+    // static gsignin (req, res, next) {
+    //     User.findOne({
+    //         email: req.user.email
+    //     })
+    //     .then((user) => {
+    //         if (user) {
+    //             return user;
+    //         } else {
+    //             return User.create({
+    //                 email: req.body.email,
+    //                 password: process.env.DEFAULT_PASSWORD,
+    //                 name: req.user.name,
+    //                 address: "-",
+    //                 phone_number: "-",
+    //                 privelege: "user"
+    //             });
+    //         }
+    //     })
+    //     .then((verified) => {
+    //         const jwt_token = jwt.generate({ _id: verified._id, name: verified.name, email: verified.email });
+    //         res.status(200).json({ jwt_token: jwt_token });
+    //     })
+    //     .catch((err) => {
+    //         next(err);
+    //     });
+    // }
 }
 
 module.exports = UserController;
