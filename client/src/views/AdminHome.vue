@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Navbar />
+    <AdminNavbar/>
     <div class="container">
       <div class="row">
         <div class="col-3">
@@ -21,8 +21,8 @@
             <slide>
               <img style="border-radius: 10px; width: 100%; height: 100%" src="https://i.imgur.com/TQtsL21.png" alt="">
             </slide>
-          </carousel> <br>
-          <img id="home-img-header" src="https://i.imgur.com/pBYVtps.png" alt="">
+          </carousel> <br><br>
+        <button type="button" @click="displayAddProduct()" class="btn admin-btns"><i class="fas fa-plus" style="margin-right:10px;"></i>Add New Product</button>
          <div id="products">
             <div class="card feature-cards" v-for="(data, index) in fetchedData" :key="index" style="width: 18rem;">
             <img :src="data.img" class="card-img-top card-imgs" alt="...">
@@ -31,12 +31,13 @@
               <p class="card-text">{{data.description}}</p>
               <span class="badge badge-dark">Stock {{data.stock}}</span><br>
               <span class="badge badge-warning">Price: ${{data.price}}</span><br><br>
-              <button @click="toDetails(data._id, data.name, data.img, data.description, data.price, data.stock)" type="button" class="btn admin-btns"><i class="fas fa-shopping-basket"></i> &nbsp; Buy</button> &nbsp;
+              <button type="button" @click="displayEditProduct(data)" class="btn admin-btns"><i class="far fa-edit"></i> &nbsp; Edit</button> &nbsp;
+              <button type="button" @click="deleteProduct(data._id)" class="btn admin-btns"><i class="far fa-trash-alt"></i> &nbsp; Delete</button>
             </div><br><br>
           </div>
+         </div>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </template>
@@ -44,8 +45,7 @@
 <script>
 import { config } from '../config'
 import { Carousel, Slide } from 'vue-carousel';
-import { mapMutations } from 'vuex'
-import Navbar from '../components/Navbar'
+import AdminNavbar from '../components/AdminNavbar'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
@@ -54,54 +54,39 @@ export default {
   components: {
     Carousel,
     Slide,
-    Navbar,
+    AdminNavbar
   },
   data() {
     return {
       autoplayboolean: true,
+      fetchedData: [],
       categoriesData: []
     }
   },
   methods: {
-    getCardInfo() {
-      axios({
-        method: 'get',
-        url: `${config.host}/products/${this.detailsProduct.name}`
-      })
-        .then(({data}) => {
-          this.cardInfo = data
-        })
-        .catch(err => {
-          console.log(err)
-        })
+    displayAddProduct() {
+      this.$router.push('/addproduct')
     },
-    toDetails(id, name, img, description, price, stock) {
-      const token = localStorage.getItem('token')
-      if (token) {
-        this.$router.push(`/product/${id}`)
-        const product = {
-          id, name, img, description, price, stock, qty: 0
-        }
-        this.$store.commit('SETDETAILSPRODUCT', product)
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'You need to login/register first'
-        })
-      }
+    displayEditProduct(data) {
+      this.$store.commit('SETEDITEDPRODUCT', data)
+      this.$router.push('/editproduct')
     },
     getProducts() {
-      this.$store.dispatch('getProducts')
-    },
-    getProductsByCategory(name) {
-      console.log(name)
       axios({
         method: 'get',
-        url: `${config.host}/categories/${name}`,
+        url: `${config.host}/products`
       })
         .then(({data}) => {
-          this.$store.state.products = data
+          this.fetchedData = data.reverse()
+        })
+    },
+    getProductsByCategory(name) {
+      axios({
+        method: 'get',
+        url: `${config.host}/categories/${name}`
+      })
+        .then(({data}) => {
+          this.fetchedData = data.reverse()
         })
     },
     getCategories() {
@@ -112,15 +97,37 @@ export default {
         .then(({data}) => {
           this.categoriesData = data
         })
-    }
-  },
-  computed: {
-    fetchedData() {
-      return this.$store.state.products
-    }
+    },
+    deleteProduct(id) {
+      const token = localStorage.getItem('token')
+      axios({
+        method: 'delete',
+        url: `${config.host}/products/${id}`,
+        headers: {token}
+      })
+        .then(({data}) => {
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.value) {
+              this.getProducts()
+              Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              )
+            }
+          })
+        })
+    },
   },
   created() {
-    this.$store.dispatch('checkToken')
     this.getProducts()
     this.getCategories()
   }
@@ -128,22 +135,14 @@ export default {
 </script>
 
 <style scoped>
-#home-img-header {
-  width: 600px;
-  height: 250px;
-
-}
-
 .card-text {
   font-weight: bold;
 }
-
 .admin-btns {
   background-color: #AB235A;
   color: white;
   font-weight: bold;
 }
-
 .card-imgs{
   width: 100%;
   height: 100%;

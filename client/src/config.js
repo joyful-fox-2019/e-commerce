@@ -1,3 +1,3 @@
 export const config = {
-    host: `https://server-wordcross-cf.ashirogisen-hacktivoverflow.online`
+  host: `http://localhost:3000`
 }

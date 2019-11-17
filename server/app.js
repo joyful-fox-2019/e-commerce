@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'testing') {
-    require('dotenv').config()
+  require('dotenv').config()
 }
 
 const express = require('express')
@@ -12,11 +12,11 @@ const errorHandler = require('./middlewares/errorHandler')
 const app = express()
 const PORT = 3000 || process.env.PORT
 
-mongoose.connect(`mongodb://localhost/ecommerce-${process.env.NODE_ENV}`, {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true})
-    .then(() => {
-        console.log('Mongoose is successfully connected')
-    })
-    .catch(console.log)
+mongoose.connect(process.env.URI, {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true})
+  .then(() => {
+  console.log('Mongoose is successfully connected')
+  })
+  .catch(console.log)
 
 app.use(morgan('dev'))
 app.use(cors())
@@ -27,7 +27,7 @@ app.use('/', routes)
 app.use(errorHandler)
 
 app.listen(PORT, () => {
-    console.log(`App is running on PORT ${PORT}`)
+  console.log(`App is running on PORT ${PORT}`)
 })
 
 module.exports = app
