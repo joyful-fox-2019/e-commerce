@@ -227,6 +227,18 @@ export default new Vuex.Store({
           dispatch('getCarts')
         })
         .catch(alert)
+    },
+    buy ({ commit }, payload) {
+      axios.post('/transactions', payload, {
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          router.push('/transactions')
+        })
+        .catch(alert)
     }
   },
   modules: {

@@ -24,7 +24,7 @@
           </v-icon>
         </div>
         <div class="mt-10">
-        <v-btn class="bg-primary">
+        <v-btn @click="deleteCart" class="bg-primary">
           <v-icon>
             mdi-delete
           </v-icon>
@@ -74,6 +74,9 @@ export default {
         }
         this.$store.dispatch('updateQty', payload)
       }
+    },
+    deleteCart () {
+      this.$store.dispatch('deleteCart', this.cart._id)
     }
   }
 }

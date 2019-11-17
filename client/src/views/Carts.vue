@@ -19,7 +19,7 @@
             <div class="t-secondary" style="font-size: 25px;">
               <b>{{ totalPrice }}</b>
             </div>
-            <v-btn class="full-width bg-secondary mt-5">BUY</v-btn>
+            <v-btn @click="buy" class="full-width bg-secondary mt-5">BUY</v-btn>
           </div>
         </v-col>
       </v-row>
@@ -39,6 +39,13 @@ export default {
   methods: {
     getCarts () {
       this.$store.dispatch('getCarts')
+    },
+    buy () {
+      let payload = {
+        carts: this.carts,
+        total: this.totalPriceRaw
+      }
+      this.$store.dispatch('buy', payload)
     }
   },
   created () {
@@ -51,6 +58,13 @@ export default {
         result += (cart.product.price * cart.qty)
       })
       return 'IDR ' + result.toLocaleString()
+    },
+    totalPriceRaw () {
+      let result = 0
+      this.carts.forEach(cart => {
+        result += (cart.product.price * cart.qty)
+      })
+      return result
     },
     ...mapState(['carts'])
   }

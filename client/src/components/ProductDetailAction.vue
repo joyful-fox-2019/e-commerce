@@ -6,43 +6,48 @@
     <div class="price t-primary">
       {{ formattedPrice }}
     </div>
-    <div class="stock">
-      Stock: {{ product.stock }}
-    </div>
-    <div class="bg-secondary pl-3 pr-3 pt-1 pb-1 mt-2" style="border-radius: 5px;">
-    <v-slider
-      v-model="qty"
-      class="align-center"
-      :max="max"
-      :min="min"
-      label="Qty"
-      color="white"
+    <div v-if="product.stock > 0">
+      <div class="stock">
+        Stock: {{ product.stock }}
+      </div>
+      <div class="bg-secondary pl-3 pr-3 pt-1 pb-1 mt-2" style="border-radius: 5px;">
+      <v-slider
+        v-model="qty"
+        class="align-center"
+        :max="max"
+        :min="min"
+        label="Qty"
+        color="white"
 
-      hide-details
-    >
-      <template v-slot:append>
-        <v-text-field
-          v-model="qty"
-          class="mt-0 pt-0"
-          color="white"
-          hide-details
-          single-line
-          type="number"
-          style="width: 60px"
-        ></v-text-field>
-      </template>
-    </v-slider>
+        hide-details
+      >
+        <template v-slot:append>
+          <v-text-field
+            v-model="qty"
+            class="mt-0 pt-0"
+            color="white"
+            hide-details
+            single-line
+            type="number"
+            style="width: 60px"
+          ></v-text-field>
+        </template>
+      </v-slider>
+      </div>
+      <v-btn
+        v-if="$store.state.user._id && !$store.state.user.isAdmin"
+        class="bg-primary mt-3 full-width"
+        @click="addToCart"
+      >
+      <v-icon class="mr-1">
+        mdi-cart-plus
+      </v-icon>
+        ADD TO CART
+      </v-btn>
     </div>
-    <v-btn
-      v-if="$store.state.user._id && !$store.state.user.isAdmin"
-      class="bg-primary mt-3 full-width"
-      @click="addToCart"
-    >
-    <v-icon class="mr-1">
-      mdi-cart-plus
-    </v-icon>
-      ADD TO CART
-    </v-btn>
+    <div v-else class="name">
+      SOLD OUT
+    </div>
     <div class="mt-5">
       <small>{{ product.description }}</small>
     </div>
@@ -115,7 +120,7 @@
           <v-btn
             class="t-primary"
             text
-            @click="addCartDialog = false"
+            @click="$store.commit('SET_ADD_CART_DIALOG', false)"
           >
             Continue Shopping
           </v-btn>
@@ -123,7 +128,7 @@
           <v-btn
             class="bg-secondary"
             text
-            @click="$router.push('/cart')"
+            @click="seeCart"
           >
             See Cart
           </v-btn>
@@ -168,6 +173,10 @@ export default {
         product: this.product._id
       }
       this.$store.dispatch('addToCart', payload)
+    },
+    seeCart () {
+      this.$store.commit('SET_ADD_CART_DIALOG', false)
+      this.$router.push('/carts')
     }
   }
 }
