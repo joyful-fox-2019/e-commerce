@@ -1,40 +1,37 @@
-`use stict`
 module.exports = (err, req, res, next) => {
-    console.log(err)
-    if (err.status && err.msg ) {
-        return res.status(err.status).json({
-            msg : err.msg
-        })
-    }
-    switch (err.name) {
-        //status untuk validation error adalah 400
-        case 'ValidationError':
-            let messages = []
-            if (err.errors) {
-                for (let index in err.errors) {
-                    messages.push(err.errors[index].message)
-                }
-            } else {
-                messages = err.message
-            }
-            return res.status(400).send({
-                msg: messages
-            })   
-        case 'CastError':
-            return res.status(400).send({
-                msg: `id invalid`
-            })  
-        case 'JsonWebTokenError' : {
-            return res.status(400).send({
-                msg : "invalid token, please don't change the token in your local storage"
-            })
-        }                 
-        default:            
-            return res.status(500).send({
-                msg: 'Internal Server Error'
-            })
-    }
+  console.log("masuk error handler, ini err", req.body, err);
+  let errStatus
+  let messages = []
 
+  if (err.name === 'CastError' && err.message.includes('Cast to ObjectId failed', 'Product')) {
+    // console.log('masuk CastError');
+    errStatus = 404
+    messages.push('Product not found!')
+  }
+  else if (err.name === 'JsonWebTokenError') {
+    errStatus = 401
+    messages.push('Unauthorized access!')
+  }
+  else if (err.name === 'ValidationError') {
+    errStatus = 400
+    for (key in err.errors) {
+      if (err.errors[key].message) {
+        messages.push(err.errors[key].message)
+      }
+    }
+  }
+  else if (err.name === 'MongoError') {
+    if (err.errmsg.includes('duplicate key error')) {
+      errStatus = 400
+      messages.push('Email has already been used!')
+    }
+  }
+  else {
+    // console.log('masuk else', err.status);
+    errStatus = err.status
+    messages.push(err.message)
+  }
+  // console.log("ini errStatus nya di error handler", errStatus);
+  res.status(errStatus ? errStatus : 500).json({ messages })
+  next()
 }
-
-

@@ -1,88 +1,157 @@
 <template>
   <div id="app">
-    <div id="nav" class="sticky-top">
-        <div class="mb-4">
-            <!-- gunakan sticky-top untuk navbar -->
-              <nav class="navbar navbar-expand-md navbar-light bg-white d-flex justify-content-between p-0 border">
-                  <div class="nav navbar d-flex justify-content-start">
-                      <div class="">                          
-                          <router-link style="font-family: 'Lobster', cursive;" class="nav-link text-success h1" to="/">Buka Toko</router-link>
-                      </div>                 
-                  </div>
-                  <ul class="nav justify-content-end navbar-nav">
-                      <li class="nav-item pr-3">
-                          <router-link class="btn btn-outline-success" to="/cart"><i class="fa fa-shopping-cart pr-2"></i>my Cart</router-link>
-                      </li>
-                          <li class="nav-item pr-3 " v-if="!this.$store.state.isLogin">
-                              <router-link class="btn btn-outline-success" to="/login"><i class="fa fa-sign-in pr-2"></i> Sign in</router-link>
-                          </li>
-                          <li class="nav-item pr-3" v-if="!this.$store.state.isLogin">
-                              <router-link class="btn btn-outline-success" to="/register"><i class="fa fa-user-plus pr-2"></i>Register</router-link>
-                          </li>
-                      <div v-if="this.$store.state.isLogin">
-                          <li class="nav-item pr-3">
-                              <button @click.prevent="logout" class="btn btn-outline-danger" to="/"><i class="fa fa-sign-out pr-2"></i>Logout</button>
-                          </li>
-                      </div>
-                  </ul>
-              </nav>
-        </div>
-    </div>
+    <Navbar @check-this="checkThis" :access-token="access_token"/>
     <router-view/>
   </div>
 </template>
 
-<style scoped>
+<script>
+import Buefy from "buefy";
+// import 'buefy/dist/buefy.css'
+import Vue from "vue";
+import router from "../router";
+import store from "./store"
 
-.nav {
-  padding-top: 0px !important;
-  padding-bottom : 0px !important;
-  margin: 0px;
+Vue.use(Buefy);
+
+import Navbar from './components/Navbar'
+import { mapState } from 'vuex'
+
+export default {
+  name: "app",
+
+  data: () => ({
+    this: this
+  }),
+
+  methods: {
+    toast(message) {
+      this.$buefy.toast.open(message);
+    },
+    success(message) {
+      this.$buefy.toast.open({
+        message: message,
+        type: "is-success"
+      });
+    },
+    danger(message) {
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: message,
+        position: "is-bottom",
+        type: "is-danger"
+      });
+    },
+
+    checkThis: function () {
+      console.log('ini this store', this.$store)
+    }
+
+    // signOut: function () {
+    //   console.log("this dan this store", this, this.$store);
+    //   localStorage.removeItem('access_token')
+    //   this.success('Successfully signed out!')
+    //   this.$router.push('/')
+    // }
+  },
+
+  watch: {
+    access_token: function () {
+      console.log('ini access token', this.access_token)
+    }
+  },
+  computed: {...mapState(['access_token'])},
+
+  router, store,
+
+  components: {
+    Navbar
+  }
+};
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
 }
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-}
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+  background-image: url("./assets/1511.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-
 
 </style>
 
-<script>
-export default {
-  methods : {
-    checkLogin(state) {
-      console.log('masuk checkLogin')
-      if (localStorage.getItem('token')) {
-          this.$store.dispatch('findUser')
-          this.$store.commit('setLogin', true)
-          this.$store.dispatch('findTransaction')
-      } else {
-          this.$store.commit('setLogin', false)
-      }
-    },
-    logout(state) {
-      console.log('masuk logout')
-      localStorage.removeItem('token')
-      this.$router.push("/login")
-      this.checkLogin()
-    }
-  },
-  created () {
-    console.log('masuk app')
-    this.checkLogin()
-    this.$store.dispatch('getAllProducts')
-  }
-}
-</script>
+<style lang="scss">
+// Import Bulma's core
+@import "~bulma/sass/utilities/_all";
+
+// Set your colors
+$primary: #8c67ef;
+$primary-invert: findColorInvert($primary);
+$twitter: #4099ff;
+$twitter-invert: findColorInvert($twitter);
+
+// Setup $colors to use as bulma classes (e.g. 'is-twitter')
+$colors: (
+  "white": (
+    $white,
+    $black
+  ),
+  "black": (
+    $black,
+    $white
+  ),
+  "light": (
+    $light,
+    $light-invert
+  ),
+  "dark": (
+    $dark,
+    $dark-invert
+  ),
+  "primary": (
+    $primary,
+    $primary-invert
+  ),
+  "info": (
+    $info,
+    $info-invert
+  ),
+  "success": (
+    $success,
+    $success-invert
+  ),
+  "warning": (
+    $warning,
+    $warning-invert
+  ),
+  "danger": (
+    $danger,
+    $danger-invert
+  ),
+  "twitter": (
+    $twitter,
+    $twitter-invert
+  )
+);
+
+// Links
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
+</style>

@@ -1,145 +1,125 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from '@/api/server.js'
-import Swal from 'sweetalert2'
-
-
+import axios from '../../config/axios'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userTransactions : [],
-    totalMoney : 0,
+    access_token: localStorage.getItem('access_token') || '',
+    isLoggedIn: false,
+    currentUser: {},
     allProducts: [],
-    isLogin : false,
-    carts : [],
-    userProducts : [],
-    user : {
-      username : '',
-      email : '',
-      photo : '',
-      membership : '', 
-      _id : ''     
-    }
+    myCart: []
   },
   mutations: {
-    // semua hal yang dilakukan oleh mutations harus syn
-    setTransactios(state, payload) {
-      state.userTransactions = payload
+    FETCH_ALL_PRODUCTS(state, payload) {
+      state.allProducts = payload
     },
-    clearCarts(state) {
-      state.carts = []
-      state.totalMoney = []
+    FETCH_MY_CART(state, payload) {
+      state.myCart = payload
+      // console.log('cart fetched')
     },
-    fillProducts (state, data) {
-      console.log( JSON.stringify(state.user) + 'fsdfsfsdfsmasuk mutations')
-      state.allProducts = data
-      state.userProducts = data.filter(item => {
-        return item.user == state.user._id
-      })
+    UPDATE_LOGIN_STATUS(state, payload) {
+      state.isLoggedIn = payload
+      // console.log('ini di update login status', state.isLoggedIn)
     },
-    setLogin(state, payload) {
-      state.isLogin = payload
-    },
-    setUser(state, user) {
-      console.log(user._id, 'masuk set User')
-      state.user._id = user._id
-      state.user.username = user.username,
-      state.user.email = user.email,
-      state.user.photo = user.photo,
-      state.user.membership = user.membership      
-    },    
-    addProduct(state, payload) {
-      console.log('masuk addProduct', state.totalMoney)
-      if (state.carts.length == 0) {
-          state.carts.push({
-            totalItem : 1,
-            product : payload,
-            totalPrice : payload.price
-          })
-          state.totalMoney += payload.price
-      } else {
-        for (let i=0; i<state.carts.length; i++) {
-            if (state.carts[i].product._id == payload._id) {
-                if (state.carts[i].totalItem >= payload.qty) {
-                  Swal.fire({
-                    title: 'Sorry ..',
-                    text: 'Your order exceed the total stocks',
-                    icon: 'error'
-                  })
-                } else {
-                  state.carts[i].totalItem += 1
-                  state.carts[i].totalPrice += payload.price
-                  state.totalMoney += payload.price
-                }
-                return;
-            }            
-        }
-        state.carts.push({
-          totalItem : 1,
-          product : payload,
-          totalPrice : payload.price
-        })
-        state.totalMoney += payload.price
-      }
-      
+    FETCH_CURRENT_USER(state, { _id, name, email, role }) {
+      state.currentUser = { _id, name, email, role }
+      console.log('fetch current user', state.currentUser);
     }
   },
   actions: {
-    // semua hal yang dilakukan oleh actions harus asyn
-    // actions harus selalu memanggil mutations sebelum merubah state
-    getAllProducts (context) {
-      axios
-        .get('/products')
-        .then(({ data }) => {
-          context.commit('fillProducts', data)
-          console.log(data, 'masuk actions')          
-        })
-        .catch(err => {
-          Swal.fire({
-            title: 'Opps ..',
-            text: `${err}`,
-            icon: 'warning'
-          })
-        })
+    toast(message) {
+      this.$buefy.toast.open(message);
     },
-    findUser(context) {
-      console.log('masuk findUser')
-      axios.
-        get(`/user`, {
-          headers : {
-            token : localStorage.getItem('token')
+    success(message) {
+      this.$buefy.toast.open({
+        message: message,
+        type: "is-success"
+      });
+    },
+    danger(message) {
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: message,
+        position: "is-bottom",
+        type: "is-danger"
+      });
+    },
+
+    fetchAllProducts({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'GET',
+          url: '/products'
+        })
+          .then(({ data }) => {
+            commit('FETCH_ALL_PRODUCTS', data)
+            resolve()
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    fetchMyCart({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'GET',
+          url: '/carts',
+          headers: {
+            access_token: localStorage.getItem('access_token')
           }
         })
-        .then(({data}) => {
-          console.log(data)
-          context.commit('setUser', data.user)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },  
-    findTransaction(context) {
-      axios.
-        get('/transaction',{
-          headers : {
-            token : localStorage.getItem('token') 
+          .then(({ data }) => {
+            // console.log('ini data di store/action/fetchMyCart', data);
+            commit('FETCH_MY_CART', data.user)
+            resolve()
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    checkToken({ commit }) {
+      // console.log('masuk checktoken');
+      return new Promise((resolve, reject) => {
+        try {
+          let isLoggedIn
+          if (localStorage.getItem('access_token')) {
+            isLoggedIn = true
+          }
+          else {
+            isLoggedIn = false
+          }
+          commit('UPDATE_LOGIN_STATUS', isLoggedIn)
+          resolve()
+        }
+        catch (err) { reject(err) }
+      })
+    },
+    fetchCurrentUser({ commit }) {
+      // console.log('masuk fetch current user');
+      return new Promise((resolve, reject) => {
+        // console.log('ini access token pas fetch user', localStorage.getItem('access_token'));
+        axios({
+          method: 'GET',
+          url: '/users/user',
+          headers: {
+            access_token: localStorage.getItem('access_token')
           }
         })
-        .then(({data}) => {
-          console.log(data)
-          context.commit('setTransactios', data)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }     
+          .then(({ data }) => {
+            // console.log('ini data pas fetch user', data)
+            commit('FETCH_CURRENT_USER', data.user)
+            resolve()
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    }
   },
-  modules: {
-  },
-  // plugins: [
-  //   createPersistedState({
-  //     path : ['user']
-  //   }) 
-  // ]
+  getters: {
+  }
 })

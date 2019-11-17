@@ -1,66 +1,95 @@
 <template>
-    <section id="home-page" >
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-2 pl-0">
-                  <sideBar> </sideBar>
-              </div>
-              <div  class="col-md-10">
-                  <!-- ini filter-->
-                  <!-- v-on:submit.prevent='searchArticle' -->
-                  <form class="form-inline md-form form-sm" >
-                          <i class="fa fa-search" aria-hidden="true"></i>
-                          <input class="form-control ml-3" style="width:90%" type="text" placeholder="Search"
-                              aria-label="Search">
-                               <!-- v-model='search' -->
-                              <!-- ini v-model yang menghubungkan -->
-                  </form>
-                <!-- this is room for products -->
-                  <div class="container" >
-                      <div class="row">
-                          <div class="col-sm-12 pt-4" > 
-                              <ProductCard></ProductCard>                                
-                          </div>
-                      </div>
-                  </div>
-                <!-- product container end -->
-              </div>
-          </div>
-      </div>   
-    </section>
-    
+  <section id="home">
+    <div class="products-display">
+      <div
+        v-if="currentUser.role === 'admin'"
+        class="button is-primary"
+        @click="isFormAddProductActive = true"
+      >Add a product</div>
+      <b-modal
+        :active.sync="isFormAddProductActive"
+        has-modal-card
+        trap-focus
+        aria-role="dialog"
+        aria-modal
+      >
+        <FormAddProduct/>
+      </b-modal>
+      <div v-for="(productGroup, i) in productsBy5" :key="i" class>
+        <ProductCardGroup :product-group="productGroup" />
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
-import Modal from '@/components/Modal'
-import axios from '../api/server'
-import Swal from 'sweetalert2'
-import ProductCard from '@/components/ProductCard'
-import sideBar from '@/components/sideBar'
-import Corosel from '@/components/Corosel'
+import { mapState } from "vuex";
+import ProductCardGroup from "../components/ProductCardGroup";
+import FormAddProduct from "../components/FormAddProduct";
 
 export default {
-  name: 'Home',
-  components: {
-    ProductCard,
-    sideBar,
-    Corosel,
-    Modal
-  },
-  data () {
-    return {
-      allProducts: []
+  data: () => ({
+    isFormAddProductActive: false,
+    products: []
+  }),
+
+  methods: {
+    addProduct: function() {},
+
+    chunkArrayInGroups: function(arr, size) {
+      var myArray = [];
+      for (var i = 0; i < arr.length; i += size) {
+        myArray.push(arr.slice(i, i + size));
+      }
+      return myArray;
     }
   },
-  created () {
-    this.allProducts = this.$store.state.allProducts
-    console.log(this.allProducts, 'ini home')
+
+  mounted() {
+    this.$store.dispatch("fetchCurrentUser");
+    this.$store.dispatch("fetchAllProducts");
+    console.log("mounted dan dispatched");
   },
+
+  components: {
+    ProductCardGroup,
+    FormAddProduct
+  },
+
   computed: {
+    productsBy5() {
+      const result = this.chunkArrayInGroups(this.allProducts, 6);
+      // console.log("group", result);
+      return result;
+    },
+    ...mapState(["allProducts", "currentUser"])
+    // products
   }
-}
+};
 </script>
 
-<style>
+<style scoped>
+#home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
+  background-image: url("../assets/1511.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.products-display {
+  margin: 2vh;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 100px;
+  /* background-color: white; */
+  /* height: 88vh; */
+  /* width: 90vw; */
+}
+
+.column {
+  padding: 0;
+}
 </style>
