@@ -16,9 +16,17 @@ module.exports = (err, req, res, next) => {
             }
             message = arrMessage            
             break
+        case 'DataError':
+            status = 404
+            message = err.message
+            break
         case "MongoError":
             status = 400
             message = "Email already registered"
+            break
+        case 'CastError':
+            status = 404
+            message = 'Data not Found'
             break
         case 'AdminError':
             status = 401

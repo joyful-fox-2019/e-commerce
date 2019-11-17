@@ -44,7 +44,12 @@ class CartController {
             _id: id
         })
         .then ((result) => {
-            res.status(200).json(result)
+            if (result !== null) res.status(200).json(result)
+            else {
+                let err = new Error ('Data Not Found')
+                err.name = 'DataError'
+                next(err)
+            }
         })
         .catch (err => {
             next(err)
