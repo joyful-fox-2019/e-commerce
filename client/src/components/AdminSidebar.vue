@@ -1,6 +1,6 @@
 <template>
 <div>
-    <nav v-if="!isLogin" class="sidebar">
+    <nav class="sidebar">
         <div class="dismiss">
             <i class="fas fa-chevron-left"></i>
         </div>
@@ -12,51 +12,13 @@
         <ul class="list-unstyled components">
             <img src="../../public/logo-text2.png" alt="logo" style="width:180px;">
             <li class="active">
-                <router-link to="/">Home</router-link>
+                <router-link to="/admin">Home</router-link>
             </li>
             <li>
-                <a href="#">Shop</a>
+                <router-link to="/admin/addproduct" class="addproduct" style="background-color: #66b851; color:white;">Add Product</router-link>
             </li>
             <li>
-                <a href="#">How it works</a>
-            </li>
-            <li>
-                <a href="#">Contact</a>
-            </li>
-        </ul>
-
-        <ul class="list-unstyled CTAs">
-            <li>
-                <router-link to="/user/register" class="register">Register</router-link>
-            </li>
-            <li>
-                <router-link to="/user/login" class="login">Login</router-link>
-            </li>
-        </ul>
-    </nav>
-    <!-- after login -->
-    <nav v-if="isLogin" class="sidebar">
-        <div class="dismiss">
-            <i class="fas fa-chevron-left"></i>
-        </div>
-
-        <div class="sidebar-header">
-            <img src="../../public/logo.png" alt="logo" style="width:150px;">
-        </div>
-
-        <ul class="list-unstyled components">
-            <img src="../../public/logo-text2.png" alt="logo" style="width:180px;">
-            <li class="active">
-                <router-link to="/">Home</router-link>
-            </li>
-            <li>
-                <a href="#">Shop</a>
-            </li>
-            <li>
-                <a href="#">How it works</a>
-            </li>
-            <li>
-                <router-link to="/user/transaction" class="trans">Transaction</router-link>
+                <router-link to="/admin/transaction" class="trans">Transaction History</router-link>
             </li>
         </ul>
 
@@ -70,18 +32,14 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import Swal from 'sweetalert2'
 export default {
   name: 'Sidebar',
   methods: {
-    ...mapActions([
-      'getCart'
-    ]),
     logout () {
       let gapi
       if (gapi === undefined) {
-        this.getCart()
         const Toast = Swal.mixin({
           toast: true,
           position: 'top-end',
@@ -99,7 +57,6 @@ export default {
           title: 'See you again'
         })
       } else {
-        this.getCart()
         var auth2 = gapi.auth2.getAuthInstance()
         auth2.signOut().then(() => {
           const Toast = Swal.mixin({
@@ -145,18 +102,16 @@ export default {
       $('a[aria-expanded=true]').attr('aria-expanded', 'false')
     })
     //  });
-  },
-  created () {
-    if (localStorage.getItem('token')) {
-      this.$store.commit('setLogin')
-    } else {
-      this.$store.commit('setLogout')
-    }
   }
 }
 </script>
 
 <style scoped>
+.addproduct:hover {
+    background-color: white !important;
+    color: black;
+}
+
 a {
     color: white;
     text-decoration: none;

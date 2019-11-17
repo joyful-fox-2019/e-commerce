@@ -15,32 +15,22 @@
     >
         <b-carousel-slide
             style="height:420px; object-fit:cover;"
-            img-src="https://www.fruitsiran.com/frontend_assets/images/banner2.jpg">
+            img-src="https://firebasestorage.googleapis.com/v0/b/project-2059615900628317391.appspot.com/o/promo-new%2F1572919597848_promo-new-1572591840374_promo-new_1572587973274_1400x688.jpg?alt=media">
         </b-carousel-slide>
 
         <b-carousel-slide
             style="height:420px; object-fit:cover;"
-            img-src="http://www.paribawala.com/wp-content/uploads/2019/03/Main-Slider.jpg">
+            img-src="https://firebasestorage.googleapis.com/v0/b/project-2059615900628317391.appspot.com/o/promo-new%2F1573463616884_1400x688.jpg?alt=media">
         </b-carousel-slide>
 
         <b-carousel-slide
-            img-src="https://barakatfresh.ae/Content/image/Inner%20page%20banner%20fruits%20870pxX300px.jpg"
+            img-src="https://firebasestorage.googleapis.com/v0/b/project-2059615900628317391.appspot.com/o/promo-new%2F1572923766330_1400x688.jpg?alt=media"
             style="height:420px; object-fit:cover;">
         </b-carousel-slide>
 
         <b-carousel-slide
             style="height:420px; object-fit:cover;"
-            img-src="http://qtamween.com/pub/media/magiccart/magicslider/a/a/aaja.jpg">
-        </b-carousel-slide>
-
-        <b-carousel-slide
-            style="height:420px; object-fit:cover;"
-            img-src="https://www.baqalat.net/image/cache/catalog/templet/slider-01-1260x600-1260x600.jpg">
-        </b-carousel-slide>
-
-        <b-carousel-slide
-            style="height:420px; object-fit:cover;"
-            img-src="http://rkrindianonlineshop.com/images/slider4.jpg">
+            img-src="https://firebasestorage.googleapis.com/v0/b/project-2059615900628317391.appspot.com/o/promo-new%2F1568970610883_1400x688.jpg?alt=media">
         </b-carousel-slide>
 
     </b-carousel>

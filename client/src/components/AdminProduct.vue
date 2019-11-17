@@ -11,14 +11,14 @@
             </div>
         </div>
         <div class="mb-4" style="display:flex; flex-wrap:wrap; justify-content:center;">
-            <div v-for="vegetable in vegetables" :key=vegetable._id class="card mx-2 my-2" style="width:23%;">
+            <div v-for="vegetable in vegetables.slice().reverse()" :key=vegetable._id class="card mx-2 my-2" style="width:23%;">
             <img class="ribbon" src="../../public/ribbon3.png" alt="ribbon">
             <p class="text-ribbon">Organic</p>
-                <img :src=vegetable.image class="card-img-top zoom" alt="product" style="height:250px; object-fit: cover; cursor:pointer;" @click="getdetail(vegetable._id)">
+                <img :src=vegetable.image class="card-img-top" alt="product" style="height:250px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title">{{ vegetable.name }}</h5>
                     <p class="card-text">Rp. {{ vegetable.price }}/kg</p>
-                    <a @click.prevent="addtoCart(vegetable._id)" style="color:white; cursor:pointer;" class="btn btn-success form-control">beli</a>
+                    <a style="color:white; cursor:pointer;" class="btn btn-success form-control" @click="getdetail(vegetable._id)">Selengkapnya</a>
                 </div>
             </div>
         </div>
@@ -34,14 +34,14 @@
                 </div>
             </div>
             <div class="mb-4" style="display:flex; flex-wrap:wrap; justify-content:center;">
-                <div v-for="fruit in fruits" :key=fruit._id class="card mx-2 my-2" style="width:23%;">
+                <div v-for="fruit in fruits.slice().reverse()" :key=fruit._id class="card mx-2 my-2" style="width:23%;">
                     <img class="ribbon" src="../../public/ribbon3.png" alt="ribbon">
                     <p class="text-ribbon">Organic</p>
-                    <img :src=fruit.image class="card-img-top zoom" alt="product" style="height:250px; object-fit: cover; cursor:pointer;" @click="getdetail(fruit._id)">
+                    <img :src=fruit.image class="card-img-top" alt="product" style="height:250px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">{{ fruit.name }}</h5>
                         <p class="card-text">Rp. {{ fruit.price }}/kg</p>
-                        <a @click.prevent="addtoCart(fruit._id)" style="color:white; cursor:pointer;" class="btn btn-success form-control">beli</a>
+                        <a style="color:white; cursor:pointer;" class="btn btn-success form-control" @click="getdetail(fruit._id)">Selengkapnya</a>
                     </div>
                 </div>
             </div>
@@ -57,14 +57,14 @@
                 </div>
             </div>
             <div class="mb-4" style="display:flex; flex-wrap:wrap; justify-content:center;">
-                <div v-for="protein in proteins" :key=protein._id class="card mx-2 my-2" style="width:23%;">
+                <div v-for="protein in proteins.slice().reverse()" :key=protein._id class="card mx-2 my-2" style="width:23%;">
                     <img class="ribbon" src="../../public/ribbon3.png" alt="ribbon">
                     <p class="text-ribbon">Organic</p>
-                    <img :src=protein.image class="card-img-top zoom" alt="product" style="height:250px; object-fit: cover; cursor:pointer;" @click="getdetail(protein._id)">
+                    <img :src=protein.image class="card-img-top" alt="product" style="height:250px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">{{ protein.name }}</h5>
                         <p class="card-text">Rp. {{ protein.price }}/kg</p>
-                        <a @click.prevent="addtoCart(protein._id)" style="color:white; cursor:pointer;" class="btn btn-success form-control">beli</a>
+                        <a style="color:white; cursor:pointer;" class="btn btn-success form-control" @click="getdetail(protein._id)">Selengkapnya</a>
                     </div>
                 </div>
             </div>
@@ -80,15 +80,15 @@
                 </div>
             </div>
             <div class="mb-4" style="display:flex; flex-wrap:wrap; justify-content:center;">
-                <div v-for="grain in grains" :key=grain._id class="card mx-2 my-2" style="width:23%;">
+                <div v-for="grain in grains.slice().reverse()" :key=grain._id class="card mx-2 my-2" style="width:23%;">
                     <img class="ribbon" src="../../public/ribbon3.png" alt="ribbon">
                     <p class="text-ribbon">Organic</p>
-                    <img :src=grain.image class="card-img-top zoom" alt="product" style="height:250px; object-fit: cover; cursor:pointer;" @click="getdetail(grain._id)">
+                    <img :src=grain.image class="card-img-top" alt="product" style="height:250px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">{{ grain.name }}</h5>
                         <p class="card-text">Rp. {{ grain.price }}/kg</p>
-                        <!-- <a href="" class="btn btn-success form-control">beli</a> -->
-                        <a @click.prevent="addtoCart(grain._id)" style="color:white; cursor:pointer;" class="btn btn-success form-control">beli</a>
+                        <!-- <a href="" class="btn btn-success form-control">detail</a> -->
+                        <a style="color:white; cursor:pointer;" class="btn btn-success form-control" @click="getdetail(grain._id)">Selengkapnya</a>
                     </div>
                 </div>
             </div>
@@ -98,43 +98,20 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import Swal from 'sweetalert2'
 
 export default {
-  name: 'Product',
+  name: 'AdminProduct',
   computed: {
     ...mapState([
-      'fruits', 'vegetables', 'proteins', 'grains', 'filterTag', 'carts'
+      'fruits', 'vegetables', 'proteins', 'grains', 'filterTag'
     ])
   },
   methods: {
     ...mapActions([
-      'getDetailProduct', 'addCart', 'getCart'
+      'getDetailProduct'
     ]),
     getdetail (id) {
       this.getDetailProduct(id)
-    },
-    setCartAnim (param) {
-      // this.IS_CART(param)
-      this.$store.commit('IS_CART', param)
-    },
-    addtoCart (id) {
-      this.setCartAnim(true)
-      if (localStorage.getItem('token')) {
-        this.addCart(id)
-          .then(_ => {
-            this.getCart()
-            this.setCartAnim(false)
-          })
-          .catch(err => {
-            console.log(err)
-            this.setCartAnim(false)
-            Swal.fire('errorr', 'internal server error', 'error')
-          })
-      } else {
-          this.setCartAnim(false)
-        this.$router.push('/user/login')
-      }
     }
   }
 }
@@ -147,7 +124,6 @@ export default {
     height: 40;
     top: -2%;
     left: 64%;
-    z-index: 2;
 }
 .text-ribbon {
     position: absolute;
@@ -156,10 +132,5 @@ export default {
     transform-origin: 0 0;
     transform: rotate(46deg);
     color: white;
-    z-index: 2;
-}
-
-.zoom:hover {
-    filter:drop-shadow(8px 8px 10px #28a745);
 }
 </style>

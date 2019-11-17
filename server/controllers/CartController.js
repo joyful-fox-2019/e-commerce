@@ -21,6 +21,7 @@ class CartController {
     static getCart (req,res,next) {
         let userId = req.loggedUser._id
         Cart.find({userId})
+            .populate('productId')
             .then(data=>{
                 res.json(data)
             })

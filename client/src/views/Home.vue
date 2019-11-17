@@ -1,18 +1,43 @@
 <template>
-<div class="home">
-  <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
-  <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <div class="wrapper">
-        <Sidebar></Sidebar>
-        <div id="content">
-          <Navbar></Navbar>
-          <Carousel></Carousel>
-          <BannerInfo></BannerInfo>
-          <Category></Category>
-          <Product></Product>
+    <div class="home">
+    <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
+    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
+        <div class="wrapper">
+
+            <Sidebar></Sidebar>
+            <div id="content">
+            <Navbar class="sticky-top"></Navbar>
+            <Carousel></Carousel>
+            <BannerInfo></BannerInfo>
+            <Category></Category>
+            <Product></Product>
+            </div>
+        </div>
+        <div class="footer">
+                <div v-if="isCart" class="progress">
+                    <div class="progress-bar progress-bar-success" style="width: 100%; background-color:#28a745;"></div>
+                </div>
+            <div class="row mt-2" style="align-items:center;">
+                <div class="col-3" style="text-align:right; border-right: 1px solid gray;">
+                    <!-- <div class="row"> -->
+                        <div>
+                            <div class="square">{{carts.length}}</div>
+                            <i class="fa fa-shopping-basket fa-lg" style="color:#429845; font-size:30px;"></i>
+                        </div>
+                    <!-- </div> -->
+                </div>
+                <div class="col-6" style="text-align:left;">
+                    <h3 class="m-0" style="color:#f44e48;">Rp. {{ priceTotal }}</h3>
+                    <span style="color:#f44e48; font-size:12px;">Free ongkir untuk pembelian diatas Rp.100.000</span>
+                </div>
+                <div class="col-3">
+                    <button @click.prevent="checkoutProduct()" class="btn btn-success">
+                        Lanjut
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -23,16 +48,112 @@ import Carousel from '@/components/Carousel'
 import BannerInfo from '@/components/BannerInfo'
 import Category from '@/components/Category'
 import Product from '@/components/Product'
+import { mapActions, mapState } from 'vuex'
+import Swal from 'sweetalert2'
 
 export default {
   name: 'home',
   components: {
     Navbar, Sidebar, Carousel, BannerInfo, Category, Product
+  },
+  methods: {
+    ...mapActions([
+      'getFruits', 'getVegetables', 'getProteins', 'getGrains', 'getCart', 'checkout', 'getUserTrans'
+    ]),
+    checkoutProduct () {
+      if (localStorage.getItem('token')) {
+        this.checkout()
+          .then(data => {
+            console.log(data)
+            this.getUserTrans()
+            Swal.fire('success', 'transaksi berhasil', 'success')
+          })
+      } else {
+        this.$router.push('/user/login')
+      }
+    }
+  },
+  computed: {
+    ...mapState([
+      'carts', 'isCart'
+    ]),
+    priceTotal () {
+      let total = 0
+      for (let i = 0; i < this.carts.length; i++) {
+        total += (this.carts[i].qty * this.carts[i].productId.price)
+      }
+      return total
+    }
+  },
+  created () {
+    this.getVegetables()
+    this.getFruits()
+    this.getProteins()
+    this.getGrains()
+    this.getCart()
+    if (localStorage.getItem('token')) {
+      this.$store.commit('setLogin')
+    }
+  },
+  mounted () {
+    //   $(document).ready(function () {
+    $('.sidebar').mCustomScrollbar({
+      theme: 'minimal'
+    })
+
+    $('.dismiss, .overlay').on('click', function () {
+      $('.sidebar').removeClass('active')
+      $('.overlay').fadeOut()
+    })
+
+    $('.sidebarCollapse').on('click', function () {
+      $('.sidebar').addClass('active')
+      $('.overlay').fadeIn()
+      $('.collapse.in').toggleClass('in')
+      $('a[aria-expanded=true]').attr('aria-expanded', 'false')
+    })
+    //  });
   }
 }
 </script>
 
 <style>
+.progress .progress-bar {
+    animation-name: animateBar;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 1s;
+}
+@keyframes animateBar {
+    0% {transform: translateX(-100%);}
+    100% {transform: translateX(0);}
+}
+.footer {
+    position: fixed;
+    bottom:0;
+    width:100vw;
+    height:80px;   /* Height of the footer */
+    background:#fff;
+    box-shadow: 1px 1px 1px 3px rgba(0, 0, 0, 0.1);
+    z-index: 5;
+}
+.square {
+    position: relative;
+    left: 92%;
+    top: 12%;
+    width: 20px;
+    height: 20px;
+    background-color:
+    #f44336;
+    border-radius: 50%;
+    font-size: 10px;
+    color:#fff;
+    text-align: center;
+    line-height: 20px;
+    /* margin-bottom: auto; */
+    /* margin-top: auto; */
+    /* z-index: 1; */
+}
 /*
     DEMO STYLE
 */
@@ -41,6 +162,7 @@ export default {
 body {
     font-family: 'Poppins', sans-serif;
     background: #fafafa;
+    /* height: 100%; */
 }
 
 p {
@@ -82,13 +204,13 @@ a, a:hover, a:focus {
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
-#sidebar {
+.sidebar {
     width: 250px;
     position: fixed;
     top: 0;
     left: -250px;
     height: 100vh;
-    z-index: 999;
+    z-index: 1021 !important;
     background: linear-gradient(#4caf50, #8ac554);
     color: #fff;
     transition: all 0.3s;
@@ -96,7 +218,7 @@ a, a:hover, a:focus {
     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
 }
 
-#sidebar.active {
+.sidebar.active {
     left: 0;
 }
 
@@ -128,27 +250,27 @@ a, a:hover, a:focus {
     display: none;
 }
 
-#sidebar .sidebar-header {
+.sidebar .sidebar-header {
     padding: 20px;
     background: #4caf50;
 }
 
-#sidebar ul.components {
+.sidebar ul.components {
     padding: 20px 0;
     border-bottom: 1px solid #4caf50;
 }
 
-#sidebar ul p {
+.sidebar ul p {
     color: #fff;
     padding: 10px;
 }
 
-#sidebar ul li a {
+.sidebar ul li a {
     padding: 10px;
     font-size: 1.1em;
     display: block;
 }
-#sidebar ul li a:hover {
+.sidebar ul li a:hover {
     color: #7386D5;
     background: #fff;
 }

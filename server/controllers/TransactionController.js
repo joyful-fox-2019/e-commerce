@@ -56,6 +56,7 @@ class TransactionController {
     }
     static history (req,res,next) {
         Transaction.find()
+            .populate('userId')
             .then(data=>{
                 res.json(data)
             })
@@ -63,9 +64,9 @@ class TransactionController {
     }
     // for cutomer
     static delivered (req,res,next) {
-        let userId = req.loggedUser._id
+        // let userId = req.loggedUser._id
         let { id } = req.params
-        Transaction.findOneAndUpdate({userId,_id:id},{$set: {deliverStatus: true}}, {new: true})
+        Transaction.findOneAndUpdate({_id:id},{$set: {deliverStatus: true}}, {new: true})
             .then(data=>{
                 res.json(data)
             })

@@ -3,7 +3,7 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
-                  <button type="button" id="sidebarCollapse" class="btn navbar-btn">
+                  <button type="button" class="btn navbar-btn sidebarCollapse">
                     <i class="fas fa-bars" style="font-size:25px;"></i>
                     <img class="ml-2" src="../../public/logo-text.png" alt="logo" style="width:130px;">
                   </button>
