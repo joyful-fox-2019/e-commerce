@@ -32,7 +32,8 @@ export default new Vuex.Store({
       writer: '',
       penciler: ''
     },
-    addCartDialog: false
+    addCartDialog: false,
+    carts: []
   },
   mutations: {
     SET_USER (state, payload) {
@@ -55,6 +56,9 @@ export default new Vuex.Store({
     },
     SET_ADD_CART_DIALOG (state, payload) {
       state.addCartDialog = payload
+    },
+    SET_CARTS (state, payload) {
+      state.carts = payload
     }
   },
   actions: {
@@ -183,6 +187,7 @@ export default new Vuex.Store({
         .catch(alert)
     },
     addToCart ({ commit }, payload) {
+      commit('SET_LOADING', true)
       axios.post(`/carts`, payload, {
         headers: {
           access_token: localStorage.getItem('access_token')
@@ -190,8 +195,36 @@ export default new Vuex.Store({
       })
         .then(({ data }) => {
           console.log(data)
+          commit('SET_LOADING', false)
           commit('SET_ADD_CART_DIALOG', true)
-          // commit('SET_LOADING', false)
+        })
+        .catch(alert)
+    },
+    getCarts ({ commit }, payload) {
+      commit('SET_LOADING', true)
+      axios.get('/carts', {
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          commit('SET_CARTS', data)
+          commit('SET_LOADING', false)
+        })
+        .catch(alert)
+    },
+    updateQty ({ dispatch }, payload) {
+      axios.patch(`/carts/${payload.cartId}`, {
+        qty: payload.qty
+      }, {
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          dispatch('getCarts')
         })
         .catch(alert)
     }

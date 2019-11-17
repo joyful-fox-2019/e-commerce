@@ -3,7 +3,7 @@
     <div class="name">
       {{ product.name }}
     </div>
-    <div class="price">
+    <div class="price t-primary">
       {{ formattedPrice }}
     </div>
     <div class="stock">
@@ -123,7 +123,7 @@
           <v-btn
             class="bg-secondary"
             text
-            @click="deleteProduct"
+            @click="$router.push('/cart')"
           >
             See Cart
           </v-btn>
@@ -181,11 +181,8 @@ export default {
 .price {
   font-family: 'Squada One', cursive !important;
   font-size: 40px;
-  color:rgb(181, 181, 255);
 }
 .stock {
-  font-family: 'Squada One', cursive !important;
-  font-size: 25px;
-  color:rgb(255, 181, 181);
+  font-size: 20px;
 }
 </style>

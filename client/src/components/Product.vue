@@ -3,8 +3,6 @@
     <v-img
       @click="$router.push(`/comics/${product._id}`)"
       :src="product.image"
-      lazy-src="https://picsum.photos/id/11/10/6"
-      aspect-ratio="0.7"
       class="grey lighten-2 product-img clickable"
     ></v-img>
     <div @click="$router.push(`/comics/${product._id}`)" class="product-name clickable mt-5">

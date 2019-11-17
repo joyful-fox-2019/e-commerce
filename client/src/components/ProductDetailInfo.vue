@@ -6,16 +6,16 @@
     <div>
       {{ formattedPublishedDate }}
     </div>
-    <div class="field mt-5">
+    <div v-if="product.writer" class="field mt-5">
       Writer:
     </div>
-    <div>
+    <div v-if="product.writer">
       {{ product.writer }}
     </div>
-    <div class="field mt-5">
+    <div v-if="product.penciler" class="field mt-5">
       Penciler:
     </div>
-    <div>
+    <div v-if="product.penciler">
       {{ product.penciler }}
     </div>
   </div>

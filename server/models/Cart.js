@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
+const Product = require('../models/Product')
 
 const cartSchema = new Schema({
   product: {
@@ -12,7 +13,8 @@ const cartSchema = new Schema({
   },
   qty: {
     type: Number,
-    required: [true, 'Quantity cannot be empty']
+    required: [true, 'Quantity cannot be empty'],
+    min: [1, 'Qty cannot be less than one']
   }
 }, {
   versionKey: false

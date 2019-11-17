@@ -100,7 +100,7 @@ hr {
 .app {
   font-family: 'Oswald', sans-serif !important;
 }
-v-btn {
+.f-fancy {
   font-family: 'Squada One', cursive !important;
 }
 .logo {

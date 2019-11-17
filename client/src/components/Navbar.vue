@@ -16,7 +16,7 @@
           </v-col>
           <v-col>
             <div class="hidden-sm-and-down text-center">
-              <v-btn v-if="$store.state.user._id && !$store.state.user.isAdmin" class="bg-surface nav-button"><v-icon>mdi-cart</v-icon></v-btn>
+              <v-btn @click="$router.push('/carts')" v-if="$store.state.user._id && !$store.state.user.isAdmin" class="bg-surface nav-button"><v-icon>mdi-cart</v-icon></v-btn>
               <v-btn v-if="$store.state.user._id && !$store.state.user.isAdmin" class="bg-surface nav-button"><v-icon>mdi-account</v-icon></v-btn>
               <v-btn @click="$router.push('/add-comic')" v-if="$store.state.user._id && $store.state.user.isAdmin" class="bg-primary nav-button">
                 <v-icon class="mr-1">

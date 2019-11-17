@@ -29,6 +29,11 @@ const routes = [
     path: '/comics/:id/update',
     name: 'comics-update',
     component: () => import('../views/UpdateProduct.vue')
+  },
+  {
+    path: '/carts',
+    name: 'carts',
+    component: () => import('../views/Carts.vue')
   }
 ]
 
