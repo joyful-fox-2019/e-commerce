@@ -8,6 +8,7 @@ const User = require('../models/User')
 const { generateToken } = require('../helpers/jwt')
 let adminToken = ''
 let customerToken = ''
+const fs = require('fs')
 
 describe('Product Test', function () {
   before(function (done) {
@@ -58,6 +59,8 @@ describe('Product Test', function () {
 
       chai.request(app)
       .post('/products')
+      .type('form')
+      .attach('image', fs.readFileSync('./futurefoundation4.jpg'), './futurefoundation4.jpg')
       .send(body)
       .set('access_token', adminToken)
       .end((err, res) => {
