@@ -221,7 +221,8 @@ describe("product testing",()=>{
       })
       let payload = {
         _id : user._id,
-        username : user.username
+        username : user.username,
+        admin: true
       }
       adminToken = jwt.getToken(payload)
 
@@ -233,7 +234,8 @@ describe("product testing",()=>{
       })
       let payloadDummy = {
         _id : userDummy._id,
-        username : userDummy.username
+        username : userDummy.username,
+        admin: false
       }
       userToken = jwt.getToken(payloadDummy)
     } catch (error) {
@@ -263,6 +265,7 @@ describe("product testing",()=>{
             "updatedAt"
           )
           productId = res.body._id
+          productName = res.body.name
           done()
         })
     })
@@ -527,10 +530,14 @@ describe("product testing",()=>{
 
     describe('delete item in cart',()=>{
       it('it should success removing item in cart',done=>{
+        let productName = {
+          productName: 'kuda'
+        }
         chai
           .request(app)
-          .patch(`/users/remove-item/${productId}`)
+          .patch(`/users/remove-item`)
           .set('token',userToken)
+          .send(productName)
           .end((err,res)=>{
             expect(err).to.be.null
             expect(res).to.have.status(201)

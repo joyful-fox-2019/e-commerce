@@ -83,19 +83,24 @@ export default {
       }
     },
     getUser(){
+      this.$q.loading.show()
       this.$store.dispatch('users/getProfile')
         .then(()=>{
+          this.$q.loading.hide()
           this.setTableData()
         })
         .catch((err) => {
+          this.$q.loading.hide()
           console.log(err);
         })
     },
     startCheckout(){
       if(this.data.length >= 1) {
         if(this.checkout){
+          this.$q.loading.show()
           this.$store.dispatch('transactions/checkout',this.totalPrice)
           .then(()=>{
+            this.$q.loading.hide()
             this.totalPrice = 0
             console.log(this.data,'atas')
             this.data = []
@@ -103,9 +108,34 @@ export default {
             console.log(this.data,'bawah')
             this.$emit('performCheckout')
             this.getUser()
+            this.$store.dispatch('users/getProfile')
+              this.$q.notify({
+              color: 'green-4',
+              textColor: 'white',
+              icon: 'done',
+              message: `Checkout success`
+            })
           })
           .catch((err) => {
-            console.log(err);
+            this.$q.loading.hide()
+            console.log(err.response.data.message.products.rejectProduct);
+            let temp = []
+            err.response.data.message.products.rejectProduct.forEach((el)=>{
+              temp.push(el.productName)
+            })
+            console.log(temp);
+            //   this.$q.notify({
+            //   color: 'red-4',
+            //   textColor: 'white',
+            //   icon: 'error',
+            //   message: `${err.response.data.message.text}`
+            // })
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: `Out of stock : ${temp.join(', ')}`
+            })
           })
         } else {
           console.log('tidak bisa checkout');
@@ -125,13 +155,16 @@ export default {
       this.selected.forEach((el) => {
         names.push(el.productName)
       })
+      this.$q.loading.show()
       this.$store.dispatch('users/removeCart',names)
         .then(() => {
+          this.$q.loading.hide()
           this.totalPrice = 0
           this.selected = []
           this.getUser()
         })
         .catch((err) => {
+          this.$q.loading.hide()
           console.log(err)
         })
     }

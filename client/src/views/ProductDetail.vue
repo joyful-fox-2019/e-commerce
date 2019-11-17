@@ -21,7 +21,7 @@
           </div>
           <h6> Total price: {{totalPrice}} </h6>
         </div>
-          <q-btn align="around" :ripple="false" class="btn-fixed-width" color="primary" label="Add to cart" icon="shopping_cart" @click="addToCart" />
+          <q-btn align="around" :ripple="false" class="btn-fixed-width" color="primary" v-if="this.thisProduct.stock >= 1" label="Add to cart" icon="shopping_cart" @click="addToCart" />
       </div>
     </div>
 
@@ -38,6 +38,9 @@
       </div>
       <div>
         <div v-html="this.thisProduct.detail"></div>
+      </div>
+      <div v-if="this.thisProduct.stock < 1">
+        <h5 style="color: red">Out of stock</h5>
       </div>
     </div>
 
@@ -83,19 +86,22 @@ export default {
           productId: this.thisProduct._id,
           qty: this.qty
         }
+        this.$q.loading.show()
         this.$store.dispatch('users/addToCart',payload)
           .then((data) => {
+            this.$q.loading.hide()
             this.$store.dispatch('users/getProfile')
               this.$q.notify({
               color: 'green-4',
               textColor: 'white',
-              icon: 'success',
+              icon: 'done',
               message: `${data.message}`
             })
           })
           .catch((err) => {
+            this.$q.loading.hide()
               this.$q.notify({
-              color: 'green-4',
+              color: 'red-4',
               textColor: 'white',
               icon: 'warning',
               message: `${err.message}`

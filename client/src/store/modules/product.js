@@ -25,6 +25,7 @@ export const Product = {
           .then(({ data }) => {
             console.log(data.products, 'ini data di product')
             context.commit('SET_PRODUCT', data.products)
+            resolve()
           })
           .catch((err) => {
             reject(err)
@@ -102,6 +103,7 @@ export const Product = {
           .then(({ data }) => {
             console.log('masuk ke findProduct')
             context.commit('SET_THIS_PRODUCT', data.product)
+            resolve()
           })
           .catch(err => {
             reject(err)

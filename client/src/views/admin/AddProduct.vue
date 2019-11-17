@@ -89,8 +89,10 @@ export default {
       formData.append('detail',this.desc)
       formData.append('price',this.price)
       formData.append('stock',this.stock)
+      this.$q.loading.show()
       this.$store.dispatch('products/addProduct',formData)
         .then(()=>{
+          this.$q.loading.hide()
           this.productName = ''
           this.desc = ''
           this.price = ''
@@ -105,6 +107,7 @@ export default {
           })
         })
         .catch((err)=>{
+          this.$q.loading.hide()
           this.$q.notify({
             color: 'red-4',
             textColor: 'white',

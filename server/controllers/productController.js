@@ -40,15 +40,15 @@ class ProductController{
         let image = req.file.cloudStoragePublicUrl
         obj.image = image
         const updated = await Product.updateOne({_id:productId},obj,{runValidators:true})
-        let message = 'Product updated'
-        res.status(200).json({message,updated})
+        let message = 'Product updated!'
+        res.status(201).json({message,updated})
       } else {
         console.log('masuk else -------------------->>>>>>000');
         let image = await Product.findOne({_id:productId}).select('image')
         obj.image = image.image
         const updated = await Product.updateOne({_id:productId},obj,{runValidators:true})
-        let message = 'Product updated'
-        res.status(200).json({message,updated})
+        let message = 'Product updated!'
+        res.status(201).json({message,updated})
       }
     } catch (error) {
      next(error) 

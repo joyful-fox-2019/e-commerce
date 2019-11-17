@@ -18,7 +18,7 @@ async function checkStorage(req, res, next) {
    if(rejectProduct.length < 1){
      next()
    } else {
-     next({status : 400, message : {text : 'Some product is empty, please remove some product', products : {rejectProduct,getProduct} }})
+     next({status : 400, message : {text : 'Out of stock, please delete some items', products : {rejectProduct,getProduct} }})
    }
   } catch (error) {
     next(error)

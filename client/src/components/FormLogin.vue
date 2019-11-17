@@ -43,9 +43,11 @@
       label="Login using github"
       @click="github"
       /> -->
-      <a href="https://github.com/login/oauth/authorize?client_id=021468bd25787be80587&scope=user:email">
+      <div style="margin-top: 10px; ">
+      <a href="https://github.com/login/oauth/authorize?client_id=021468bd25787be80587&scope=user:email" id="git">
             Sign in using Github
             </a>
+      </div>
   </div>  
 </template>
 
@@ -65,8 +67,10 @@ export default {
         email : this.email,
         password : this.password
       }
+      this.$q.loading.show()
       this.$store.dispatch('login',payload)
         .then(()=>{
+          this.$q.loading.hide()
           this.$store.commit('SET_STATE',false)
           this.$store.dispatch('users/getProfile')
           let token = localStorage.getItem('token')
@@ -84,6 +88,7 @@ export default {
         })
         .catch((error)=>{
           console.log(error);
+          this.$q.loading.hide()
           this.$store.commit('SET_STATE',false)
           this.$q.notify({
             color: 'red-4',
@@ -96,12 +101,14 @@ export default {
     google(){
     this.$gAuth.signIn()
       .then(GoogleUser => {
+        this.$q.loading.show()
         this.$store.commit('SET_STATE',false)
         this.isSignIn = this.$gAuth.isAuthorized
         let id_token = GoogleUser.getAuthResponse().id_token
         // let profile = GoogleUser.getBasicProfile()
         this.$store.dispatch('google',id_token)
           .then(_ => {
+            this.$q.loading.hide()
             this.$store.commit('SET_STATE',false)
         this.$store.dispatch('users/getProfile')
         let token = localStorage.getItem('token')
@@ -116,6 +123,7 @@ export default {
             })
           })
           .catch((error)=>{
+            this.$q.loading.hide()
           console.log(error);
           this.$store.commit('SET_STATE',false)
           this.$q.notify({
@@ -147,5 +155,13 @@ export default {
 }
 #submitButton{
   font-size: 10px;
+}
+#git{
+  padding: 5px;
+  background-color: grey;
+  border-radius: 5px;
+  text-decoration: none;
+  color: white;
+  width: 100%
 }
 </style>

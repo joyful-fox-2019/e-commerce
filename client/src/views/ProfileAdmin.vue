@@ -87,8 +87,10 @@ export default {
   },
   methods:{
     getAllTransactions(){
+      this.$q.loading.show()
       this.$store.dispatch('transactions/allTransactions')
         .then(() => {
+          this.$q.loading.hide()
           console.log(this.allTransactions)
         })
     },

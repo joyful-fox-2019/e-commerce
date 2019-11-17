@@ -16,7 +16,14 @@ export default {
   },
   methods: {
     getProduct(){
+      this.$q.loading.show()
       this.$store.dispatch('products/getProduct')
+        .then(()=>{
+          this.$q.loading.hide()
+        })
+        .catch(()=>{
+          this.$q.loading.hide()
+        })
     }
   },
   computed: {

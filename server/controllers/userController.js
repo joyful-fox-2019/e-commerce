@@ -225,7 +225,7 @@ class UserController{
   static async removeCart(req,res,next){
     try {
       let {productName} = req.body
-      console.log(req.body);
+      console.log(req.body,'ini req.body');
       let userId = req.loggedUser._id
       let updated = []
       for (let name of productName){

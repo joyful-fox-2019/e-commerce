@@ -66,11 +66,29 @@
             />
         </div>
     
-      <div>
-        <q-btn label="Update" type="submit" color="primary" id="submitButton"/>
-        <q-btn label="Remove product" color="red" @click="deleteProduct"/>
+      <div>  
+        <q-btn :no-caps="true" label="Update" type="submit" color="primary" id="submitButton"/>
+        <q-btn :no-caps="true" label="Remove product" color="red" @click="confirm = true" style="margin-left: 10px"/>
       </div>
     </q-form>
+
+  <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="report_problem" color="red" text-color="white" />
+          <div >
+            <span class="q-ml-sm">Are you sure to delete this product?</span>
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat :no-caps="true" label="Cancel" color="primary" v-close-popup />
+          <q-btn flat label="Yes"  :no-caps="true" color="primary" @click="deleteProduct" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+
   </div>
 </template>
 
@@ -86,7 +104,8 @@ export default {
       stock: this.prod.stock,
       prevImage: this.prod.image,
       image: '',
-      id: this.prod._id
+      id: this.prod._id,
+      confirm: false
     }
   },
   methods:{
@@ -101,8 +120,10 @@ export default {
         formData,
         _id : this.id
       }
+      this.$q.loading.show()
       this.$store.dispatch('products/updateProduct',payload)
         .then(()=>{
+          this.$q.loading.hide()
           this.productName = ''
           this.desc = ''
           this.price = ''
@@ -118,7 +139,14 @@ export default {
           })
         })
         .catch((err) => {
+          this.$q.loading.hide()
           console.log(err)
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            icon: 'alert',
+            message: `${err.response.data}`
+          })
         })
     },
     factoryFn(file){
@@ -126,8 +154,10 @@ export default {
     },
     deleteProduct(){
       let payload = { _id : this.id}
+      this.$q.loading.show()
       this.$store.dispatch('products/removeProduct',payload)
         .then(()=>{
+          this.$q.loading.hide()
           this.productName = ''
           this.desc = ''
           this.price = ''
@@ -143,6 +173,7 @@ export default {
           })
         })
         .catch((err) => {
+          this.$q.loading.hide()
           console.log(err)
         })
     }

@@ -50,9 +50,11 @@
       color="black"
       class="text-white full-width" 
       label="Login using github" /> -->
-        <a href="https://github.com/login/oauth/authorize?client_id=021468bd25787be80587&scope=user:email">
+        <div style="margin-top: 10px; ">
+      <a href="https://github.com/login/oauth/authorize?client_id=021468bd25787be80587&scope=user:email" id="git">
             Sign in using Github
             </a>
+      </div>
   </div>  
 </template>
 
@@ -74,8 +76,10 @@ export default {
         email: this.email,
         password: this.password
       }
+      this.$q.loading.show()
       this.$store.dispatch('register',payload)
         .then(()=>{
+          this.$q.loading.hide()
       this.$store.dispatch('users/getProfile')
           this.email=''
           this.password=''
@@ -89,12 +93,13 @@ export default {
           })
         })
         .catch((error)=>{
+          this.$q.loading.hide()
           console.log(error);
           this.$q.notify({
             color: 'red-4',
             textColor: 'white',
             icon: 'warning',
-            message: `${error.data.message}`
+            message: `${error.data.arr.join('-')}`
           })
         })
     },
@@ -104,8 +109,10 @@ export default {
         this.isSignIn = this.$gAuth.isAuthorized
         let id_token = GoogleUser.getAuthResponse().id_token
         // let profile = GoogleUser.getBasicProfile()
+        this.$q.loading.show()
         this.$store.dispatch('google',id_token)
           .then(_ => {
+            this.$q.loading.hide()
             this.$store.dispatch('users/getProfile')
             this.checkAdmin()
               this.$q.notify({
@@ -116,6 +123,7 @@ export default {
             })
           })
           .catch((error)=>{
+            this.$q.loading.hide()
           console.log(error);
           this.$q.notify({
             color: 'red-4',
@@ -145,5 +153,13 @@ export default {
 }
 #submitButton{
   font-size: 10px;
+}
+#git{
+  padding: 5px;
+  background-color: grey;
+  border-radius: 5px;
+  text-decoration: none;
+  color: white;
+  width: 100%
 }
 </style>
