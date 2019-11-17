@@ -2,7 +2,7 @@
 **Omniverse**
 ----
 
-access deployed app to: [omniverse.satyowicaksana.online](http://spotlight.satyowicaksana.online)
+access deployed app to: [omniverse.satyowicaksana.online](http://omniverse.satyowicaksana.online)
 
 ----
 
