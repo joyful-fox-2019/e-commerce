@@ -36,7 +36,7 @@ All API requests that require you to login, need to include token in their heade
 ```
 token : <your_token_value>
 ```
-To get token, you need to sign up first. Just follow the instructions below.
+To get token, you need to login with your account, or sign up if you haven't made one. Just follow the instructions below.
 
 **Sign Up**
 ----
