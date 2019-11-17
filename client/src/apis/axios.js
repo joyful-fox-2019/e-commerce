@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const server = axios.create({
-    baseURL: 'http://ecommerce.server.edirates.xyz'
+    baseURL: 'http://localhost:3000'
 });
 
 export default server;
