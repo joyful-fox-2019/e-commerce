@@ -47,11 +47,6 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "transaction" */ './views/Transaction.vue')
         },
         {
-          path: 'notification',
-          name: 'notification',
-          component: () => import(/* webpackChunkName: "notification" */ './views/Notification.vue')
-        },
-        {
           path: 'favorites',
           name: 'favorites',
           component: () => import(/* webpackChunkName: "favorites" */ './views/Favorites.vue'),
@@ -75,14 +70,25 @@ const router = new Router({
     {
       path: '/admin',
       name: 'admin',
-      component: () => import(/* webpackChunkName: "admin" */ './views/Admin.vue'),
-      children: [
-        {
-          path: 'transaction',
-          name: 'adminTransaction',
-          component: () => (/* webpackChunkName: "adminTransaction" */ './views/Transaction.vue')
-        }
-      ],
+      component: () => import(/* webpackChunkName: "admin" */ './views/Transaction.vue'),
+      beforeEnter (to, from, next) {
+        if (store.state.isAdmin) next()
+        else next('/')
+      }
+    },
+    {
+      path: '/edit/:id',
+      name: 'productEdit',
+      component: () => import(/* webpackChunkName: "editProduct" */ './views/EditProduct.vue'),
+      beforeEnter (to, from, next) {
+        if (store.state.isAdmin) next()
+        else next('/')
+      }
+    },
+    {
+      path: '/addproduct',
+      name: 'addProduct',
+      component: () => import(/* webpackChunkName: "addProduct" */ './views/EditProduct.vue'),
       beforeEnter (to, from, next) {
         if (store.state.isAdmin) next()
         else next('/')

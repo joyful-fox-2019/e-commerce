@@ -9,7 +9,7 @@ const morgan = require('morgan')
 const port = process.env.PORT
 let uri
 
-if(process.env.NODE_ENV === 'development' || process.NODE_ENV === 'testing'){
+if(process.NODE_ENV === 'test'){
   uri = `${process.env.MONGO_URI}-${process.env.NODE_ENV}`
 } else {
   uri = process.env.MONGO_URI_PROD

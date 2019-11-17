@@ -22,7 +22,6 @@ export default {
   },
   methods: {
     changeMode (val) {
-      console.log(val, 'line 25')
       this.mode = val
     }
   }
@@ -34,7 +33,8 @@ export default {
   background-image: url('http://static1.squarespace.com/static/57027bf6f850820e70b867c9/57e0201b9de4bb934fe050da/5a157ec071c10b644b0322ca/1546876531838/The+Col+Collective_TDF+2018+Recon_1.jpg?format=1500w');
   background-repeat: no-repeat;
   background-attachment: fixed;
-  min-height: 90vh;
+  background-size: cover;
+  min-height: 92vh;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -42,6 +42,5 @@ export default {
 .page-container {
   margin: 0 auto;
   padding: 100px;
-  border: 1px solid blue;
 }
 </style>

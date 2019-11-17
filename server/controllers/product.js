@@ -40,7 +40,6 @@ class ProductController {
   }
   static update (req, res, next) {
     const { name, price, image, stock } = req.body
-    console.log(req.body);
     const { id } = req.params
     Product.findById(id).populate('favourites')
       .then(product => {
@@ -58,7 +57,7 @@ class ProductController {
         product.name = name
         product.price = price
         product.stock = stock
-        return product.save()
+        return product.save({ validateBeforeSave: false  })
       })
       .then(product => {
         res.status(200).json({ message: `Successfully updated product`, product})

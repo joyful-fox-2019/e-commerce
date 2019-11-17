@@ -14,7 +14,12 @@
     </div>
     <div class="login-section">
       <p>Or you login via:</p>
-      <button id="google-btn">Google</button>
+      <g-signin-button
+        :params="googleSignInParams"
+        @success="onSignIn"
+        @error="onSignInError">
+      Sign in with Google
+      </g-signin-button>
     </div>
   </div>
 </template>
@@ -24,10 +29,31 @@ export default {
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
+      googleSignInParams: {
+        client_id: '1037604377022-dnjrdc18d14vnr1ai9gd7jdcir2difh3.apps.googleusercontent.com'
+      }
     }
   },
   methods: {
+    onSignIn (googleUser) {
+      var id_token = googleUser.getAuthResponse().id_token
+      this.$store.dispatch('googleLogin', { id_token })
+        .then(({ data }) => {
+          this.$notify({ type: 'success', title: data.message })
+          localStorage.setItem('token', data.token)
+          localStorage.setItem('userId', data.id)
+          this.$store.commit('SET_LOGIN_STATUS', true)
+          this.$store.dispatch('verifyAdmin')
+          this.$router.push('/')
+        })
+        .catch(({ response }) => {
+          this.$notify({ type: 'error', text: response.data.message })
+        })
+    },
+    onSignInError () {
+      this.$$notify({ type: 'error', title: 'There is something wrong' })
+    },
     login () {
       this.$store.dispatch('login', { email: this.email, password: this.password })
         .then(({ data }) => {
@@ -35,6 +61,7 @@ export default {
           localStorage.setItem('token', data.token)
           localStorage.setItem('userId', data.id)
           this.$store.commit('SET_LOGIN_STATUS', true)
+          this.$store.dispatch('verifyAdmin')
           this.$router.push('/')
         })
         .catch(({ response }) => {
@@ -58,7 +85,6 @@ export default {
     padding: 5px;
     background-color: rgba(245, 245, 220, 0.408);
     margin: 0 auto;
-    /* border: 1px solid orange; */
     width: 50%;
   }
   .login-section {
@@ -68,7 +94,6 @@ export default {
     justify-content: center;
     align-items: center;
     margin: 10px auto;
-    /* border: 1px solid red; */
   }
   .login-section form {
     width: 100%;
@@ -100,14 +125,14 @@ export default {
   .login-btn:hover {
     background-color: rgb(7, 145, 145);
   }
-  #google-btn {
-    background-color: white;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 10px;
-    margin: 10px auto;
-  }
-  #google-btn:hover {
-    background-color: red;
-  }
+  .g-signin-button {
+  /* This is where you control how the button looks. Be creative! */
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 3px;
+  background-color: #f0f0f0;
+  color: rgb(75, 45, 45);
+  margin-top: 5px;
+  cursor: pointer;
+}
 </style>

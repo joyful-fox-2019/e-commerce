@@ -1,16 +1,16 @@
 <template>
   <div class="my-10 mx-auto w-1/2">
-    <div class="flex-column border border-green-500 p-4">
-      <div class="cart-items flex-column border-red-500 border items-">
+    <div class="flex-column shadow p-4">
+      <div class="cart-items flex-column shadow items-">
         <div v-if="cart.length === 0">
           <h1>No items yet in your cart.</h1>
-          <button class="p-2 bg-yellow-400 my-4 hover:bg-yellow-500" @click="toProduct">Continue Shopping?</button>
+          <button class="p-2 bg-yellow-200 my-4 hover:bg-yellow-400" @click="toProduct">Continue Shopping?</button>
         </div>
-        <div v-for="item in cart" :key="item._id" class="flex border border-yellow-700">
+        <div v-for="item in cart" :key="item._id" class="flex">
           <div class="item-image w-1/2 p-1 flex-column justify-center">
             <img :src="item.product.image" alt="img" class="w-32 my-2 mx-auto">
           </div>
-          <div class="item-info flex justify-between border border-black w-full p-2 items-center">
+          <div class="item-info flex justify-between w-full p-2 items-center">
             <div class="flex flex-wrap w-1/3"><h1>{{ item.product.name }} </h1></div>
             <div class="w-1/5"><p>{{ item.qty }} pcs</p></div>
             <div><p>{{ usdFormat(item.product.price) }}</p></div>
@@ -24,7 +24,7 @@
       <div class="total-price flex justify-end m-2">
         <h1>Total Price: <span>USD {{ usdFormat(totalPrice()) }}</span></h1>
       </div>
-      <div class="cart-action border border-blue-500 flex justify-end m-2">
+      <div class="cart-action flex justify-end m-2">
         <button class="bg-gray-800 hover:bg-gray-600 p-2 text-white" @click="checkout">Checkout</button>
       </div>
     </div>
@@ -56,6 +56,7 @@ export default {
       this.$store.dispatch('checkout', { items: this.cart, price: this.totalPrice })
         .then(({ data }) => {
           this.$notify({ type: 'success', title: data.message })
+          this.$store.dispatch('fetchCart')
         })
         .catch(({ response }) => {
           this.$notify({ type: 'error', title: response.data.message })
@@ -64,7 +65,7 @@ export default {
     deleteFromFav (id) {
       this.$store.commit('DELETE_FROM_FAV', { id })
       this.$store.dispatch('updateCart', { cart: this.cart })
-      this.$notify({ type: 'info', title: 'Successfully updated your cart'})
+      this.$notify({ type: 'info', title: 'Successfully updated your cart' })
     }
   },
   computed: {

@@ -23,12 +23,13 @@ class TransactionController {
         let promises = []
         products.forEach((product, index) => {
           product.stock -= productIds[index].qty
+          product.sold += productIds[index].qty
           promises.push(product.save({ validateBeforeSave: false }))
         })
         return Promise.all(promises)
       })
       .then(products => {
-        res.status(201).json({ transaction: result, message: 'Successfully create transaction'})
+        // res.status(201).json({ transaction: result, message: 'Successfully create transaction'})
         next()
       })
       .catch(next)
@@ -36,7 +37,10 @@ class TransactionController {
   static find (req, res, next) {
     let objParams = {}
     if(req.loggedUser.role === 'user') objParams.owner = req.loggedUser.id
-    Transaction.find(objParams).populate('owner').sort([['createdAt', 'desc']])
+    Transaction.find(objParams)
+      .populate('owner')
+      .populate('items.product')
+      .sort([['createdAt', 'desc']])
       .then(transactions => {
         res.status(200).json(transactions)
       })

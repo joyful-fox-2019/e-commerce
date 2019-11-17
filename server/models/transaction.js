@@ -5,7 +5,7 @@ const transactionSchema = new Schema({
   status : { type: String, default: 'pending'},
   price: { type: Number, min: 0 },
   items: [{ 
-    product: { type: Schema.Types.ObjectId, ref: 'User'}, 
+    product: { type: Schema.Types.ObjectId, ref: 'Product'}, 
     qty: { type: Number, min: 1 }
   }],
   owner :{ type: Schema.Types.ObjectId, ref: 'User'}

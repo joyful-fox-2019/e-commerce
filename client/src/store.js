@@ -6,6 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isLogin: false,
+    isAdmin: false,
     role: '',
     products: [],
     favProducts: [],
@@ -39,6 +40,9 @@ export default new Vuex.Store({
     },
     SET_TRANSACTIONS (state, payload) {
       state.transactions = payload
+    },
+    SET_ADMIN (state, payload) {
+      state.isAdmin = payload
     }
   },
   actions: {
@@ -49,6 +53,15 @@ export default new Vuex.Store({
         data: {
           email: payload.email,
           password: payload.password
+        }
+      })
+    },
+    googleLogin ({ commit }, payload) {
+      return axios({
+        method: 'POST',
+        url: '/users/glogin',
+        data: {
+          id_token: payload.id_token
         }
       })
     },
@@ -63,11 +76,37 @@ export default new Vuex.Store({
         }
       })
     },
-    verify ({ commit }, payload) {
-      return axios({
+    verify ({ commit }) {
+      axios({
         method: 'GET',
-        url: '/users/verify'
+        url: '/users/verify',
+        headers: {
+          token: localStorage.getItem('token')
+        }
       })
+        .then(({ data }) => {
+          Vue.notify({ type: 'info', title: data.message })
+          commit('SET_LOGIN_STATUS', true)
+        })
+        .catch(({ response }) => {
+          Vue.notify({ type: 'error', title: response.data.message })
+        })
+    },
+    verifyAdmin ({ commit }) {
+      axios({
+        method: 'GET',
+        url: '/users/admin/verify',
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+        .then(({ data }) => {
+          Vue.notify({ type: 'success', title: data.message })
+          commit('SET_ADMIN', true)
+        })
+        .catch(({ response }) => {
+          Vue.notify({ type: 'error', title: response.data })
+        })
     },
     fetchProducts ({ commit }, payload) {
       let query = '?'
@@ -106,7 +145,7 @@ export default new Vuex.Store({
           commit('SET_FAV_PRODUCTS', data)
         })
         .catch(({ response }) => [
-          console.log(response.data.message)
+          Vue.notify({ type: 'error', title: response.data.message })
         ])
     },
     fetchCart ({ commit }) {
@@ -119,10 +158,9 @@ export default new Vuex.Store({
       })
         .then(({ data }) => {
           commit('SET_CART', data.cart)
-          console.log(data)
         })
         .catch(({ response }) => {
-          console.log(response.data)
+          Vue.notify({ type: 'error', title: response.data.message })
         })
     },
     updateCart ({ commit }, payload) {
@@ -159,7 +197,22 @@ export default new Vuex.Store({
         }
       })
     },
-    updateTransaction ({ commit }, payload) {
+    fetchTrx ({ commit }, payload) {
+      axios({
+        method: 'GET',
+        url: '/transactions',
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+        .then(({ data }) => {
+          commit('SET_TRANSACTIONS', data)
+        })
+        .catch(({ response }) => {
+          Vue.notify({ type: 'error', title: response.data.message })
+        })
+    },
+    updateTransaction ({ dispatch }, payload) {
       return axios({
         method: 'PATCH',
         url: `/transactions/${payload.id}`,
@@ -178,7 +231,7 @@ export default new Vuex.Store({
         headers: {
           token: localStorage.getItem('token')
         },
-        data: payload // form data
+        data: payload.data // form data
       })
     },
     updateProduct ({ commit }, payload) {

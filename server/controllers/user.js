@@ -2,6 +2,7 @@ const User = require('../models/user')
 const { comparePass } = require('../helpers/bcrypt')
 const { verifyToken, genToken } = require('../helpers/jwt')
 const { ObjectId } = require('mongoose').Types
+const { OAuth2Client } = require('google-auth-library')
 
 class UserController {
   static register (req, res, next) {
@@ -35,6 +36,37 @@ class UserController {
         }
       })
       .catch(next)
+  }
+  static gLogin (req, res, next) {
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+
+    const { id_token } = req.body
+    let userData
+
+    client.verifyIdToken({
+      idToken: id_token,
+      audience: process.env.GOOGLE_CLIENT_ID
+    })
+    .then(ticket => {
+      const gPayload = ticket.getPayload()
+      const { email, name } = gPayload
+      userData = { email, name }
+      return User.findOne({ email })
+    })
+    .then(user => {
+      if(user){
+        const token = sign({id: user._id })
+        res.status(200).json({ token })
+      } else {
+        userData.password = 'password123'
+        return User.create(userData)
+        .then(user=> {
+          const token = sign({id: user._id})
+          res.status(200).json({ token, message: 'Welcome back!' })
+        })
+      }
+    })
+    .catch(next)
   }
   static verify (req, res, next) {
     try {
@@ -79,7 +111,7 @@ class UserController {
   static checkout (req, res, next ) {
     const cart = []
     const { id } = req.loggedUser
-    User.findByIdAndUpdate(id, { $set: { cart }}).populate('cart.product')
+    User.findByIdAndUpdate(id, { cart }).populate('cart.product')
       .then(user => {
         res.status(200).json({ user, message: 'Successfully checkout'})
       })
