@@ -1,10 +1,8 @@
 <template>
   <div id="transactionPage">
-    <div id="list">
-      <div class="q-pa-md" style="max-width: 420px">
+      <div class="q-pa-md" style="max-width: 420px" id="list">
         <user-trans-list v-for="transaction in userTransactions" :key="transaction.i" :transaction="transaction" @trans="thisTrans"></user-trans-list>
       </div>
-    </div>
     <div id="detail">
         <transaction-detail :thisTrans="which"></transaction-detail>
     </div>
@@ -50,7 +48,9 @@ export default {
 }
 #list{
   width: 370px !important;
-}
-#detail{
+  max-height: 96vh;
+  overflow: scroll;
+  overflow-x: hidden;
+  margin-top: 10px
 }
 </style>

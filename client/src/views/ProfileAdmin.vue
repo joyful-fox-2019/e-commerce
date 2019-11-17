@@ -4,42 +4,42 @@
     <q-drawer show-if-above side="left" elevated>
       <!-- drawer content -->
           <q-list bordered separator>
-            <q-item clickable>
+            <q-item clickable to="/admin" @click="home = true">
               <q-item-section>
                 <div>
                   <img src="https://cdn.quasar.dev/img/boy-avatar.png" width="100px" height="100px">
                 </div>
                 <q-item-label>Admin</q-item-label>
-                <p> Revenue: ini total pendapatan</p>
+                <p> Revenue: {{ user.money }}</p>
               </q-item-section>
 
             </q-item>
 
-            <q-item clickable to="/admin/transactions">
+            <q-item clickable to="/admin/transactions" @click="home = false">
               <q-item-section>
                 <q-item-label>Transactions</q-item-label>
-                <q-item-label caption>Total transactions: 10</q-item-label>
-                <q-item-label caption>Pending transactions: 6</q-item-label>
-                <q-item-label caption>Done transactions: 4</q-item-label>
+                <q-item-label caption>Total transactions: {{ allTransactions.length }}</q-item-label>
+                <q-item-label caption>Pending transactions: {{ allPending }}</q-item-label>
+                <q-item-label caption>Done transactions: {{ allDone }}</q-item-label>
               </q-item-section>
             </q-item>
-                <q-separator />
 
             <q-item >
               <q-item-section >
                 <q-item-label>Products</q-item-label>
-                <q-item clickable to="/admin/addproduct" style="border-bottom: 1px solid grey">Add new product</q-item>
-                <q-item clickable to="/admin/updateproduct">Update a product</q-item>
+                <q-item clickable to="/admin/addproduct" :dense="true" @click="home = false">Add new product</q-item>
+                <q-item clickable to="/admin/updateproduct" :dense="true" @click="home = false">Update a product</q-item>
               </q-item-section>
             </q-item>
-            <q-item>
+
+            <q-item  clickable to='/#'>
               <q-item-section>
-                <q-item clickable to='/'>Home</q-item>
+                <q-item-label>Home</q-item-label>
               </q-item-section>
             </q-item>
             <q-item clickable>
               <q-item-section>
-                <q-item-label>Logout</q-item-label>
+                <q-item-label  @click="logout">Logout</q-item-label>
               </q-item-section>
             </q-item>
 
@@ -47,18 +47,73 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <div v-if="home">
+        <q-card flat bordered class="my-cardssssss" style="width: 60%; margin: 30px auto">
+          <q-card-section>
+            <div class="text-h6">Welcome to admin page</div>
+          </q-card-section>
+
+          <q-card-section>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua.
+          </q-card-section>
+
+          <q-separator inset />
+
+          <q-card-section>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua.
+          </q-card-section>
+        </q-card>
+      </div>
+      <router-view @bukanhome="sethome" />
     </q-page-container>
 
   </q-layout>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'adminPage',
   data () {
     return {
+      home: true
     }
+  },
+  methods:{
+    getAllTransactions(){
+      this.$store.dispatch('transactions/allTransactions')
+        .then(() => {
+          console.log(this.allTransactions)
+        })
+    },
+      logout(){
+      localStorage.clear()
+      this.$router.push({path: '/'})
+      this.$store.commit('LOGIN',false)
+      this.$store.commit('SET_ADMIN',false)
+      this.$store.commit('USERNAME','')
+      this.$store.commit('SET_ID','')
+      this.$store.commit('users/EMPTY_USER')
+    },
+    sethome(val){
+      this.home = val
+    }
+  },
+  computed: {
+    ...mapState('users',[
+      'user'
+    ]),
+    ...mapState('transactions',[
+      'allTransactions',
+      'allPending',
+      'allDone'
+    ])
+  },
+  created(){
+    this.getAllTransactions()
+    this.$store.dispatch('users/getProfile')
   }
 }
 </script>

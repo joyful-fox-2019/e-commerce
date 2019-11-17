@@ -21,14 +21,14 @@
 
         <div >
           <h6 :style="setColor">Total price: Rp. {{ totalPrice }} </h6>
-          
         </div>
+
         <q-btn
         :ripple="false" 
         @click="startCheckout"
         >
           Checkout
-            <q-tooltip v-if="!checkout" content-style="font-size: 10px" content-class="bg-red" :offset="[10, 10]">
+            <q-tooltip v-if="!moneys" content-style="font-size: 10px" content-class="bg-red" :offset="[10, 10]">
               You dont have enough money to checkout, please top-up first
             </q-tooltip>
         </q-btn>
@@ -61,7 +61,8 @@ export default {
       ], 
       data: [],
       totalPrice: 0,
-      checkout: false,
+      checkout: true,
+      moneys: true,
       selected: []
     }
   },
@@ -91,17 +92,31 @@ export default {
         })
     },
     startCheckout(){
-      if(this.checkout){
-        this.$store.dispatch('transactions/checkout',this.totalPrice)
-        .then(()=>{
-          this.totalPrice = 0
-          this.getUser()
-        })
-        .catch((err) => {
-          console.log(err);
-        })
+      if(this.data.length >= 1) {
+        if(this.checkout){
+          this.$store.dispatch('transactions/checkout',this.totalPrice)
+          .then(()=>{
+            this.totalPrice = 0
+            console.log(this.data,'atas')
+            this.data = []
+            this.checkout = false
+            console.log(this.data,'bawah')
+            this.$emit('performCheckout')
+            this.getUser()
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+        } else {
+          console.log('tidak bisa checkout');
+        }
       } else {
-        console.log('tidak bisa checkout');
+          this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'report',
+              message: `You have nothing in your cart`
+            })
       }
     },
     remove(){
@@ -127,10 +142,10 @@ export default {
       if(this.totalPrice === 0){
         return "color: black"
       } else if (this.totalPrice <= this.user.money) {
-        this.checkout = true
+        this.moneys = true
         return "color: blue"
       } else {
-        this.checkout = false
+        this.moneys = false
         return "color: red"
       }
     }

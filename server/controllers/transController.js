@@ -48,7 +48,7 @@ class TransactionController{
 
   static async all(req,res,next){
     try {
-      const transactions = await Transaction.find({}).populate('cart.product')
+      const transactions = await Transaction.find({}).populate('cart.product').populate('userId').sort({createdAt: 'desc'})
       res.status(200).json({transactions})
     } catch (error) {
       next(error)

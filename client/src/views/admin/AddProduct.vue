@@ -125,8 +125,9 @@ export default {
 
 <style>
 #addPage{
-  width: 80%;;
-  margin: 0 auto 10px auto
+  width: 80% !important;
+  margin: 0 auto 10px auto;
+  overflow:unset !important;
 }
 #titleAdd{
   margin: 20px !important

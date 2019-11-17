@@ -77,9 +77,8 @@ export default {
       }
     },
     addToCart(){
-      console.log(this.qty)
-      // this.qty = 0
       if (localStorage.getItem('token')){
+        if (this.qty >= 1) {
         let payload = {
           productId: this.thisProduct._id,
           qty: this.qty
@@ -102,6 +101,14 @@ export default {
               message: `${err.message}`
             })
           })
+        } else {
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            icon: 'warning',
+            message: `Please input product value`
+          })
+        }
       }else{
         this.$store.commit('SET_STATE',true)
           this.$q.notify({
@@ -125,7 +132,7 @@ export default {
     }
   },
   created(){
-    this.getProductDetail()
+    // this.getProductDetail()
   }
 }
 </script>

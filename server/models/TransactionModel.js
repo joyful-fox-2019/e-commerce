@@ -8,7 +8,7 @@ const transactions = new Schema({
   },
   status : {
     type : String,
-    default : 'unpaid'
+    default : 'Waiting Confirmation'
   },
   cart : [{
     product : {type : Schema.Types.ObjectId, ref : 'Product'},

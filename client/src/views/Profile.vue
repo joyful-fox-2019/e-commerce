@@ -35,8 +35,8 @@
                 <q-item-label>Wishlist</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item  clickable to='/'>
-              <q-item-section>
+            <q-item clickable to='/#'>
+              <q-item-section >
                 Home
               </q-item-section>
             </q-item>
@@ -50,7 +50,7 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view @performCheckout="getUserTransactions" />
     </q-page-container>
 
      <q-dialog v-model="prompt" persistent>
@@ -65,7 +65,7 @@
           v-model="topup" 
           autofocus 
           @keyup.enter="prompt = false" 
-           :rules="[ val => val && val.length > 0 || 'Please type something']"
+           :rules="[ val => val && val < 0  || 'Please type something']"
           />
         </q-card-section>
 
@@ -89,7 +89,7 @@ export default {
   name: 'profile',
   data () {
     return {
-      topup : '',
+      topup : 0,
       prompt : false
     }
   },
@@ -104,13 +104,22 @@ export default {
       this.$store.commit('users/EMPTY_USER')
     },
     setTopUp(){
-      this.$store.dispatch('users/topup',Number(this.topup))
-        .then(()=>{
-          this.$store.dispatch('users/getProfile')
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      if(this.topup > 1) {
+        this.$store.dispatch('users/topup',Number(this.topup))
+          .then(()=>{
+            this.$store.dispatch('users/getProfile')
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      } else {
+        this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'report',
+              message: `Minimum top up value is Rp. 10000`
+            })
+      }
     }, getUserTransactions(){
       this.$store.dispatch('transactions/userTransactions')
         .then(() => {
@@ -133,7 +142,7 @@ export default {
   },
   created(){
     this.getUserTransactions()
-    // this.$store.dispatch('users/getProfile')
+    this.$store.dispatch('users/getProfile')
   }
 }
 </script>
