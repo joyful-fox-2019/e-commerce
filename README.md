@@ -1,5 +1,5 @@
 # DEPLOY LINK
-http://organic-commerce.arnoldtherigan.site
+http://organicommerce.arnoldtherigan.site
 
 ## API-DOCUMENTATION (use apiary)
 https://ecommerce67.docs.apiary.io
