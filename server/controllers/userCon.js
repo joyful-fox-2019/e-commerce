@@ -9,7 +9,7 @@ class UserController {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
-            role: req.body.role
+            role: 'admin'
         })
             .then((newUser) => {
                 res.status(201).json( {newUser, message: 'success sign up'})
@@ -35,7 +35,7 @@ class UserController {
                 role: user.role
             }
             let token = generateToken(payload)
-            res.status(200).json({message: 'success sign in', token})
+            res.status(200).json({message: 'success sign in', token, user})
             }).catch(next)
     }
 }

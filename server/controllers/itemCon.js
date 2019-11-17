@@ -4,7 +4,8 @@ class itemController {
 
     static create(req,res,next) {
         const image = req.file ? req.file.cloudStoragePublicUrl : ''
-        const { name, description, price, stock} = req.body
+        const { name, description, stock} = req.body
+        const price = Number(req.body.price)
         Item.create({
             name,
             description,

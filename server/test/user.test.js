@@ -166,7 +166,7 @@
 //                 .end(function(err, res) {
 //                     expect(err).to.be.null
 //                     expect(res).to.have.status(200)
-//                     expect(res.body).to.be.an('object').to.have.any.keys('message','token')
+//                     expect(res.body).to.be.an('object').to.have.any.keys('message','token', user)
 //                     expect(res.body.message).to.equal('success sign in')
 //                     done()
 //                 })

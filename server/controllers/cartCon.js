@@ -4,7 +4,7 @@ class CartController {
 
     static create(req, res, next) {
         const itemId = req.params.id
-        const qty = req.body.qty
+        const qty = Number(req.body.qty)
         let subPrice
         //qty validation
         Item.findById(itemId)
@@ -26,13 +26,16 @@ class CartController {
 
     static showAll(req, res, next) { //admin only
         Cart.find()
+            .populate('itemId')
             .then(carts => {
+                console.log(carts)
                 res.status(200).json({carts})
             }).catch(next)
     }
 
     static showAllUserCart(req, res, next) {
         Cart.find({userId: req.loggedUser.id})
+            .populate('itemId')
             .then(carts => {
                 res.status(200).json({carts})
             }).catch(next)
@@ -40,6 +43,7 @@ class CartController {
 
     static showAllHistoryUserCart(req, res, next) {
         Cart.find({userId: req.loggedUser.id, status: true})
+            .populate('itemId')
             .then(carts => {
                 res.status(200).json({carts})
             }).catch(next)
@@ -47,25 +51,34 @@ class CartController {
 
     static showAllPendingUserCart(req, res, next) {
         Cart.find({userId: req.loggedUser.id, status: false})
+            .populate('itemId')
             .then(carts => {
                 res.status(200).json({carts})
             }).catch(next)
     }
 
     static update(req, res, next) {
-        console.log('masuk update')
         const { id } = req.params
         const update = {}
+        let qtyCheckout
         for (let key in req.body) {
             update[key] = req.body[key]
         }
-        if (!update.qty) {
+        if (update.status) { //untuk update status
             Cart.findByIdAndUpdate(id, update)
                 .then(cart => {
                     if (!cart) throw ({message: 'data not found'})
-                    res.status(200).json({cart, message: 'success update cart'})
+                    qtyCheckout = cart.qty
+                    return Item.findById(cart.itemId)
+                })
+                .then(item => {
+                    let newQty = item.stock - qtyCheckout 
+                    return Item.findByIdAndUpdate(item._id, { stock: newQty})
+                })
+                .then(_ => {
+                    res.status(200).json({message: 'checkout success'})
                 }).catch(next)     
-        } else {
+        } else if (update.qty) { //untuk update qty
             Cart.findById(id)
                 .then(cart => {
                     if (!cart) throw ({message: 'data not found'})
@@ -73,10 +86,12 @@ class CartController {
                 })
                 .then(item => {
                     if (item.stock < update.qty) throw ({message: 'stock less than qty'})
+                    const subPrice = item.price * update.qty
+                    update.subPrice = subPrice
                     return Cart.findByIdAndUpdate(id, update)
                 })
                 .then(cart => {
-                    res.status(200).json({cart, message: 'success update cart'})
+                    res.status(200).json({message: 'success update cart'})
                 }).catch(next) 
         }
     }

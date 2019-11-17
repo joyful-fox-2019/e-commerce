@@ -21,14 +21,15 @@ after(function(done) {
             })
             .then(_ => {
                 console.log('testing: delete data user success!')
-                done()
                 return Cart.deleteMany()
             })
             .then(_ => {
                 console.log('testing: delete data cart success!')
-                done()
             })
             .catch(console.log)
+            .finally(() => {
+                done()
+            })
     } 
 })
 
@@ -69,7 +70,7 @@ before(function(done) {
                 description: 'green tea',
                 image: 'url', 
                 price: 5000,
-                stock: 5
+                stock: 100
             })
         })
         .then((item) => {
@@ -84,15 +85,21 @@ describe('Cart CRUD', function() {
     describe('POST /carts/id', function() {
         describe('succes process', function() {
             it('should send an object (newCart, message) with 201 status code', function(done) {
+                console.log(itemId, '===================')
                 chai.request(app)
                 .post(`/click/carts/${itemId}`)
                 .set('token', tokenCustomer)
                 .send({
-                    qty: 4,
+                    qty: 7,
                     status: true,
                 })
                 .end(function(err, res) {
+                    console.log('==================')
+                    console.log(res.body)
+                    console.log('==================')
+
                     cartId = res.body.newCart._id
+                    itemId = res.body.newCart.itemId
                     expect(err).to.be.null
                     expect(res).to.have.status(201)
                     expect(res.body).to.be.an('object').to.have.any.keys('newCart','message')
@@ -152,7 +159,7 @@ describe('Cart CRUD', function() {
                 .post(`/click/carts/${itemId}`)
                 .set('token', tokenCustomer)
                 .send({
-                    qty: 10
+                    qty: 1000
                 })
                 .end(function(err, res) {
                     expect(err).to.be.null
@@ -170,6 +177,7 @@ describe('Cart CRUD', function() {
                 .get(`/click/carts`)
                 .set('token', tokenAdmin)
                 .end(function(err, res) {
+                    console.log(res.body)
                     expect(err).to.be.null
                     expect(res).to.have.status(200)
                     expect(res.body).to.be.an('object').to.have.any.keys('carts')
@@ -298,8 +306,8 @@ describe('Cart CRUD', function() {
                 .end(function(err, res) {
                     expect(err).to.be.null
                     expect(res).to.have.status(200)
-                    expect(res.body).to.be.an('object').to.have.any.keys('cart', 'message')
-                    expect(res.body.message).to.equal('success update cart')
+                    expect(res.body).to.be.an('object').to.have.any.keys('message')
+                    expect(res.body.message).to.equal('checkout success')
                     done()
                 })
             })
@@ -308,13 +316,12 @@ describe('Cart CRUD', function() {
                 .put(`/click/carts/${cartId}`)
                 .set('token', tokenCustomer)
                 .send({
-                    status: false,
-                    qty: 2
+                    qty: 1
                 })
                 .end(function(err, res) {
                     expect(err).to.be.null
                     expect(res).to.have.status(200)
-                    expect(res.body).to.be.an('object').to.have.any.keys('cart', 'message')
+                    expect(res.body).to.be.an('object').to.have.any.keys('message')
                     expect(res.body.message).to.equal('success update cart')
                     done()
                 })
@@ -356,7 +363,7 @@ describe('Cart CRUD', function() {
                 .set('token', tokenCustomer)
                 .send({
                     status: false,
-                    qty: 20
+                    qty: 10001
                 })
                 .end(function(err, res) {
                     expect(err).to.be.null
