@@ -105,14 +105,7 @@
           <b>{{transaction.owner.username}}</b>
         </p>
         <p>
-          Pt. Top-f
-          Jl. Science Timur 1 Blok B 3F No. 2 - 3
-          Jababeka 5, Sertajaya Cikarang Timur
-          Bekasi
-          Cikarang Timur, Kab. Bekasi
-          Jawa Barat, 17530
-          Indonesia
-          Telepon/Handphone: 6287781776995
+          {{transaction.owner.address}}
         </p>
       </div>
     </div>

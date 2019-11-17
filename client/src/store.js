@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-const host = `http://localhost:3000`
-// const host = `https://e-commerce-api.sigitariprasetyo.xyz`
+// const host = `http://localhost:3000`
+const host = `https://e-commerce-api.sigitariprasetyo.xyz`
 
 Vue.use(Vuex)
 

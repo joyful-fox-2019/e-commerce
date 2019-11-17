@@ -28,11 +28,6 @@ export default {
     Navbar,
     DetailTransaction
   },
-  // data() {
-  //   return {
-  //     transactions: this.$store.state.transaction
-  //   };
-  // },
   computed: {
     transactions: {
       get(){

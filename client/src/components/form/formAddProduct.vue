@@ -48,8 +48,8 @@
 
 <script>
 import axios from 'axios'
-// const host = `https://e-commerce-api.sigitariprasetyo.xyz`
-const host = `http://localhost:3000`
+const host = `https://e-commerce-api.sigitariprasetyo.xyz`
+// const host = `http://localhost:3000`
 
 export default {
   name: 'FormAddProduct',
