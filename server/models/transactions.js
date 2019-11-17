@@ -24,7 +24,11 @@ const transactionSchema = new Schema({
     type: Boolean,
     default: false
   }
-}, { timestamps:true,versionKey:false })
+}, { timestamps:true,versionKey:false,writeConcern: {
+  w: 'majority',
+  j: true,
+  wtimeout: 1000
+} })
 
 const Transaction = model('Transaction', transactionSchema)
 module.exports = Transaction

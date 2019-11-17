@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Cart from '../views/Cart.vue'
-import Histrorypage from '../views/Historypage.vue'
+import Historypage from '../views/Historypage.vue'
 import Login from '../views/Login.vue'
 import Admin from '../views/Admin.vue'
 import Gamelist from '../views/Gamelist.vue'
@@ -26,7 +26,7 @@ const routes = [
   {
     path: '/mygame/:id',
     name: 'mygame',
-    component: Histrorypage
+    component: Historypage
   },
   {
     path: '/login',
@@ -37,6 +37,11 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: Admin,
+    beforeEnter: (to, from, next) => {
+      // if (localStorage.getItem('access_token')) next()
+      // else next('/login')
+      next()
+    },
     children: [
       {
         path: 'game-list',

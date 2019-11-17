@@ -6,6 +6,14 @@ import './plugins/bootstrap-vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import { next, successToast } from './helpers/notif'
+
+Vue.mixin({
+  methods: {
+    next: next,
+    successToast: successToast
+  }
+})
 
 Vue.config.productionTip = false
 

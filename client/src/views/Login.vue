@@ -11,7 +11,7 @@
               id="input-group-1"
               label="Email address:"
               label-for="input-1"
-              
+
             >
               <b-form-input
                 id="input-1"
@@ -24,9 +24,9 @@
 
             <b-form-group
               id="input-group-1"
-              label="Email address:"
+              label="Your name:"
               label-for="input-1"
-              
+
             >
               <b-form-input
                 id="input-1"
@@ -51,7 +51,7 @@
             <b-button type="submit" class="mr-2" variant="dark"><font-awesome-icon icon="user-plus" class="mr-1"></font-awesome-icon>Register</b-button>
             <b-button type="reset" class="mr-2" variant="secondary">Reset</b-button>
           </b-form>
-          
+
         </div>
 
         <!--  Login  -->
@@ -62,7 +62,6 @@
               id="input-group-1"
               label="Email address:"
               label-for="input-1"
-              
             >
               <b-form-input
                 id="input-1"
@@ -81,14 +80,14 @@
                 type="password"
                 placeholder="Enter password"
               ></b-form-input>
-              
+
               <p class="mt-2"><small>Don't Have account? <span @click="changePage()">Register here</span>.</small></p>
             </b-form-group>
 
             <b-button type="submit" class="mr-2" variant="dark"><font-awesome-icon icon="sign-in-alt" class="mr-1"></font-awesome-icon> Login</b-button>
             <b-button type="reset" class="mr-2" variant="secondary">Reset</b-button>
           </b-form>
-          
+
         </div>
 
       </b-col>
@@ -97,43 +96,56 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        login: true,
-        form: {
-          email: '',
-          name: '',
-          password: ''
-        },
-        show: true
-      }
+import axios from '../config/getdata'
+import Swal from 'sweetalert2'
+
+export default {
+  data () {
+    return {
+      login: true,
+      form: {
+        email: '',
+        name: '',
+        password: ''
+      },
+      show: true
+    }
+  },
+  methods: {
+    onLogin (evt) {
+      this.$store.dispatch('thisLogin', { email: this.form.email, password: this.form.password })
+      this.form.email = ''
+      this.form.name = ''
+      this.form.password = ''
     },
-    methods: {
-      onRegister(evt) {
-        evt.preventDefault()
-        alert(JSON.stringify(this.form))
-      },
-      onLogin(evt) {
-        evt.preventDefault()
-        alert(JSON.stringify(this.form))
-      },
-      onReset(evt) {
-        evt.preventDefault()
-        // Reset our form values
-        this.form.email = ''
-        this.form.name = ''
-        this.form.food = null
-        this.form.checked = []
-        // Trick to reset/clear native browser form validation state
-        this.show = false
-        this.$nextTick(() => {
-          this.show = true
+    onRegister (evt) {
+      this.$store.dispatch('thisRegister', { email: this.form.email, password: this.form.password, name: this.form.name })
+        .then(({ data }) => {
+          this.successToast('Register Successfuly!')
+          this.changePage()
         })
-      },
-      changePage(){
-        this.login = !this.login
-      }
+        .catch(err => {
+          console.log(err.response.data)
+          this.next(err.response.data.errors)
+        })
+      // this.form.email = ''
+      // this.form.name = ''
+      // this.form.password = ''
+    },
+    onReset (evt) {
+      evt.preventDefault()
+      this.form.email = ''
+      this.form.name = ''
+      this.form.password = ''
+      this.show = false
+      this.$nextTick(() => {
+        this.show = true
+      })
+    },
+    changePage () {
+      console.log('masuk')
+      this.login = !this.login
     }
   }
+}
 </script>

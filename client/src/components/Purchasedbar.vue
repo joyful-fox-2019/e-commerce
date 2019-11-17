@@ -24,22 +24,22 @@
 <script>
 export default {
   name: 'Gamelistbar',
-  props:{
+  props: {
     title: String,
     price: Number,
     status: Boolean,
     articleId: String,
     no: Number
   },
-  data() {
+  data () {
     return {}
   },
   methods: {
-    gotoDetail(_id) {
+    gotoDetail (_id) {
       // this.$router.push({ path: `/admin/edit-game/1221`});
     }
   },
-  created(){
+  created () {
     console.log(this.tags)
   }
 }

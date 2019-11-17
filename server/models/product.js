@@ -21,7 +21,11 @@ const productSchema = new Schema({
     type: Boolean,
     default: false,
   }
-},{ timestamps:true,versionKey:false })
+},{ timestamps:true,versionKey:false,writeConcern: {
+  w: 'majority',
+  j: true,
+  wtimeout: 1000
+} })
 
 const Product = model('Product', productSchema)
 module.exports = Product

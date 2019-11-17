@@ -4,7 +4,7 @@
       Game Stock List
     </h2>
     <div>
-      
+
       <!-- Data Header -->
       <b-row no-gutters>
         <b-col>
@@ -30,36 +30,12 @@
       <!-- Article List -->
       <Gamelistbar
         style="cursor:pointer;"
-        :title="'Death Stranding'"
-        :price="20"
-        :stock="20"
-        :no="0+1"
-      ></Gamelistbar>
-
-      <Gamelistbar
-        style="cursor:pointer;"
-        :title="'Death Stranding'"
-        :price="20"
-        :stock="20"
-        :no="0+1"
-      ></Gamelistbar>
-
-      <Gamelistbar
-        style="cursor:pointer;"
-        :title="'Death Stranding'"
-        :price="20"
-        :stock="20"
-        :no="0+1"
-      ></Gamelistbar>
-
-      <Gamelistbar
-        style="cursor:pointer;"
-        v-for="(data,index) in articleData"
+        v-for="(data,index) in gameList"
         :key='index'
-        :title="data.title"
-        :date="moment(data.createdAt).format('dddd, MMMM Do YYYY')"
-        :stock="data.tags"
-        :articleId="data._id"
+        :title="data.name"
+        :stock="data.qty"
+        :price="data.price"
+        :gameId="data._id"
         :no="index+1"
       ></Gamelistbar>
 
@@ -69,46 +45,27 @@
 
 <script>
 import Gamelistbar from '../components/Gamelistbar'
-import axios from '../config/getdata'
 
 export default {
-  name: 'Articlelist',
-  data() {
-    return {
-      articleData: []
-    };
-  },
-  components:{
+  name: 'Gamelist',
+  components: {
     Gamelistbar
   },
+  data () {
+    return {}
+  },
   methods: {
-    gotoDetail(_id) {
-      this.$router.push({ path: `/admin/edit-article/${_id}`});
-    },
-    fetchData(){
-      axios({
-        method: 'get',
-        url: '/articles/userArticle',
-        headers: {
-          access_token: localStorage.getItem("access_token")
-        }
-      })
-      .then(({ data }) => {
-        console.log(data)
-        this.articleData = data
-      })
-      .catch(err => {
-        console.log(err)
-        console.log(err.response)
-        this.next(err.response.data)
-      })
+    fetchData () {
+      this.$store.dispatch('fetchGameData')
     }
   },
-  created(){
-    // this.fetchData()
+  computed: {
+    gameList () {
+      return this.$store.state.gameList
+    }
+  },
+  created () {
+    this.fetchData()
   }
 }
 </script>
-
-<style>
-</style>

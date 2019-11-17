@@ -4,7 +4,7 @@
       Purchased History
     </h2>
     <div>
-      
+
       <!-- Data Header -->
       <b-row no-gutters>
         <b-col>
@@ -30,36 +30,11 @@
       <!-- Article List -->
       <Purchasedbar
         style="cursor:pointer;"
-        :title="'Death Stranding'"
-        :price="20"
-        :status="true"
-        :no="0+1"
-      ></Purchasedbar>
-
-      <Purchasedbar
-        style="cursor:pointer;"
-        :title="'Death Stranding'"
-        :price="20"
-        :stock="20"
-        :no="0+1"
-      ></Purchasedbar>
-
-      <Purchasedbar
-        style="cursor:pointer;"
-        :title="'Death Stranding'"
-        :price="20"
-        :stock="20"
-        :no="0+1"
-      ></Purchasedbar>
-
-      <Purchasedbar
-        style="cursor:pointer;"
-        v-for="(data,index) in articleData"
+        v-for="(data,index) in historyData"
         :key='index'
-        :title="data.title"
-        :date="moment(data.createdAt).format('dddd, MMMM Do YYYY')"
-        :stock="data.tags"
-        :articleId="data._id"
+        :title="data._id"
+        :price="data.total"
+        :status="data.status"
         :no="index+1"
       ></Purchasedbar>
 
@@ -72,40 +47,40 @@ import Purchasedbar from '../components/Purchasedbar'
 import axios from '../config/getdata'
 
 export default {
-  name: 'Articlelist',
-  data() {
+  name: 'Historylist',
+  data () {
     return {
-      articleData: []
-    };
+      historyData: []
+    }
   },
-  components:{
+  components: {
     Purchasedbar
   },
   methods: {
-    gotoDetail(_id) {
-      this.$router.push({ path: `/admin/edit-article/${_id}`});
+    gotoDetail (_id) {
+      // this.$router.push({ path: `/admin/edit-article/${_id}` })
     },
-    fetchData(){
+    fetchData () {
       axios({
         method: 'get',
-        url: '/articles/userArticle',
+        url: '/transactions',
         headers: {
-          access_token: localStorage.getItem("access_token")
+          access_token: localStorage.getItem('access_token')
         }
       })
-      .then(({ data }) => {
-        console.log(data)
-        this.articleData = data
-      })
-      .catch(err => {
-        console.log(err)
-        console.log(err.response)
-        this.next(err.response.data)
-      })
+        .then(({ data }) => {
+          console.log(data)
+          this.historyData = data
+        })
+        .catch(err => {
+          console.log(err)
+          console.log(err.response)
+          this.next(err.response.data)
+        })
     }
   },
-  created(){
-    // this.fetchData()
+  created () {
+    this.fetchData()
   }
 }
 </script>

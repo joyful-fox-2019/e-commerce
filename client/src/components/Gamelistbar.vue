@@ -1,5 +1,5 @@
 <template>
-  <b-row no-gutters @click="gotoDetail(articleId)">
+  <b-row no-gutters @click="gotoDetail(gameId)">
     <b-col>
       <b-card class="mb-2 border-dark bg-secondary">
         <b-row class="text-dark align-items-center">
@@ -24,23 +24,20 @@
 <script>
 export default {
   name: 'Gamelistbar',
-  props:{
+  props: {
     title: String,
     price: Number,
     stock: Number,
-    articleId: String,
+    gameId: String,
     no: Number
   },
-  data() {
+  data () {
     return {}
   },
   methods: {
-    gotoDetail(_id) {
-      this.$router.push({ path: `/admin/edit-game/1221`});
+    gotoDetail (_id) {
+      this.$router.push({ path: `/admin/edit-game/${_id}` })
     }
-  },
-  created(){
-    console.log(this.tags)
   }
 }
 </script>

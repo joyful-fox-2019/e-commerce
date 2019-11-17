@@ -16,7 +16,7 @@ class TransactionController {
 
   static async getUserTransaction (req,res,next) {
     try{
-      const data = await Transaction.find({ UserId: req.loggedUser._id })
+      const data = await Transaction.find({ UserId: req.loggedUser._id }).populate('product.ProductId')
       res.status(200).json(data)
     }
     catch(err){
