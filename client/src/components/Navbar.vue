@@ -5,8 +5,7 @@
       <q-toolbar>
         <div id="brand" @click="goHome">
           <q-toolbar-title>
-            <q-icon name="home"/>
-            Title
+            <q-icon name="home" color="teal" size="lg"/>
           </q-toolbar-title>
         </div>
         <div id="searchBar">
@@ -43,7 +42,7 @@
         </div>
         <div v-if="login">
           <div class="buttonNavbar">
-            <q-btn round :color="setColor" size="sm" icon="shopping_cart" style="margin-right: 5px; margin-top: 2px" v-if="!admin" to='/profile/cart' />
+            <q-btn round :color="setColor" size="sm" icon="shopping_cart" style="margin-right: 20px; margin-left: 20px; margin-top: 2px" v-if="!admin" to='/profile/cart' />
             <q-btn-dropdown round color="secondary" icon="person"> 
               <q-list>
 
@@ -148,6 +147,9 @@ export default {
       }
       console.log(baru,'ini baru')
       console.log(lama,'ini lama')
+    },
+    search(){
+      this.$emit('search',this.search)
     }
   },
   created(){

@@ -89,8 +89,7 @@
         </q-stepper-navigation>
       </template>
     </q-stepper>
-
-    <div id="deleteButton" v-if="user.admin">
+    <div id="deleteButton" v-if="user.admin && thisTrans.status">
       <q-btn color="red" :ripple="false" :no-caps="true"  @click="confirm = true">Delete this transactions</q-btn>
     </div>
 
@@ -173,6 +172,7 @@ export default {
     deleteTransaction(){
       this.$store.dispatch('transactions/deleteTransactions',this.thisTrans._id)
       .then(() => {
+        this.metaStep= 0
         this.$emit('getAnother')
           this.$store.dispatch('transactions/allTransactions')
         })

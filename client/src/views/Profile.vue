@@ -1,7 +1,7 @@
 <template>
   <q-layout view="hHh LpR fFf">
 
-    <q-drawer show-if-above side="left" elevated>
+    <q-drawer show-if-above side="left" elevated id="lefter">
       <!-- drawer content -->
           <q-list bordered separator>
             <q-item>
@@ -16,7 +16,10 @@
 
             </q-item>
 
-            <q-item clickable to="/profile/transactions">
+            <q-item clickable to="/profile/transactions" @click="home = false">
+              <q-item-section avatar>
+                <q-avatar rounded color="green" text-color="white" icon="history" />
+              </q-item-section>
               <q-item-section>
                 <q-item-label>Transactions</q-item-label>
                 <q-item-label caption>Pending transactions: {{ userPending }}</q-item-label>
@@ -24,23 +27,35 @@
               </q-item-section>
             </q-item>
 
-            <q-item clickable to="/profile/cart">
+            <q-item clickable to="/profile/cart" @click="home = false">
+              <q-item-section avatar>
+                <q-avatar rounded color="green" text-color="white" icon="shopping_cart" />
+              </q-item-section>
               <q-item-section>
                 <q-item-label>Cart</q-item-label>
               </q-item-section>
             </q-item>
 
-            <q-item clickable>
+            <q-item clickable to="/profile/wishlist" @click="home = false">
+            <q-item-section avatar>
+                <q-avatar rounded color="green" text-color="white" icon="shopping_basket" />
+              </q-item-section>
               <q-item-section>
                 <q-item-label>Wishlist</q-item-label>
               </q-item-section>
             </q-item>
             <q-item clickable to='/#'>
+            <q-item-section avatar>
+                <q-avatar rounded color="green" text-color="white" icon="home" />
+              </q-item-section>
               <q-item-section >
                 Home
               </q-item-section>
             </q-item>
             <q-item clickable>
+              <q-item-section avatar>
+                <q-avatar rounded color="green" text-color="white" icon="logout" />
+              </q-item-section>
               <q-item-section>
                 <q-item-label @click="logout">Logout</q-item-label>
               </q-item-section>
@@ -50,7 +65,18 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view @performCheckout="getUserTransactions" />
+      <div v-if="home">
+        <q-card flat bordered class="my-cardssssss" style="width: 60%; margin: 30px auto">
+          <q-card-section>
+            <div class="text-h6">Welcome to profile page</div>
+          </q-card-section>
+
+          <q-card-section>
+            Choose what you need on the sidebar
+          </q-card-section>
+        </q-card>
+      </div>
+      <router-view @performCheckout="getUserTransactions" @bukanhome="sethome" />
     </q-page-container>
 
      <q-dialog v-model="prompt" persistent>
@@ -90,7 +116,8 @@ export default {
   data () {
     return {
       topup : 0,
-      prompt : false
+      prompt : false,
+      home: true
     }
   },
   methods : {
@@ -125,6 +152,9 @@ export default {
         .then(() => {
           console.log(this.userTransactions)
         })
+    },
+    sethome(val){
+      this.home = val
     }
   },
   computed : {
@@ -150,5 +180,8 @@ export default {
 <style scoped>
 #avatar{
   width: 100px
+}
+#lefter{
+  background-color: red;
 }
 </style>

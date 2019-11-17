@@ -97,6 +97,47 @@ class ProductController{
     }
   }
 
+  static async addToFav(req,res,next){
+    try {
+      let { productId } = req.params
+      let userId = req.loggedUser._id
+      const findWishlist = await User.findOne({_id:userId}).select('wishlist')
+      if (findWishlist.wishlist.length < 1){
+        const addWishlist = await User.updateOne({_id:userId},{$push : {wishlist : productId}})
+        res.status(200).json(addWishlist)
+      } else {
+        let flag = false
+        for(let i = 0; i < findWishlist.wishlist.length; i++){
+          if(findWishlist.wishlist[i] == productId){
+            flag = false
+            next({status:409,message : 'You\'ve already add this product to your wishlist'})
+            break;
+          } else {
+            flag = true
+          }
+        }
+        if(flag){
+          console.log('masuk dua');
+          const addWishlist = await User.updateOne({_id:userId},{$push : {wishlist : productId}})
+          res.status(200).json(addWishlist)
+        }
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async removeFav(req,res,next){
+    try {
+      let { productId } = req.params
+      let userId = req.loggedUser._id
+      const removeWishList = await User.updateOne({_id:userId},{$pull : {wishlist : productId}})
+      res.status(200).json(removeWishList)
+    } catch (error) {
+      next(error)
+    }
+  }
+
 }
 
 module.exports = ProductController

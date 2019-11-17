@@ -1,7 +1,7 @@
 <template>
   <div id="addPage">
     <div id="titleAdd">
-      <h4 > add new product</h4>
+      <h4 > Add new product</h4>
     </div>
     <q-form
       class="q-gutter-md"
@@ -18,17 +18,6 @@
       required
       :dense="true" />
 
-      <!-- <q-input 
-      outlined
-      type="textarea" 
-      v-model="desc"
-      label="Descriptions" 
-      stack-label 
-      lazy-rules
-      :rules="[ val => val && val.length > 0 || 'Please input product descriptions']"
-      :dense="true" /> -->
-
-      Descriptions
       <q-editor
       v-model="desc"
       :definitions="{
@@ -55,7 +44,7 @@
       stack-label 
       lazy-rules
       min="1000"
-      :rules="[ val => val && val > 1000 || 'Please input product price']"
+      :rules="[ val => val && val > 1000 || 'Input product price minimal 1000']"
       :dense="true" />
 
         <div>
@@ -115,10 +104,21 @@ export default {
             message: 'Product submitted!'
           })
         })
+        .catch((err)=>{
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            icon: 'report',
+            message: `${err.join('-')}`
+          })
+        })
     },
     factoryFn(file){
       this.image = file[0]
     }
+  },
+  created(){
+    this.$emit('bukanhome')
   }
 }
 </script>
@@ -126,10 +126,9 @@ export default {
 <style>
 #addPage{
   width: 80% !important;
-  margin: 0 auto 10px auto;
+  margin: 0 auto 100px auto !important;
   overflow:unset !important;
 }
 #titleAdd{
-  margin: 20px !important
 }
 </style>

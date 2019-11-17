@@ -5,11 +5,11 @@
     </div>
     <div id="uProductDetail">
       <div v-if="!empty">
-        <update :prod="prod"></update>
+        <update :prod="prod" @bukanupdate="kosongin"></update>
 
       </div>
-      <div v-if="empty">
-        Select product from product list
+      <div v-if="empty" id="emptyMessage">
+        <h5>Select product from product list</h5>
       </div>
 
     </div>
@@ -41,6 +41,10 @@ export default {
     setCard(card){
       this.empty = false
       this.prod = card
+    },
+    kosongin(){
+      console.log('masuk kosongi');
+      this.empty = true
     }
   },
   computed: {
@@ -50,6 +54,7 @@ export default {
   },
   created(){
     this.getProduct()
+    this.$emit('bukanhome')
   }
 }
 </script>
@@ -68,5 +73,8 @@ export default {
 }
 #uProductDetail{
   width: 100%;
+}
+#emptyMessage{
+  margin: 20px
 }
 </style>

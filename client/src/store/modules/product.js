@@ -32,7 +32,6 @@ export const Product = {
       })
     },
     addProduct (context, payload) {
-      console.log(payload)
       let token = localStorage.getItem('token')
       return new Promise((resolve, reject) => {
         axios({
@@ -45,20 +44,16 @@ export const Product = {
           data: payload
         })
           .then(({ data }) => {
-            console.log(data)
             resolve()
           })
           .catch((err) => {
-            console.log(err)
-            reject(err)
+            reject(err.response.data.arr)
           })
       })
     },
     updateProduct (context, payload) {
       let token = localStorage.getItem('token')
       let productId = payload._id
-      console.log(payload, ' ini payload di store')
-      console.log(productId)
       return new Promise((resolve, reject) => {
         axios({
           url: `/products/${productId}`,
@@ -70,7 +65,6 @@ export const Product = {
           data: payload.formData
         })
           .then(({ data }) => {
-            console.log(data)
             resolve()
           })
           .catch((err) => {

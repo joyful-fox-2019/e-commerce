@@ -4,7 +4,8 @@ import { Promise } from 'q'
 export const User = {
   namespaced: true,
   state: {
-    user: {}
+    user: {},
+    wishlist: []
   },
   mutations: {
     SET_USER (state, payload) {
@@ -13,6 +14,9 @@ export const User = {
     EMPTY_USER (state, payload) {
       console.log('masuk empty user')
       state.user = {}
+    },
+    SET_WISHLIST (state, payload) {
+      this.wishlist = payload
     }
   },
   actions: {
@@ -28,6 +32,7 @@ export const User = {
           .then(({ data }) => {
             console.log(data.user, 'ini data hasil axios user')
             context.commit('SET_USER', data.user)
+            context.commit('SET_WISHLIST', data.user.wishlist)
             resolve()
           })
           .catch((err) => {
@@ -102,6 +107,26 @@ export const User = {
             reject(err)
           })
       })
+    },
+    addToWishlist (context, payload) {
+      // let token = localStorage.getItem('token')
+      // return new Promise((resolve, reject) => {
+      //   axios({
+      //     url: `/products/addwishlist/${payload}`,
+      //     method: 'patch',
+      //     headers: {
+      //       token
+      //     }
+      //   })
+      //     .then(({ data }) => {
+      //       console.log(data)
+      //       resolve()
+      //     })
+      //     .catch((err) => {
+      //       console.log(err)
+      //       reject(err)
+      //     })
+      // })
     }
   }
 }

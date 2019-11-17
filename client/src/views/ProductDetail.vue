@@ -3,23 +3,23 @@
     <navbar></navbar>
   <div id="productDetail" class="row">
 
-    <div id="productLeft"  class="col-4">
+    <div id="productLeft"  class="col-5">
       <div id="productImage">
         <img :src="this.thisProduct.image" width="100%"/>
       </div>
       <div id="cartForm">
-        Add to cart
-        <div style="display: flex; flex-direction: 'column'; height: 90px !important">
+        <h6>Add to cart</h6>
+        <div id="formDetail">
           <div>
             <q-btn :ripple="false" push color="white" text-color="primary" round icon="remove" @click="minusOne" />
           </div>
-          <div>
+          <div id="qty">
             <h6>  {{ qty }} </h6>
           </div>
-          <div>
+          <div id="pBtn">
             <q-btn :ripple="false" push color="primary" round icon="add"  @click="plusOne" />
           </div>
-          Total price: {{totalPrice}}
+          <h6> Total price: {{totalPrice}} </h6>
         </div>
           <q-btn align="around" :ripple="false" class="btn-fixed-width" color="primary" label="Add to cart" icon="shopping_cart" @click="addToCart" />
       </div>
@@ -166,5 +166,21 @@ export default {
 }
 #cartForm{
   height: 90px !important;
+  width: 100%;
+}
+#cartForm h6{
+  margin: 5px 
+}
+#formDetail{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px 0px
+}
+#qty{
+  margin: 0 10px
+}
+#pBtn{
+  margin-right: 10px
 }
 </style>

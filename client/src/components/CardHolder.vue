@@ -1,6 +1,6 @@
 <template>
   <div id="contentHolder">
-    <card v-for="product in products" :key="product.i" :product="product"></card>
+    <card v-for="product in filteredProducts" :key="product.i" :product="product"></card>
   </div>
 </template>
 
@@ -10,6 +10,7 @@ import { mapState } from 'vuex'
 
 
 export default {
+  props: ['query'],
   components : {
     Card
   },
@@ -21,7 +22,14 @@ export default {
   computed: {
     ...mapState('products',[
       'products'
-    ])
+    ]),
+    filteredProducts(){
+        let find = this.query
+          return this.products.filter((product)=>{
+            let regex = new RegExp(find,'i')
+            return product.name.match(regex)
+          })
+      }
   },
   created(){
     this.getProduct()

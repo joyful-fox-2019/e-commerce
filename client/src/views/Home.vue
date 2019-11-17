@@ -1,9 +1,11 @@
 <template>
   <div>
-    <Navbar></Navbar>
+    <Navbar @search='setquery'></Navbar>
     <div id="content">
-      <h6> Products </h6>
-      <card-holder></card-holder>
+      <div id="titleHome">
+        <h6> List Products </h6>
+      </div>
+      <card-holder :query='query'></card-holder>
     </div>
   </div>
 </template>
@@ -18,6 +20,11 @@ export default {
   components: {
     Navbar,
     CardHolder
+  },
+  data(){
+    return{
+      query: ''
+    }
   },
   methods : {
     redirectGithub(){
@@ -66,6 +73,9 @@ export default {
         localStorage.removeItem('gitSuccess')
         },2000)
       }
+    },
+    setquery(search){
+      this.query = search
     }
   },
   created(){
@@ -89,7 +99,7 @@ export default {
   padding: 2px
 }
 #content h6{
-  margin: 0
+  margin: 0;
+  font-weight: 700
 }
-
 </style>

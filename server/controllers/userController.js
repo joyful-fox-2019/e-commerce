@@ -183,7 +183,7 @@ class UserController{
   static async findOne(req,res,next){
     try {
       let _id = req.loggedUser._id
-      let user = await User.findOne({_id}).populate('cart.product')
+      let user = await User.findOne({_id}).populate('cart.product').populate('wishlist')
       res.status(200).json({user})
     } catch (error) {
       next(error)
@@ -251,6 +251,16 @@ class UserController{
       let updateUser = await User.updateOne({_id:userId},{money : newMoney},{runValidators : true })
       let message = 'Topup succed'
       res.status(200).json({message,updateUser}) 
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async myWishlist(req,res,next){
+    try {
+      let userId = req.loggedUser._id
+      let wishlist = await User.findOne({_id:userId},'wishlist').populate('wishlist')
+      res.status(200).json(wishlist)
     } catch (error) {
       next(error)
     }

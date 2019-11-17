@@ -7,6 +7,7 @@ import Transactions from './views/admin/Transactions.vue'
 import UpdateProduct from './views/admin/UpdateProduct.vue'
 import Cart from './views/user/Cart.vue'
 import UserTransaction from './views/user/UserTransaction.vue'
+import Wishlist from './views/user/Wishlist.vue'
 
 Vue.use(Router)
 
@@ -69,6 +70,11 @@ export default new Router({
           path: 'transactions',
           name: 'transactions',
           component: UserTransaction
+        },
+        {
+          path: 'wishlist',
+          name: 'wishlist',
+          component: Wishlist
         }
       ]
     },

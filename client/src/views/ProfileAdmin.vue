@@ -16,6 +16,9 @@
             </q-item>
 
             <q-item clickable to="/admin/transactions" @click="home = false">
+            <q-item-section avatar>
+                <q-avatar rounded color="green" text-color="white" icon="history" />
+              </q-item-section>
               <q-item-section>
                 <q-item-label>Transactions</q-item-label>
                 <q-item-label caption>Total transactions: {{ allTransactions.length }}</q-item-label>
@@ -25,6 +28,9 @@
             </q-item>
 
             <q-item >
+              <q-item-section avatar>
+                <q-avatar rounded color="green" text-color="white" icon="storefront" />
+              </q-item-section>
               <q-item-section >
                 <q-item-label>Products</q-item-label>
                 <q-item clickable to="/admin/addproduct" :dense="true" @click="home = false">Add new product</q-item>
@@ -33,11 +39,17 @@
             </q-item>
 
             <q-item  clickable to='/#'>
+            <q-item-section avatar>
+                <q-avatar rounded color="green" text-color="white" icon="home" />
+              </q-item-section>
               <q-item-section>
                 <q-item-label>Home</q-item-label>
               </q-item-section>
             </q-item>
             <q-item clickable>
+              <q-item-section avatar>
+                <q-avatar rounded color="green" text-color="white" icon="logout"/>
+              </q-item-section>
               <q-item-section>
                 <q-item-label  @click="logout">Logout</q-item-label>
               </q-item-section>
@@ -54,15 +66,7 @@
           </q-card-section>
 
           <q-card-section>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua.
-          </q-card-section>
-
-          <q-separator inset />
-
-          <q-card-section>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua.
+            Choose what you need on the sidebar
           </q-card-section>
         </q-card>
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div id="addPage">
+  <div id="addPages">
     <div>
       <h4>Fill out this form to update product</h4>
     </div>
@@ -17,17 +17,6 @@
       :rules="[ val => val && val.length > 0 || 'Please input product name']"
       :dense="true" />
 
-      <!-- <q-input 
-      outlined
-      type="textarea" 
-      v-model="desc"
-      label="Descriptions" 
-      stack-label 
-      lazy-rules
-      :rules="[ val => val && val.length > 0 || 'Please input product descriptions']"
-      :dense="true" /> -->
-
-       Descriptions
       <q-editor
       v-model="desc"
       :definitions="{
@@ -120,11 +109,12 @@ export default {
           this.stock = ''
           this.image = ''
           this.$store.dispatch('products/getProduct')
+          this.$emit('bukanupdate')
           this.$q.notify({
             color: 'green-4',
             textColor: 'white',
             icon: 'done',
-            message: 'Product submitted!'
+            message: 'Product updated!'
           })
         })
         .catch((err) => {
@@ -144,6 +134,7 @@ export default {
           this.stock = ''
           this.image = ''
           this.$store.dispatch('products/getProduct')
+          this.$emit('bukanupdate')
           this.$q.notify({
             color: 'green-4',
             textColor: 'white',
@@ -172,11 +163,12 @@ export default {
 </script>
 
 <style>
-#addPage{
-  width: 100%;
-  margin: 0 auto 10px auto;
-  height: 98vh;
+#addPages{
+  width: 80%;
+  margin: 10px auto 10px auto;
+  height: 95vh;
   overflow: scroll;
+  overflow-x: hidden;
   overflow-x: hidden
 }
 #titleAdd{
@@ -185,5 +177,13 @@ export default {
 #setImage{
   display: flex;
   flex-direction: row
+}
+#img1{
+  width: 200px;
+  height: 200px;
+  border: 1px solid rgba(0, 0, 0, 0.233);
+  display: flex;
+  align-items: center;
+  margin-right: 30px
 }
 </style>

@@ -152,6 +152,7 @@ export default {
   },
   created(){
     // this.setTableData()
+    this.$emit('bukanhome',false)
     if(!this.user.cart){
       console.log('masuk sini')
       this.getUser()

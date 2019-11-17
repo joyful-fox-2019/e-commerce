@@ -36,7 +36,12 @@ const users = new Schema({
     min : [0,'User money minimal 0'],
     max : [10000000, 'User money maximal 10000000'],
     default: 0
-  }
+  },
+  wishlist : [{
+    type : Schema.Types.ObjectId,
+    ref : 'Product'
+  }]
+
 },{
   versionKey : false
 })

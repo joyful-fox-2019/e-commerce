@@ -36,7 +36,7 @@ export default {
     ])
   },
   created(){
-    
+    this.$emit('bukanhome',false)
   }
 }
 </script>
