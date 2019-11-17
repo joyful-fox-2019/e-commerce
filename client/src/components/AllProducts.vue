@@ -2,7 +2,11 @@
   <v-app id="inspire">
     <v-content>
       <v-container>
-        <v-layout row wrap>
+        <v-row v-if="this.products.length === 0" style="display:flex; flex-direction: column; text-align:center">
+          <img src="../assets/empty_product.png" alt="empty_product" style="max-width:400px; margin:50px auto;">
+          <h1 class="grey--text" style="margin-left:10px; margin-bottom:10px;">Be the first to fill this emptiness.</h1> 
+        </v-row>
+        <v-layout v-else row wrap>
           <v-flex xs12 sm6 md4 lg3 v-for="product in products" :key="product._id">
             <v-card class="text-xs-center ma-3" style="text-align:center;">
               <v-responsive class="pt-4">
