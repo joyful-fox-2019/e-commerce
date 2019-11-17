@@ -3,7 +3,7 @@ let mode = "";
 if (process.env.NODE_ENV === "testing") {
     mode = "-test";
 }
-mongoose.connect(process.env.MONGO_DB_LOCAL + mode, {
+mongoose.connect(process.env.MONGO_DB + mode, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true
