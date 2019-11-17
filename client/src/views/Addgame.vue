@@ -1,17 +1,18 @@
 <template>
   <div>
-    <h2 class="mt-5 mt-md-2 mb-4"> <b></b> Create Article </h2>
+    <h2 class="mt-5 mt-md-2 mb-4 text-light"> Post Game </h2>
     <form>
-      <b-form-input required v-model="title" placeholder="Article Title"></b-form-input>
+      <b-form-input required v-model="title" placeholder="Game Title"></b-form-input>
       <b-form-file
         class="mt-3"
         v-model="file"
         :state="Boolean(file)"
-        placeholder="Choose a image or drop it here..."
+        placeholder="Choose a game image or drop it here..."
         drop-placeholder="Drop image here..."
       ></b-form-file>
-    <b-form-input required v-model="tags" class="mt-3" placeholder="Tags"></b-form-input>
-    <b-button @click="postArticle()" variant="info" class="mt-3">Post Article</b-button>
+    <b-form-input required v-model="tags" class="mt-3" placeholder="Price"></b-form-input>
+    <b-form-input required v-model="tags" class="mt-3" placeholder="Quantity"></b-form-input>
+    <b-button @click="postArticle()" variant="dark" class="mt-3">Post Game</b-button>
     </form>
   </div>
 </template>

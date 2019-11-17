@@ -12,7 +12,7 @@
           <b-col cols="2" class="text-center text-white"> ${{ price }}</b-col>
           <b-col class="text-center text-white" cols="2">
             <p class="m-0">
-              {{ stock }}
+              {{ status ? 'Success' : 'Pending' }}
             </p>
           </b-col>
         </b-row>
@@ -27,7 +27,7 @@ export default {
   props:{
     title: String,
     price: Number,
-    stock: Number,
+    status: Boolean,
     articleId: String,
     no: Number
   },
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     gotoDetail(_id) {
-      this.$router.push({ path: `/admin/edit-game/1221`});
+      // this.$router.push({ path: `/admin/edit-game/1221`});
     }
   },
   created(){

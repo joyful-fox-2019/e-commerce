@@ -31,7 +31,7 @@ const userSchema = new Schema({
     ProductName: String,
     ProductPrice: Number
   }]
-})
+}, { timestamps:true,versionKey:false })
   
 userSchema.path('email').validate(function(value){
   return User.findOne({ email: value })

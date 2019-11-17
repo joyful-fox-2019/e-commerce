@@ -7,6 +7,8 @@ import Login from '../views/Login.vue'
 import Admin from '../views/Admin.vue'
 import Gamelist from '../views/Gamelist.vue'
 import Addgame from '../views/Addgame.vue'
+import Editgame from '../views/Editgame.vue'
+import Purchased from '../views/Purchased.vue'
 
 Vue.use(VueRouter)
 
@@ -17,12 +19,12 @@ const routes = [
     component: Home
   },
   {
-    path: '/cart',
+    path: '/cart/:id',
     name: 'cart',
     component: Cart
   },
   {
-    path: '/mygame',
+    path: '/mygame/:id',
     name: 'mygame',
     component: Histrorypage
   },
@@ -43,11 +45,15 @@ const routes = [
       {
         path: 'add-game',
         component: Addgame
+      },
+      {
+        path: 'edit-game/:id',
+        component: Editgame
+      },
+      {
+        path: 'purchased',
+        component: Purchased
       }
-      // {
-      //   path: 'edit-article/:id',
-      //   // component: Editarticle
-      // }
     ]
   },
   {

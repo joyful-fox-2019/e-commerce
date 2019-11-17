@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="mt-5 mt-md-2 mb-4 text-white">
-      Game Stock List
+      Purchased History
     </h2>
     <div>
       
@@ -14,13 +14,13 @@
                 <b class="text-light">No.</b>
               </b-col>
               <b-col class="border-right" cols="6">
-                <b class="text-light">Game Title</b>
+                <b class="text-light">Transaction Id</b>
               </b-col>
-              <b-col class="border-right text-center" cols="2">
-                <b class="text-light" style="font-size:13px;">Price</b>
+              <b-col class="text-center border-right" cols="2">
+                <b class="text-light">Total</b>
               </b-col>
-              <b-col class="text-center" cols="2">
-                <b class="text-light">Qty.</b>
+              <b-col class=" text-center" cols="2">
+                <b class="text-light" style="font-size:13px;">Status</b>
               </b-col>
             </b-row>
           </b-card>
@@ -28,31 +28,31 @@
       </b-row>
 
       <!-- Article List -->
-      <Gamelistbar
+      <Purchasedbar
+        style="cursor:pointer;"
+        :title="'Death Stranding'"
+        :price="20"
+        :status="true"
+        :no="0+1"
+      ></Purchasedbar>
+
+      <Purchasedbar
         style="cursor:pointer;"
         :title="'Death Stranding'"
         :price="20"
         :stock="20"
         :no="0+1"
-      ></Gamelistbar>
+      ></Purchasedbar>
 
-      <Gamelistbar
+      <Purchasedbar
         style="cursor:pointer;"
         :title="'Death Stranding'"
         :price="20"
         :stock="20"
         :no="0+1"
-      ></Gamelistbar>
+      ></Purchasedbar>
 
-      <Gamelistbar
-        style="cursor:pointer;"
-        :title="'Death Stranding'"
-        :price="20"
-        :stock="20"
-        :no="0+1"
-      ></Gamelistbar>
-
-      <Gamelistbar
+      <Purchasedbar
         style="cursor:pointer;"
         v-for="(data,index) in articleData"
         :key='index'
@@ -61,14 +61,14 @@
         :stock="data.tags"
         :articleId="data._id"
         :no="index+1"
-      ></Gamelistbar>
+      ></Purchasedbar>
 
     </div>
   </div>
 </template>
 
 <script>
-import Gamelistbar from '../components/Gamelistbar'
+import Purchasedbar from '../components/Purchasedbar'
 import axios from '../config/getdata'
 
 export default {
@@ -79,7 +79,7 @@ export default {
     };
   },
   components:{
-    Gamelistbar
+    Purchasedbar
   },
   methods: {
     gotoDetail(_id) {
