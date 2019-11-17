@@ -52,7 +52,7 @@ export default {
         })
     },
     onSignInError () {
-      this.$$notify({ type: 'error', title: 'There is something wrong' })
+      this.$notify({ type: 'error', title: 'There is something wrong' })
     },
     login () {
       this.$store.dispatch('login', { email: this.email, password: this.password })

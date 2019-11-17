@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="flex-column items-center border border-blue-700 w-full" >
-    <div v-if="$route.params.id" class="product-window p-10 my-10 mx-auto w-1/2 flex justify-center border border-red-800">
+    <div class="flex-column items-center w-full" >
+    <div v-if="$route.params.id" class="product-window p-10 my-10 mx-auto w-1/2 flex justify-center">
       <router-view @change-favorite="changeFavorite"></router-view>
     </div>
     <div class="product-list flex flex-wrap justify-around my-20 mx-auto w-4/5">

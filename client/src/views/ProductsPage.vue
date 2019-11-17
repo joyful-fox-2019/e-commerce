@@ -63,7 +63,5 @@ export default {
 </script>
 
 <style scoped>
-  #product-page {
-    background-color: azure;
-  }
+
 </style>

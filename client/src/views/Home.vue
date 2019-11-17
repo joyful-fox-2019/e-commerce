@@ -32,24 +32,13 @@ export default {
     background-image: url('https://cdn.mos.cms.futurecdn.net/dpA5bpmPcBM6rPszKB9SpH.jpg');
     -webkit-filter: grayscale(100%);
     filter: opacity(45%);
-    height: 92vh;
-    /* -webkit-backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    -webkit-transform: translate3d(0,0,0); */
+    min-height: 92vh;
   }
-  /* h1 {
-    font-size: 8em;
-    color: #FB4264;
-    font-size: 9vw;
-    line-height: 9vw;
-  } */
   .welcome {
     font-size: 8em;
     display: block;
     color: #FB4264;
     width: 100%;
-    /* font-size: 9vw; */
-    /* line-height: 9vw; */
     animation: welcome 1s ease infinite;
     -moz-animation: welcome 1s ease infinite;
     -webkit-animation: welcome 1s ease infinite;

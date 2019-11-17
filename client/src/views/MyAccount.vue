@@ -5,7 +5,7 @@
       <div class="m-1 p-2 hover:bg-blue-600 cursor-pointer" :class="menu === 'transaction'? 'bg-green-400':'bg-blue-400'" @click="changeMenu('transaction')">Transaction</div>
       <div class="m-1 p-2 hover:bg-blue-600 cursor-pointer" :class="menu === 'favorites'? 'bg-green-400':'bg-blue-400'" @click="changeMenu('favorites')">Favorites</div>
     </div>
-    <div class="m-4 flex justify-center border border-blue-200">
+    <div class="m-4 flex justify-center">
       <router-view></router-view>
     </div>
   </div>

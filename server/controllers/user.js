@@ -50,18 +50,18 @@ class UserController {
     .then(ticket => {
       const gPayload = ticket.getPayload()
       const { email, name } = gPayload
-      userData = { email, name }
+      userData = { email, username:name }
       return User.findOne({ email })
     })
     .then(user => {
       if(user){
-        const token = sign({id: user._id })
+        const token = genToken({id: user._id, role: user.role })
         res.status(200).json({ token })
       } else {
         userData.password = 'password123'
         return User.create(userData)
         .then(user=> {
-          const token = sign({id: user._id})
+          const token = genToken({id: user._id, role: user.role})
           res.status(200).json({ token, message: 'Welcome back!' })
         })
       }

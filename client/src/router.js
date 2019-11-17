@@ -63,7 +63,6 @@ const router = new Router({
         if (store.state.isLogin) next()
         else {
           next(from.fullPath)
-          console.log(from)
         }
       }
     },

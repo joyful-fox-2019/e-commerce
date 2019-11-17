@@ -89,7 +89,7 @@ export default new Vuex.Store({
           commit('SET_LOGIN_STATUS', true)
         })
         .catch(({ response }) => {
-          Vue.notify({ type: 'error', title: response.data.message })
+          console.log(response.data.message)
         })
     },
     verifyAdmin ({ commit }) {
@@ -105,7 +105,7 @@ export default new Vuex.Store({
           commit('SET_ADMIN', true)
         })
         .catch(({ response }) => {
-          Vue.notify({ type: 'error', title: response.data })
+          console.log(response.data.message)
         })
     },
     fetchProducts ({ commit }, payload) {

@@ -90,7 +90,6 @@ export default {
         })
     },
     '$route.path' () {
-      console.log(this.$route.path)
       if (this.$route.path.includes('products')) {
         this.productPage = true
       } else {

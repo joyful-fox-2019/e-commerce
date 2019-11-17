@@ -1,6 +1,7 @@
 <template>
   <div class="trx-card m-2">
     <div  class="trx-item flex w-full items-center shadow-lg p-4 border border-gray-300" :class="buttonName.length>0 ? 'bg-yellow-100': ''">
+      <h1>{{transaction.owner.name}}</h1>
       <div  class="item-image w-1/4 flex-column justify-center items-center">
         <div v-for="item in transaction.items" :key="item.product._id" class="item-image flex justify-center items-center">
             <div class="w-full font-bold m-4">{{item.product.name}}</div>
