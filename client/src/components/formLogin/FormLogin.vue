@@ -51,7 +51,7 @@ export default {
     changeForm () {
       this.$store.dispatch('changeFormAsync', false)
         .then(payload => {
-          if (this.$store.state.formLogin === payload) this.$router.push('register')
+          if (this.$store.state.formLogin === payload) this.$router.push('/register')
         })
         .catch(err => {
           console.log(err)
@@ -83,13 +83,7 @@ export default {
         })
     }
   },
-  created () {
-    // if (this.$router.name)
-  }
-  // goRegis () {
-  //   this.$store.state.formLogin = false
-  //   this.$router.push('register')
-  // }
+  created () {}
 }
 </script>
 

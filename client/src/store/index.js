@@ -12,7 +12,7 @@ export default new Vuex.Store({
       password: ''
     },
     userLogin: {
-      email: '',
+      name: '',
       password: ''
     },
     localStorage: {
@@ -78,6 +78,9 @@ export default new Vuex.Store({
           resolve()
         }, 300)
       })
+    },
+    clearUserLogin (context) {
+      context.commit('CLEARUSERLOGIN')
     }
   },
   modules: {

@@ -3,7 +3,6 @@
     <audio controls autoplay loop style="display:none;">
       <source src="../assets/music/login.mp3" type="audio/mpeg">
     </audio>
-    <h1>{{ formNowIn }}</h1>
     <app-formlogin v-if="formNowIn"/>
     <router-view></router-view>
   </div>

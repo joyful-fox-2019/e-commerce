@@ -8,7 +8,19 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: Home
+    component: Home,
+    children:[
+      {
+        path: '',
+        name: 'bestitem',
+        component: () => import(/* webpackChunkName: "bestitem" */ '../components/listItem/BestItem.vue')
+      },
+      {
+        path: 'newitem',
+        name: 'newitem',
+        component: () => import(/* webpackChunkName: "newitem" */ '../components/listItem/NewItem.vue')
+      }
+    ]
   },
   {
     path: '/about',

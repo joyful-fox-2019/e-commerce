@@ -1,5 +1,5 @@
 <template>
-    <div class="navbar">
+    <div class="navbar" style="z-index:1;">
         <header>
             <img class="logo" src="../../assets/images/logoHome.png" alt="logoHome">
             <nav class="navbod">
@@ -9,14 +9,23 @@
                     <li><a href="#">Forum</a></li>
                 </ul>
             </nav>
-            <a href="" class="cta"><button>Log Out</button></a>
+            <a href="" @click="logout" class="cta"><button>Log Out</button></a>
         </header>
     </div>
 </template>
 
 <script>
 export default {
-  name: 'navbar'
+  name: 'navbar',
+  methods: {
+    logout () {
+      localStorage.removeItem('token')
+      localStorage.removeItem('name')
+      localStorage.removeItem('email')
+      this.$store.dispatch('clearUserLogin')
+      this.$router.push('/')
+    }
+  }
 }
 </script>
 
