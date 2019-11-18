@@ -16,6 +16,9 @@ export default {
   name: 'app',
   components: {
     Navbar
+  },
+  created () {
+    this.$store.commit('SET_USER')
   }
 }
 </script>

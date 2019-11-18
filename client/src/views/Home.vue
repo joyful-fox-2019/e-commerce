@@ -1,7 +1,7 @@
 <template>
   <div class="home" style="margin: 30px 0;">
     <div class="container is-fluid">
-      <CardProduct v-for="num in 28" :key="num"></CardProduct>
+      <CardProduct v-for="product in products" :key="product._id" :productId="product._id" :name="product.name" :price="product.price" :image="product.images[0]"></CardProduct>
     </div>
   </div>
 </template>
@@ -12,8 +12,33 @@ import CardProduct from '@/components/CardProduct'
 
 export default {
   name: 'home',
+  data () {
+    return {
+      products: []
+    }
+  },
   components: {
     CardProduct
+  },
+  methods: {
+    fetchProducts () {
+      this.$store
+        .dispatch('getProducts')
+        .then(data => {
+          this.products = data
+        })
+        .catch(({ data }) => {
+          data.message.forEach(errMsg => {
+            this.$store.state.Toast.fire({
+              icon: 'error',
+              title: errMsg
+            })
+          })
+        })
+    }
+  },
+  created () {
+    this.fetchProducts()
   }
 }
 </script>
