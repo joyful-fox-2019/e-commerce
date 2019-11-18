@@ -13,9 +13,10 @@ const upload = gcsUpload({
   }
 })
 
+router.get('/', ProductController.read)
+
 router.use(authentication)
 
-router.get('/', ProductController.read)
 router.get('/:id', ProductController.readOne)
 
 router.use(authorizationAdmin)

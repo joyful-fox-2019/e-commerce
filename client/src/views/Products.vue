@@ -21,8 +21,8 @@
                       <i class="fas fa-trash-alt"></i> Delete
                     </div>
                     <hr>
-                    <div>
-                      <router-link :to="'/update/'+product._id"><i class="far fa-edit"></i> Update</router-link>
+                    <div @click="update(product._id)">
+                      <i class="far fa-edit"></i> Update
                     </div>
                   </div>
                   <h1 class="title">{{ product.name }}</h1>
@@ -39,6 +39,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import $ from "jquery";
 
 export default {
   name: 'products',
@@ -61,10 +62,18 @@ export default {
         id
       })
     },
+    update (id) {
+      this.$router.push({ path: `/update/${id}` })
+    },
     addcart (id) {
-      this.$store.dispatch('addcart', {
-        id
-      })
+      if(!this.isLogin){ 
+        this.$router.push({ path: '/login' })
+      }
+      else{
+        this.$store.dispatch('addcart', {
+          id
+        })
+      }
     }
   },
   created () {

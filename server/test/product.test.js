@@ -293,24 +293,6 @@ describe('Product Testing', function() {
           })
       })
     })
-
-    describe('Error Test', function() {
-      it('should send an error with 401 status code because required token', function(done) {
-        this.timeout(10000)
-        chai.request(app)
-          .get('/product')
-          .end(function(err, res){
-            expect(err).to.be.null
-            expect(res).to.have.status(401)
-            expect(res.body).to.be.an('object').to.have.any.keys('message', 'errors')
-            expect(res.body.message).to.equal('Json Web Token Error')
-            expect(res.body.errors).to.be.an('array').that.includes('JsonWebTokenError')
-            done()
-          })
-      })
-
-    })
-
   })
 
   describe('GET /product/:id', function() {

@@ -20,10 +20,11 @@ const Toast = Swal.mixin({
 
 export default new Vuex.Store({
   state: {
-    isLogin: 'false',
+    isLogin: false,
     username: '',
     role: 'customer',
     products: [],
+    cart: [],
     history: []
   },
   mutations: {
@@ -37,6 +38,9 @@ export default new Vuex.Store({
     },
     fetchHistory (state, payload) {
       state.history = payload
+    },
+    fetchCart (state, payload) {
+      state.cart = payload
     }
   },
   actions: {
@@ -271,25 +275,27 @@ export default new Vuex.Store({
         })
     },
     fetchCart ({ state, commit, dispatch }) {
-      return new Promise((resolve, reject) => {
-        axios({
-          method: 'get',
-          url: url + '/cart',
-          headers: {
-            token: localStorage.getItem('token')
-          }
-        })
-          .then(({ data }) => {
-            resolve(data)
-          })
-          .catch(err => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: err.response.data.errors.join(', ')
-            })
-          })
+      Swal.showLoading()
+      axios({
+        method: 'get',
+        url: url + '/cart',
+        headers: {
+          token: localStorage.getItem('token')
+        }
       })
+        .then(({ data }) => {
+          Swal.close()
+          commit('fetchCart', data)
+        })
+        .catch(err => {
+          Swal.close()
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.response.data.errors.join(', ')
+          })
+        })
     },
     deleteCart ({ state, commit, dispatch }, payload) {
       axios({
@@ -340,6 +346,7 @@ export default new Vuex.Store({
         })
     },
     fetchHistory ({ state, commit, dispatch }) {
+      Swal.showLoading()      
       let urlHistory
       if (state.role === 'admin') {
         urlHistory = '/transaction/admin'
@@ -354,9 +361,11 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
+          Swal.close()
           commit('fetchHistory', data)
         })
         .catch(err => {
+          Swal.close()
           Swal.fire({
             icon: 'error',
             title: 'Oops...',

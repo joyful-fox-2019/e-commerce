@@ -6,7 +6,15 @@
 
 <script>
 export default {
-
+  name: 'app',
+  mounted () {
+    if (localStorage.getItem('token')) {
+      this.$store.commit('login', {
+        username: localStorage.getItem('username'),
+        role: 'admin'
+      })
+    }
+  }
 }
 </script>
 

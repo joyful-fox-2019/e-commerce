@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import $ from "jquery";
 
 export default {
   name: 'login',
@@ -95,12 +96,6 @@ export default {
     }
   },
   mounted () {
-    if (localStorage.getItem('token')) {
-      this.$store.commit('login', {
-        username: localStorage.getItem('username'),
-        role: 'customer'
-      })
-    }
     $(function () {
       $('.input input').focus(function () {
         $(this).parent('.input').each(function () {
