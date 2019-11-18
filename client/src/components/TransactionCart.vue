@@ -1,6 +1,5 @@
 <template>
   <div>
-    <b class="t-secondary">{{customer.email}}</b>
     <v-row>
       <v-col lg="3" md="3" cols="12">
         <v-img
@@ -25,9 +24,7 @@
         </div>
       </v-col>
     </v-row>
-    <v-btn @click="updateStatus" v-if="$store.state.user._id && $store.state.user.isAdmin && status === 'Waiting for confirmation'" class="full-width bg-primary">Confirm Delivery</v-btn>
-    <v-btn @click="updateStatus" v-if="$store.state.user._id && !$store.state.user.isAdmin && status === 'Order shipped'" class="full-width bg-secondary">Confirm Received</v-btn>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -65,9 +62,6 @@ export default {
     },
     deleteCart () {
       this.$store.dispatch('deleteCart', this.cart._id)
-    },
-    updateStatus () {
-      this.$store.dispatch('updateStatus', this.transactionId)
     }
   }
 }

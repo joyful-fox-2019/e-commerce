@@ -76,7 +76,7 @@
     ></v-text-field>
     <v-btn
       :disabled="!valid"
-      class="mt-4 full-width bg-primary"
+      class="mt-4 mb-10 full-width bg-primary"
       type="submit"
     >
       ADD COMIC

@@ -179,11 +179,11 @@ export default new Vuex.Store({
         .catch(alert)
     },
     getProduct ({ commit }, payload) {
-      // commit('SET_LOADING', true)
+      commit('SET_LOADING', true)
       axios.get(`/products/${payload}`)
         .then(({ data }) => {
           commit('SET_PRODUCT', data)
-          // commit('SET_LOADING', false)
+          commit('SET_LOADING', false)
         })
         .catch(alert)
     },

@@ -1,5 +1,8 @@
 <template>
   <div class="mt-10">
+    <div class="t-secondary">
+    <b>{{transaction.customer.email}}</b>
+    </div>
     <TransactionCart
     v-for="cart in transaction.carts"
     :key="cart._id" :cart="cart"
@@ -7,6 +10,8 @@
     :status="transaction.status"
     :transaction-id="transaction._id"
     ></TransactionCart>
+    <v-btn @click="updateStatus" v-if="$store.state.user._id && $store.state.user.isAdmin && transaction.status === 'Waiting for confirmation'" class="full-width bg-primary">Confirm Delivery</v-btn>
+    <v-btn @click="updateStatus" v-if="$store.state.user._id && !$store.state.user.isAdmin && transaction.status === 'Order shipped'" class="full-width bg-secondary">Confirm Received</v-btn>
   </div>
 </template>
 
@@ -19,6 +24,9 @@ export default {
   methods: {
     getTransaction () {
       this.$store.dispatch('getTransaction', this.$route.params.id)
+    },
+    updateStatus () {
+      this.$store.dispatch('updateStatus', this.transaction._id)
     }
   },
   components: {
