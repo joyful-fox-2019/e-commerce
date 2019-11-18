@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "sonorous-folio-258807",
+  "private_key_id": "ac9bad9590e1ad47fc86c17335baa40e16236c03",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCZrbNRrBOUUy3G\nDh6PIIoDGDM/DJom8+sofVhaPFGpjrVGsLvsb9uVrOJwpjv+3S87L/bg/DvUBIji\n3nLaDYJcQ9loP9X/yPDxSn3Voxm1fhvAZhVUWGqicfGhjV8jOmv1ewVnM3EBUAC1\nChpIQgyErPj7RZgKgGPXFGOMmGCXdP6hqHw+CC1zL5SXrp8FTTCrMCqbSx4WcIno\nhA+D1jhY3UMOXaeIwWuWAc+k6LL8xfnIvLk1H5xbkUGb9k8iHVpxIsq8IfD6Jfoq\nbNnKoVnEzcxSBVb17YoEsiLgL2j2gTw7hOJ0ljw8MQGQgbcwxOJdIowhGB6KsQqK\n+7Gf+u4RAgMBAAECggEACuHUspoZidWJBn8N9WsjsrvmNxb8nHkFxCh6FuuyCaxw\nFDkkGYZDOZpUL49p7K57b3jCReS+lNEcY1pGrj+qJT/tt3bbv8DaJO/2MKhbw/ER\n5IImDQK0zFt+tYal/7/dkLS9KXVoUWQ5pJg6S7cXnVaFS/+92DKGv15zfSt2HYtg\nfE7sWt2oL+u3YHbfxWt/TNn0mJbeHlg8Y6QRj90KtS1FIbAFoIcYfVy9lFzbJv8Y\nzCvd9k5aEx8PGnNjFwIlD1bjCeR3pj9tz7Fhn0zct78YkIS4guyjs577F7PnGxHn\ng3RsoeerLdTdwNTWqGPOWKGu2IUqsSG/2EyF6LaZdQKBgQDGXRYtA0BWuOMZNnzX\nDsGUz7EIHMhnIFbutMIGQZeTgN/+ieqaDxzd4btfJng0ZuMmEMjlIEn1uBhznNcM\n+Q01JYrxabxSYDgTEOs8R4SJ8pz3pBKbaa9QEZMkPABncuW9Oqh0zVV4FUWRplLu\nalPYAXAH3VW3UT36CGS12rI+dQKBgQDGVMtsGwUDHcOMu38+yGZqnlj6cWlJYZEJ\nPxGcs2SiRDwxMt4wvFZDA+COP7jat3eEjtUxCT8oXuyC8jNZeQX96M/jUZG05y50\nXdtncSFOf39FGKx+eUzEzzae1v1M5YIdxYzH/jOebxk+6y82X1fNzk/J/nIdZjC3\nxuc8Iia1rQKBgQCYfL6rY7B1+jM6EpTtjb5qcy6YGehEvquVXQc6X/nxvkRzG/po\n6+049GphvuTxA5bikEyfNq8kYZ0KYys+IcZxcKba5nmKqcTxgzQSZrgQg5z/EfXr\n2taWKqx+UlHNNJo/WXReNeraISAV01I1TS+fAZvpr9BQ1/dY2lLxKWmUcQKBgQCu\n4wrV8yWCT/al3JgiBpi5H5SakvMisBQysRiYs1/j7oOdZpujIhB2265iATLCOtH7\nY+/+Y4b71Gh+N5CsLxnngin+62iuusSt/C2Ck7GpBKh3h4BjrhbR3V7uxelqq18H\nXbH8kN13scPzRXPGYGCOrISTO/nojroa9BvnXL4BqQKBgQCwWX25gj60vqSTsaK+\n20btYc1q0yOPBI/Y6hvJgFLR8XSwHalrSFgyflycv2wUEboWPEvxhVbHnbZfINJ2\nHZRe1ZM1T9WZZieqtamie+UUxXCS2OBq//+TJNmzNRaBqmejyhdiwJ4wBYwRImzl\nMDeyl8xeQrrabqYUCmb0z8nZ7g==\n-----END PRIVATE KEY-----\n",
+  "client_email": "ecommerce-387@sonorous-folio-258807.iam.gserviceaccount.com",
+  "client_id": "104455288489299123614",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ecommerce-387%40sonorous-folio-258807.iam.gserviceaccount.com"
+}
