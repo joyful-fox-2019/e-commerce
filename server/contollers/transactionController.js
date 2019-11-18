@@ -35,6 +35,34 @@ class transactionController {
             })
             .catch(next)
     }
+
+    static update(req, res, next) {
+        console.log('masuk update')
+        let {carts, status} = req.body
+        console.log(req.params.id)
+        Transaction.
+            findOneAndUpdate({
+                _id : req.params.id
+            }, {
+                carts,
+                status,
+                user : req.user._id,               
+            },{
+                new : true
+            }).
+            then(transaction => {
+                if (transaction) {
+                    res.json(transaction)
+                } else {
+                    next({
+                        status : 404,
+                        msg : 'transaction not found'
+                    })
+                }
+                
+            })
+            .catch(next)
+    }
         
 }
 

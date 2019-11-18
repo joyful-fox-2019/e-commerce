@@ -6,5 +6,6 @@ const {authenticate, authorize} = require('../middlewares/auth')
 router.use(authenticate)
 router.post('/', transactionController.create)
 router.get('/', transactionController.findAll)
+router.put('/:id', transactionController.update)
 
 module.exports = router
