@@ -38,9 +38,8 @@ const routes = [
     name: 'admin',
     component: Admin,
     beforeEnter: (to, from, next) => {
-      // if (localStorage.getItem('access_token')) next()
-      // else next('/login')
-      next()
+      if (localStorage.getItem('access_token')) next()
+      else next('/login')
     },
     children: [
       {

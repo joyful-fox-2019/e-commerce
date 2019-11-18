@@ -4,13 +4,14 @@ const app = require('../app')
 const User = require('../models/user')
 const Product = require('../models/product')
 const { generateToken } = require('../helpers/jwt')
+const fs = require('fs')
 
 chai.use(chaiHttp)
 const expect = chai.expect
 
 let initialProduct = {}
 let initialToken = ''
-let initialProductForDeleted = {}
+let initialProductIdForDeleted = ''
 
 let newProduct = {
   name: "Something2",
@@ -79,21 +80,24 @@ describe('Product Route', () => {
 
   describe('POST /product', () => {
     describe('Success add data', () => {
-      it('Should return (name,price,qty,imgUrl) with 201 status code', (done) => {
+      it('Should return (name,price,qty,imgUrl) without with 201 status code', (done) => {
         let newProduct = {
           name: "Something",
           price: 200000,
-          qty: 10,
-          imgUrl: 'https://storage.googleapis.com/dipaecommerce/1573610531954-death-stranding-logo-600x337.jpg'
-        }
+          qty: 10}
         chai.request(app)
         .post('/products')
-        .send(newProduct)
+        .field('qty', newProduct.qty)
+        .field('price', newProduct.price)
+        .field('name', newProduct.name)
+        .attach('imgUrl', fs.readFileSync("./test/img/gambar.jpg"), "gambar.jpg")
         .set('access_token',initialToken)
         .end((err,res) => {
           expect(err).to.be.null
           expect(res).to.have.status(201)
-          expect(res.body).to.be.an('object').to.have.any.keys('name','price','qty','imgUrl')
+          expect(res.body).to.be.an('object').to.have.any.keys('name','price','qty','imgUrl','_id')
+          initialProductIdForDeleted = res.body._id
+          console.log(initialProductIdForDeleted)
           expect(res.body.name).to.be.an('string')
           expect(res.body.imgUrl).to.be.an('string')
           expect(res.body.price).to.be.an('number')
@@ -335,16 +339,15 @@ describe('Product Route', () => {
   describe('DELETE /products/:id', () => {
     describe('Success delete product', () => {
       it('Should return response with 200 status code', (done) => {
-        // chai.request(app)
-        // .delete(`/products/${initialProductForDeleted._id}`)
-        // .set('access_token',initialToken)
-        // .end((err,res) => {
-        //   expect(err).to.be.null
-        //   expect(res).to.have.status(200)
-        //   expect(res.body).to.be.an('object').to.have.any.keys('deleteProductData')
-        //   done()
-        // })
-        done()
+        chai.request(app)
+        .delete(`/products/${initialProductIdForDeleted}`)
+        .set('access_token',initialToken)
+        .end((err,res) => {
+          expect(err).to.be.null
+          expect(res).to.have.status(200)
+          expect(res.body).to.be.an('object').to.have.any.keys( 'deleteProductData','deleteImgDataInGCS' )
+          done()
+        })
       })
     })
     describe('Fail delete product', () => {
