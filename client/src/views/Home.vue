@@ -1,18 +1,27 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div class="home" style="margin: 30px 0;">
+    <div class="container is-fluid">
+      <CardProduct v-for="num in 28" :key="num"></CardProduct>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+// @ is an alias to /src\
+import CardProduct from '@/components/CardProduct'
 
 export default {
-  name: "home",
+  name: 'home',
   components: {
-    HelloWorld
+    CardProduct
   }
-};
+}
 </script>
+
+<style scoped>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+</style>

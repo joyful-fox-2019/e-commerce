@@ -15,37 +15,56 @@ describe("Product Testing", function () {
     price: 24000000,
     stock: 5
   };
-  let newUser = {
-    name: "Ahmad Fadilah",
-    email: "ahmadfadilah@mail.com",
-    password: "ahmadfadilah123"
-  };
-  let imgUrl = "";
-  let userToken = "";
-  let userId = "";
+  let regAdmin = {
+    name: 'Admin',
+    isAdmin: true,
+    email: 'admin@mail.com',
+    password: 'admin123'
+  }
+  let regCustomer = {
+    name: 'Customer',
+    email: 'customer@mail.com',
+    password: 'customer123'
+  }
+  let imgUrl = []
+  let adminToken = ''
+  let customerToken = ''
   before(function (done) {
-    user
-      .create(newUser)
-      .then(result => {
-        userId = result._id;
-        chai
+    chai
+      .request(app)
+      .post('/users/register')
+      .send(regAdmin)
+      .then(({ body }) => {
+        return chai
           .request(app)
-          .post("/users/login")
+          .post('/users/login')
           .send({
-            email: newUser.email,
-            password: newUser.password
+            email: regAdmin.email,
+            password: regAdmin.password
           })
-          .end(function (err, res) {
-            if (err) {
-              console.log(err);
-            } else {
-              userToken = res.body.token;
-            }
-            done();
-          });
       })
-      .catch(console.log);
-  });
+      .then(({ body }) => {
+        adminToken = body.token
+        return chai
+          .request(app)
+          .post('/users/register')
+          .send(regCustomer)
+      })
+      .then(({ body }) => {
+        return chai
+          .request(app)
+          .post('/users/login')
+          .send({
+            email: regCustomer.email,
+            password: regCustomer.password
+          })
+      })
+      .then(({ body }) => {
+        customerToken = body.token
+        done()
+      })
+      .catch(console.log)
+  })
   after(function (done) {
     product
       .deleteMany({})
@@ -54,17 +73,22 @@ describe("Product Testing", function () {
       })
       .then(() => {
         if (imgUrl) {
-          return deleteFileGcs(imgUrl);
+          let arrPromise = []
+          imgUrl.forEach(url => {
+            arrPromise.push(deleteFileGcs(url))
+          })
+          return Promise.all(arrPromise);
         }
       })
       .then(result => {
         console.log(result);
-        imgUrl = "";
-        userToken = "";
+        imgUrl = [];
+        adminToken = "";
         done();
       })
       .catch(console.log);
-  });
+  })
+  // testing POST /products; 1 success & 6 error
   describe("POST /products", function () {
     describe("Success Testing", function () {
       afterEach(function (done) {
@@ -72,7 +96,11 @@ describe("Product Testing", function () {
           .deleteMany({})
           .then(() => {
             if (imgUrl) {
-              return deleteFileGcs(imgUrl);
+              let arrPromise = []
+              imgUrl.forEach(url => {
+                arrPromise.push(deleteFileGcs(url))
+              })
+              return Promise.all(arrPromise);
             }
           })
           .then(result => {
@@ -82,21 +110,21 @@ describe("Product Testing", function () {
           })
           .catch(console.log);
       });
-      it("should return created product(ObjectID, name, price, stock, image)", function (done) {
+      it("should return created product(ObjectID, name, price, stock, images)", function (done) {
         chai
           .request(app)
           .post("/products")
-          .set("token", userToken)
+          .set("token", adminToken)
           .field("name", newProduct.name)
           .field("price", newProduct.price)
           .field("stock", newProduct.stock)
           .attach(
-            "image",
+            "images",
             fs.readFileSync("./test/img/AS-GF-RTX2080Ti.jpg"),
             "AS-GF-RTX2i.jpg"
           )
           .end(function (err, res) {
-            imgUrl = res.body.image;
+            imgUrl = res.body.images;
             expect(err).to.be.null;
             expect(res).to.have.status(201);
             expect(res.body)
@@ -106,8 +134,7 @@ describe("Product Testing", function () {
                 "name",
                 "price",
                 "stock",
-                "image",
-                "seller",
+                "images",
                 "createdAt",
                 "updatedAt"
               );
@@ -120,6 +147,8 @@ describe("Product Testing", function () {
             expect(res.body.stock)
               .to.be.a("number")
               .to.equal(newProduct.stock);
+            expect(res.body.images)
+              .to.be.an("array")
             done();
           });
       });
@@ -130,7 +159,11 @@ describe("Product Testing", function () {
           .deleteMany({})
           .then(() => {
             if (imgUrl) {
-              return deleteFileGcs(imgUrl);
+              let arrPromise = []
+              imgUrl.forEach(url => {
+                arrPromise.push(deleteFileGcs(url))
+              })
+              return Promise.all(arrPromise);
             }
           })
           .then(result => {
@@ -148,12 +181,12 @@ describe("Product Testing", function () {
           .field("price", newProduct.price)
           .field("stock", newProduct.stock)
           .attach(
-            "image",
+            "images",
             fs.readFileSync("./test/img/AS-GF-RTX2080Ti.jpg"),
             "AS-GF-RTX2i.jpg"
           )
           .end(function (err, res) {
-            imgUrl = res.body.image;
+            imgUrl = res.body.images;
             expect(err).to.be.null;
             expect(res).to.have.status(400);
             expect(res.body)
@@ -166,21 +199,21 @@ describe("Product Testing", function () {
           });
       });
       it('should return "Please login again" with status code 400 when unknown token', function (done) {
-        let invalidToken = "12345salahtoken";
+        let unknownToken = "12345salahtoken";
         chai
           .request(app)
           .post("/products")
-          .set("token", invalidToken)
+          .set("token", unknownToken)
           .field("name", newProduct.name)
           .field("price", newProduct.price)
           .field("stock", newProduct.stock)
           .attach(
-            "image",
+            "images",
             fs.readFileSync("./test/img/AS-GF-RTX2080Ti.jpg"),
             "AS-GF-RTX2i.jpg"
           )
           .end(function (err, res) {
-            imgUrl = res.body.image;
+            imgUrl = res.body.images;
             expect(err).to.be.null;
             expect(res).to.have.status(400);
             expect(res.body)
@@ -192,20 +225,46 @@ describe("Product Testing", function () {
             done();
           });
       });
-      it('should return "Product name is required" with status code 400 when submit form without name', function (done) {
+      it('should return "not authorized" with status code 403 when user not admin', function (done) {
         chai
           .request(app)
           .post("/products")
-          .set("token", userToken)
+          .set("token", customerToken)
+          .field("name", newProduct.name)
           .field("price", newProduct.price)
           .field("stock", newProduct.stock)
           .attach(
-            "image",
+            "images",
             fs.readFileSync("./test/img/AS-GF-RTX2080Ti.jpg"),
             "AS-GF-RTX2i.jpg"
           )
           .end(function (err, res) {
-            imgUrl = res.body.image;
+            imgUrl = res.body.images;
+            expect(err).to.be.null;
+            expect(res).to.have.status(403);
+            expect(res.body)
+              .to.be.an("object")
+              .to.have.any.keys("message");
+            expect(res.body.message)
+              .to.be.an("array")
+              .that.includes("not authorized");
+            done();
+          });
+      });
+      it('should return "Product name is required" with status code 400 when submit form without name', function (done) {
+        chai
+          .request(app)
+          .post("/products")
+          .set("token", adminToken)
+          .field("price", newProduct.price)
+          .field("stock", newProduct.stock)
+          .attach(
+            "images",
+            fs.readFileSync("./test/img/AS-GF-RTX2080Ti.jpg"),
+            "AS-GF-RTX2i.jpg"
+          )
+          .end(function (err, res) {
+            imgUrl = res.body.images;
             expect(err).to.be.null;
             expect(res).to.have.status(400);
             expect(res.body)
@@ -221,16 +280,16 @@ describe("Product Testing", function () {
         chai
           .request(app)
           .post("/products")
-          .set("token", userToken)
+          .set("token", adminToken)
           .field("name", newProduct.name)
           .field("stock", newProduct.stock)
           .attach(
-            "image",
+            "images",
             fs.readFileSync("./test/img/AS-GF-RTX2080Ti.jpg"),
             "AS-GF-RTX2i.jpg"
           )
           .end(function (err, res) {
-            imgUrl = res.body.image;
+            imgUrl = res.body.images;
             expect(err).to.be.null;
             expect(res).to.have.status(400);
             expect(res.body)
@@ -246,16 +305,16 @@ describe("Product Testing", function () {
         chai
           .request(app)
           .post("/products")
-          .set("token", userToken)
+          .set("token", adminToken)
           .field("name", newProduct.name)
           .field("price", newProduct.price)
           .attach(
-            "image",
+            "images",
             fs.readFileSync("./test/img/AS-GF-RTX2080Ti.jpg"),
             "AS-GF-RTX2i.jpg"
           )
           .end(function (err, res) {
-            imgUrl = res.body.image;
+            imgUrl = res.body.images;
             expect(err).to.be.null;
             expect(res).to.have.status(400);
             expect(res.body)
@@ -268,27 +327,25 @@ describe("Product Testing", function () {
           });
       });
     });
-  });
+  })
+  // testing GET /products; 1 success & 0 error
   describe("GET /products", function () {
     before(function (done) {
       let products = [
         {
           name: "Asus GeForce RTX 2080 Ti 11GB DDR6 - Strix OC",
           price: 24000000,
-          stock: 5,
-          seller: userId
+          stock: 5
         },
         {
           name: "Gigabyte GeForce RTX 2080 8GB DDR6 Aorus - GV-N2080AORUS-8GC",
           price: 11960000,
-          stock: 6,
-          seller: userId
+          stock: 6
         },
         {
           name: "Asus GeForce RTX 2060 SUPER 8GB DDR6 - Strix Advance",
           price: 7600000,
-          stock: 4,
-          seller: userId
+          stock: 4
         }
       ];
       product
@@ -309,7 +366,6 @@ describe("Product Testing", function () {
         chai
           .request(app)
           .get("/products")
-          .set("token", userToken)
           .end(function (err, res) {
             expect(err).to.be.null;
             expect(res).to.have.status(200);
@@ -323,7 +379,7 @@ describe("Product Testing", function () {
                 "name",
                 "price",
                 "stock",
-                "seller",
+                "images",
                 "createdAt",
                 "updatedAt"
               );
@@ -331,31 +387,13 @@ describe("Product Testing", function () {
           });
       });
     });
-    describe("Error Testing", function () {
-      it("should return product list from should send an error with 400 status code because no user login", function (done) {
-        chai
-          .request(app)
-          .get("/products")
-          .end(function (err, res) {
-            expect(err).to.be.null;
-            expect(res).to.have.status(400);
-            expect(res.body)
-              .to.be.an("object")
-              .to.have.any.keys("message");
-            expect(res.body.message)
-              .to.be.an("array")
-              .that.includes("no user login");
-            done();
-          });
-      });
-    });
-  });
+  })
+  // testing GET /products; 1 success & 1 error
   describe("GET /products/:id", function () {
     let createdProduct = {};
     before(function (done) {
-      const productDummy = { ...newProduct, seller: userId };
       product
-        .create(productDummy)
+        .create(newProduct)
         .then(result => {
           createdProduct = result;
           done();
@@ -373,7 +411,6 @@ describe("Product Testing", function () {
         chai
           .request(app)
           .get(`/products/${createdProduct._id}`)
-          .set("token", userToken)
           .end(function (err, res) {
             expect(err).to.be.null;
             expect(res).to.have.status(200);
@@ -384,145 +421,156 @@ describe("Product Testing", function () {
                 "name",
                 "price",
                 "stock",
-                "seller",
+                "images",
                 "createdAt",
                 "updatedAt"
-              );
+              )
+            expect(res.body.name)
+              .to.be.a("string")
+              .to.equal(newProduct.name)
+            expect(res.body.price)
+              .to.be.a("number")
+              .to.equal(newProduct.price)
+            expect(res.body.stock)
+              .to.be.a("number")
+              .to.equal(newProduct.stock)
+            expect(res.body.images)
+              .to.be.an("array")
             done();
           });
       });
     });
     describe("Error Testing", function () {
-      it("should send an error with 400 status code because no user login", function (done) {
+      it("should send an error with 404 status code because product not found", function (done) {
         chai
           .request(app)
-          .get(`/products/${createdProduct._id}`)
+          .get('/products/5dd01ad72f8995647895a701')
           .end(function (err, res) {
-            expect(err).to.be.null;
-            expect(res).to.have.status(400);
+            expect(err).to.be.null
+            expect(res).to.have.status(404)
             expect(res.body)
               .to.be.an("object")
-              .to.have.any.keys("message");
+              .to.have.any.keys("message")
             expect(res.body.message)
               .to.be.an("array")
-              .that.includes("no user login");
+              .that.includes("Not Found")
             done();
           });
       });
     });
   });
-  describe("PATCH /products/:id/... (update stock and price)", function () {
-    let createdProduct = {};
-    before(function (done) {
-      const productDummy = { ...newProduct, seller: userId };
-      product
-        .create(productDummy)
-        .then(result => {
-          createdProduct = result;
-          done();
-        })
-        .catch(console.log);
-    });
-    after(function (done) {
-      product
-        .findByIdAndDelete(createdProduct._id)
-        .then(() => done())
-        .catch(console.log);
-    });
-    describe("Success Testing", function () {
-      it("Should return old data product before update", function (done) {
-        chai
-          .request(app)
-          .patch(`/products/${createdProduct._id}/stock`)
-          .set("token", userToken)
-          .send({
-            stock: 10
-          })
-          .end(function (err, res) {
-            expect(err).to.be.null;
-            expect(res).to.have.status(200);
-            expect(res.body)
-              .to.be.an("object")
-              .to.have.all.keys(
-                "_id",
-                "name",
-                "price",
-                "stock",
-                "seller",
-                "createdAt",
-                "updatedAt"
-              );
-            done();
-          });
-      });
-      it("Should return old data product before update", function (done) {
-        chai
-          .request(app)
-          .patch(`/products/${createdProduct._id}/price`)
-          .set("token", userToken)
-          .send({
-            price: 20000000,
-          })
-          .end(function (err, res) {
-            expect(err).to.be.null;
-            expect(res).to.have.status(200);
-            expect(res.body)
-              .to.be.an("object")
-              .to.have.all.keys(
-                "_id",
-                "name",
-                "price",
-                "stock",
-                "seller",
-                "createdAt",
-                "updatedAt"
-              );
-            done();
-          });
-      });
-    });
-  });
-  describe("DELETE /products/:id", function () {
-    let createdProduct = {};
-    before(function (done) {
-      const productDummy = { ...newProduct, seller: userId };
-      product
-        .create(productDummy)
-        .then(result => {
-          createdProduct = result;
-          done();
-        })
-        .catch(console.log);
-    });
-    after(function (done) {
-      product
-        .findByIdAndDelete(createdProduct._id)
-        .then(() => done())
-        .catch(console.log);
-    });
-    describe("Success Testing", function () {
-      it("should deleted product id", function (done) {
-        chai
-          .request(app)
-          .delete(`/products/${createdProduct._id}`)
-          .set("token", userToken)
-          .end(function (err, res) {
-            expect(err).to.be.null;
-            expect(res).to.have.status(200);
-            expect(res.body)
-              .to.be.an("object")
-              .to.have.all.keys(
-                "_id",
-                "name",
-                "price",
-                "stock",
-                "seller",
-                "createdAt",
-                "updatedAt"
-              );
-            done();
-          });
-      });
-    });
-  })
+//   describe("PATCH /products/:id/... (update stock and price)", function () {
+//     let createdProduct = {};
+//     before(function (done) {
+//       const productDummy = { ...newProduct, seller: userId };
+//       product
+//         .create(productDummy)
+//         .then(result => {
+//           createdProduct = result;
+//           done();
+//         })
+//         .catch(console.log);
+//     });
+//     after(function (done) {
+//       product
+//         .findByIdAndDelete(createdProduct._id)
+//         .then(() => done())
+//         .catch(console.log);
+//     });
+//     describe("Success Testing", function () {
+//       it("Should return old data product before update", function (done) {
+//         chai
+//           .request(app)
+//           .patch(`/products/${createdProduct._id}/stock`)
+//           .set("token", userToken)
+//           .send({
+//             stock: 10
+//           })
+//           .end(function (err, res) {
+//             expect(err).to.be.null;
+//             expect(res).to.have.status(200);
+//             expect(res.body)
+//               .to.be.an("object")
+//               .to.have.all.keys(
+//                 "_id",
+//                 "name",
+//                 "price",
+//                 "stock",
+//                 "seller",
+//                 "createdAt",
+//                 "updatedAt"
+//               );
+//             done();
+//           });
+//       });
+//       it("Should return old data product before update", function (done) {
+//         chai
+//           .request(app)
+//           .patch(`/products/${createdProduct._id}/price`)
+//           .set("token", userToken)
+//           .send({
+//             price: 20000000,
+//           })
+//           .end(function (err, res) {
+//             expect(err).to.be.null;
+//             expect(res).to.have.status(200);
+//             expect(res.body)
+//               .to.be.an("object")
+//               .to.have.all.keys(
+//                 "_id",
+//                 "name",
+//                 "price",
+//                 "stock",
+//                 "seller",
+//                 "createdAt",
+//                 "updatedAt"
+//               );
+//             done();
+//           });
+//       });
+//     });
+//   });
+//   describe("DELETE /products/:id", function () {
+//     let createdProduct = {};
+//     before(function (done) {
+//       const productDummy = { ...newProduct, seller: userId };
+//       product
+//         .create(productDummy)
+//         .then(result => {
+//           createdProduct = result;
+//           done();
+//         })
+//         .catch(console.log);
+//     });
+//     after(function (done) {
+//       product
+//         .findByIdAndDelete(createdProduct._id)
+//         .then(() => done())
+//         .catch(console.log);
+//     });
+//     describe("Success Testing", function () {
+//       it("should deleted product id", function (done) {
+//         chai
+//           .request(app)
+//           .delete(`/products/${createdProduct._id}`)
+//           .set("token", userToken)
+//           .end(function (err, res) {
+//             expect(err).to.be.null;
+//             expect(res).to.have.status(200);
+//             expect(res.body)
+//               .to.be.an("object")
+//               .to.have.all.keys(
+//                 "_id",
+//                 "name",
+//                 "price",
+//                 "stock",
+//                 "seller",
+//                 "createdAt",
+//                 "updatedAt"
+//               );
+//             done();
+//           });
+//       });
+//     });
+//   })
 });

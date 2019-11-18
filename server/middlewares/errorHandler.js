@@ -5,9 +5,17 @@ module.exports = {
     // console.log(err)
 
     if (process.env.NODE_ENV) {
-      deleteFileGcs(req.body.image)
-        .then(console.log)
-        .catch(console.log)
+      if (req.body.images) {
+        let images = req.body.images
+        let arrPromise = []
+        images.forEach(url => {
+          arrPromise.push(deleteFileGcs(url))
+        })
+        Promise
+          .all(arrPromise)
+          .then(console.log)
+          .catch(console.log)
+      }
     }
     let status = err.status || 500
     let message = [err.message] || ['Internal Server Error']

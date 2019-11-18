@@ -24,16 +24,16 @@ module.exports = {
       next(error)
     }
   },
-  productAuthorization: function (req, res, next) {
-    product
-      .findById(req.params.id)
+  adminAuthorization: function (req, res, next) {
+    user
+      .findById(req.loggedUser._id)
       .then(result => {
-        if (result.seller = req.loggedUser._id) {
+        if (result.isAdmin) {
           next()
         } else {
           next({
-            statusCode: 403,
-            msg: 'not authorized'
+            status: 403,
+            message: 'not authorized'
           })
         }
       })
@@ -47,8 +47,8 @@ module.exports = {
           next()
         } else {
           next({
-            statusCode: 403,
-            msg: 'not authorized'
+            status: 403,
+            message: 'not authorized'
           })
         }
       })

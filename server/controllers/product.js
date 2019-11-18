@@ -2,14 +2,13 @@ const { product } = require("../models")
 
 class ProductController {
   static add(req, res, next) {
-    const { name, price, stock, image } = req.body
+    const { name, price, stock, images } = req.body
     product
       .create({
         name,
         price,
         stock,
-        image,
-        seller: req.loggedUser._id
+        images
       })
       .then(result => {
         res.status(201).json(result)
@@ -28,7 +27,14 @@ class ProductController {
     product
       .findById(req.params.id)
       .then(result => {
-        res.status(200).json(result)
+        if (result) {
+          res.status(200).json(result)
+        } else {
+          next({
+            status: 404,
+            message: 'Not Found'
+          })
+        }
       })
       .catch(next)
   }

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 
+// database mongodb atlas
 const MONGODB_URI = `mongodb+srv://mongodbatlas:mongodbatlas@myfirstcluster-6alcw.gcp.mongodb.net/e-commerce-${process.env.NODE_ENV}?retryWrites=true&w=majority`
 
 mongoose

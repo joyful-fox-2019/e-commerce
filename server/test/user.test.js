@@ -8,10 +8,16 @@ chai.use(chaiHttp)
 
 describe('User Testing', function () {
   this.timeout(20000)
-  let newUser = {
-    name: 'Ahmad Fadilah',
-    email: 'ahmadfadilah@mail.com',
-    password: 'ahmadfadilah123'
+  let regAdmin = {
+    name: 'Admin',
+    isAdmin: true,
+    email: 'admin@mail.com',
+    password: 'admin123'
+  }
+  let regCustomer = {
+    name: 'Customer',
+    email: 'customer@mail.com',
+    password: 'customer123'
   }
 
   // after all testing done, delete users database
@@ -22,45 +28,74 @@ describe('User Testing', function () {
       .catch(console.log)
   })
 
-  // testing POST /user/register; 1 success & 6 error
+  // testing POST /user/register; 2 success & 6 error
   describe('POST /users/register', function () {
     describe('Success Testing', function () {
-      it('should return created user(ObjectId, name, email, hashPassword)', function (done) {
+      it('should return created user admin (ObjectId, name, isAdmin, email, hashPassword)', function (done) {
         chai
           .request(app)
           .post('/users/register')
-          .send(newUser)
+          .send(regAdmin)
           .end(function (err, res) {
             expect(err).to.be.null
             expect(res).to.have.status(201)
             expect(res.body)
               .to.be.an('object')
-              .to.have.any.keys('_id', 'name', 'email', 'password')
+              .to.have.all.keys('_id', 'name', 'isAdmin', 'email', 'password', 'createdAt', 'updatedAt')
             expect(res.body.name)
               .to.be.a('string')
-              .to.equal(newUser.name)
+              .to.equal(regAdmin.name)
+            expect(res.body.isAdmin)
+              .to.be.a('boolean')
+              .to.equal(true)
             expect(res.body.email)
               .to.be.a('string')
-              .to.equal(newUser.email)
+              .to.equal(regAdmin.email)
             expect(res.body.password)
               .to.be.a('string')
-              .to.not.equal(newUser.password)
+              .to.not.equal(regAdmin.password)
+            done()
+          })
+      })
+      it('should return created user customer (ObjectId, name, isAdmin, email, hashPassword)', function (done) {
+        chai
+          .request(app)
+          .post('/users/register')
+          .send(regCustomer)
+          .end(function (err, res) {
+            expect(err).to.be.null
+            expect(res).to.have.status(201)
+            expect(res.body)
+              .to.be.an('object')
+              .to.have.all.keys('_id', 'name', 'isAdmin', 'email', 'password', 'createdAt', 'updatedAt')
+            expect(res.body.name)
+              .to.be.a('string')
+              .to.equal(regCustomer.name)
+            expect(res.body.isAdmin)
+              .to.be.a('boolean')
+              .to.equal(false)
+            expect(res.body.email)
+              .to.be.a('string')
+              .to.equal(regCustomer.email)
+            expect(res.body.password)
+              .to.be.a('string')
+              .to.not.equal(regCustomer.password)
             done()
           })
       })
     })
     describe('Error Testing', function () {
-      it('should return "Data already exist" with status code 400 when submit newUser again', function (done) {
+      it('should return "Data already exist" with status code 400 when submit regCustomer again', function (done) {
         chai
           .request(app)
           .post('/users/register')
-          .send(newUser)
+          .send(regCustomer)
           .end(function (err, res) {
             expect(err).to.be.null
             expect(res).to.have.status(400)
             expect(res.body)
               .to.be.an('object')
-              .to.have.any.keys('message')
+              .to.have.all.keys('message')
             expect(res.body.message)
               .to.be.an('array')
               .that.includes('Data already exist')
@@ -68,7 +103,7 @@ describe('User Testing', function () {
           })
       })
       it('should return "Name is required" with status code 400 when submit form without name', function (done) {
-        const withoutName = { ...newUser }
+        const withoutName = { ...regCustomer }
         delete withoutName.name
         chai
           .request(app)
@@ -79,7 +114,7 @@ describe('User Testing', function () {
             expect(res).to.have.status(400)
             expect(res.body)
               .to.be.an('object')
-              .to.have.any.keys('message')
+              .to.have.all.keys('message')
             expect(res.body.message)
               .to.be.an('array')
               .that.includes('Name is required')
@@ -87,7 +122,7 @@ describe('User Testing', function () {
           })
       })
       it('should return "Email is required" with status code 400 when submit form without email', function (done) {
-        const withoutEmail = { ...newUser }
+        const withoutEmail = { ...regCustomer }
         delete withoutEmail.email
         chai
           .request(app)
@@ -98,7 +133,7 @@ describe('User Testing', function () {
             expect(res).to.have.status(400)
             expect(res.body)
               .to.be.an('object')
-              .to.have.any.keys('message')
+              .to.have.all.keys('message')
             expect(res.body.message)
               .to.be.an('array')
               .that.includes('Email is required')
@@ -106,7 +141,7 @@ describe('User Testing', function () {
           })
       })
       it('should return "Password is required" with status code 400 when submit form without password', function (done) {
-        const withoutPassword = { ...newUser }
+        const withoutPassword = { ...regCustomer }
         delete withoutPassword.password
         chai
           .request(app)
@@ -117,7 +152,7 @@ describe('User Testing', function () {
             expect(res).to.have.status(400)
             expect(res.body)
               .to.be.an('object')
-              .to.have.any.keys('message')
+              .to.have.all.keys('message')
             expect(res.body.message)
               .to.be.an('array')
               .that.includes('Password is required')
@@ -125,7 +160,7 @@ describe('User Testing', function () {
           })
       })
       it('should return "Invalid email format" with status code 400 when submit form but invalid email', function (done) {
-        const invalidEmail = { ...newUser, email: 'invalidemail.hacktiv' }
+        const invalidEmail = { ...regCustomer, email: 'invalidemail.hacktiv' }
         chai
           .request(app)
           .post('/users/register')
@@ -135,7 +170,7 @@ describe('User Testing', function () {
             expect(res).to.have.status(400)
             expect(res.body)
               .to.be.an('object')
-              .to.have.any.keys('message')
+              .to.have.all.keys('message')
             expect(res.body.message)
               .to.be.an('array')
               .that.includes('Invalid email format')
@@ -143,7 +178,7 @@ describe('User Testing', function () {
           })
       })
       it('should return "password minimum contain 8 characthers" with status code 400 when submit form but password is less than 8 characters', function (done) {
-        const invalidPassword = { ...newUser, password: '123456' }
+        const invalidPassword = { ...regCustomer, password: '123456' }
         chai
           .request(app)
           .post('/users/register')
@@ -153,7 +188,7 @@ describe('User Testing', function () {
             expect(res).to.have.status(400)
             expect(res.body)
               .to.be.an('object')
-              .to.have.any.keys('message')
+              .to.have.all.keys('message')
             expect(res.body.message)
               .to.be.an('array')
               .that.includes('password minimum contain 8 characthers')
@@ -163,16 +198,19 @@ describe('User Testing', function () {
     })
   })
 
-  // testing POST /user/login; 1 success & 2 error
+  // testing POST /user/login; 2 success & 2 error
   describe('POST /users/login', function () {
-    let userLogin = { ...newUser }
-    delete userLogin.name
+    let customerLogin = { ...regCustomer }
+    let adminLogin = { ...regAdmin }
+    delete customerLogin.name
+    delete adminLogin.name
+    delete adminLogin.isAdmin
     describe('Success Testing', function () {
-      it('should return token, name, email, when submit login user', function (done) {
+      it('should return token, name, email, when submit login admin', function (done) {
         chai
           .request(app)
           .post('/users/login')
-          .send(userLogin)
+          .send(adminLogin)
           .end(function (err, res) {
             expect(err).to.be.null
             expect(res).to.have.status(200)
@@ -182,17 +220,38 @@ describe('User Testing', function () {
             expect(res.body.token).to.be.a('string')
             expect(res.body.name)
               .to.be.a('string')
-              .to.equal(newUser.name)
+              .to.equal(regAdmin.name)
             expect(res.body.email)
               .to.be.a('string')
-              .to.equal(newUser.email)
+              .to.equal(regAdmin.email)
+            done()
+          })
+      })
+      it('should return token, name, email, when submit login customer', function (done) {
+        chai
+          .request(app)
+          .post('/users/login')
+          .send(customerLogin)
+          .end(function (err, res) {
+            expect(err).to.be.null
+            expect(res).to.have.status(200)
+            expect(res.body)
+              .to.be.an('object')
+              .to.have.any.keys('token', 'name', 'email')
+            expect(res.body.token).to.be.a('string')
+            expect(res.body.name)
+              .to.be.a('string')
+              .to.equal(regCustomer.name)
+            expect(res.body.email)
+              .to.be.a('string')
+              .to.equal(regCustomer.email)
             done()
           })
       })
     })
     describe('Error Testing', function () {
       it('should return "Invalid email/password" with status code 401 when submit login but email is invalid', function (done) {
-        const wrongEmail = { ...userLogin, email: 'salah@mail.com' }
+        const wrongEmail = { ...customerLogin, email: 'salah@mail.com' }
         chai
           .request(app)
           .post('/users/login')
@@ -210,7 +269,7 @@ describe('User Testing', function () {
           })
       })
       it('should return "Invalid email/password" with status code 401 when submit login but password is invalid', function (done) {
-        const wrongPassword = { ...userLogin, password: 'salahpassword' }
+        const wrongPassword = { ...customerLogin, password: 'salahpassword' }
         chai
           .request(app)
           .post('/users/login')
