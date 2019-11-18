@@ -72,7 +72,7 @@ export default new Vuex.Store({
           data: payload
         })
           .then(({ data }) => {
-            commit('login', data)            
+            commit('login', data)
             resolve(data)
             Toast.fire({
               icon: 'success',
@@ -112,7 +112,6 @@ export default new Vuex.Store({
     },
     create ({ state, commit, dispatch }, payload) {
       return new Promise((resolve, reject) => {
-
         let fd = new FormData()
         fd.set('name', payload.name)
         fd.set('description', payload.description)
@@ -137,7 +136,7 @@ export default new Vuex.Store({
             dispatch('fetchProduct', {
               title: '',
               tag: ''
-            })      
+            })
             resolve(data)
             Toast.fire({
               icon: 'success',
@@ -188,21 +187,20 @@ export default new Vuex.Store({
             token: localStorage.getItem('token')
           }
         })
-        .then(({ data }) => {
-          resolve(data)
-        })
-        .catch(err => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.response.data.errors.join(', ')
+          .then(({ data }) => {
+            resolve(data)
           })
-        })
+          .catch(err => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: err.response.data.errors.join(', ')
+            })
+          })
       })
     },
     update ({ state, commit, dispatch }, payload) {
       return new Promise((resolve, reject) => {
-
         let fd = new FormData()
         fd.set('name', payload.name)
         fd.set('description', payload.description)
@@ -230,7 +228,7 @@ export default new Vuex.Store({
             dispatch('fetchProduct', {
               title: '',
               tag: ''
-            })      
+            })
             resolve(data)
             Toast.fire({
               icon: 'success',
@@ -257,20 +255,20 @@ export default new Vuex.Store({
           token: localStorage.getItem('token')
         }
       })
-      .then(({ data }) => {
-        dispatch('fetchCart')
-        Toast.fire({
-          icon: 'success',
-          title: 'Added to cart success'
+        .then(({ data }) => {
+          dispatch('fetchCart')
+          Toast.fire({
+            icon: 'success',
+            title: 'Added to cart success'
+          })
         })
-      })
-      .catch(err => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: err.response.data.errors.join(', ')
+        .catch(err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.response.data.errors.join(', ')
+          })
         })
-      })
     },
     fetchCart ({ state, commit, dispatch }) {
       return new Promise((resolve, reject) => {
@@ -281,16 +279,16 @@ export default new Vuex.Store({
             token: localStorage.getItem('token')
           }
         })
-        .then(({ data }) => {
-          resolve(data)
-        })
-        .catch(err => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.response.data.errors.join(', ')
+          .then(({ data }) => {
+            resolve(data)
           })
-        })
+          .catch(err => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: err.response.data.errors.join(', ')
+            })
+          })
       })
     },
     deleteCart ({ state, commit, dispatch }, payload) {
@@ -343,10 +341,9 @@ export default new Vuex.Store({
     },
     fetchHistory ({ state, commit, dispatch }) {
       let urlHistory
-      if(state.role === 'admin'){
+      if (state.role === 'admin') {
         urlHistory = '/transaction/admin'
-      }
-      else{
+      } else {
         urlHistory = '/transaction'
       }
       axios({
@@ -356,16 +353,16 @@ export default new Vuex.Store({
           token: localStorage.getItem('token')
         }
       })
-      .then(({ data }) => {
-        commit('fetchHistory', data)
-      })
-      .catch(err => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: err.response.data.errors.join(', ')
+        .then(({ data }) => {
+          commit('fetchHistory', data)
         })
-      })
+        .catch(err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.response.data.errors.join(', ')
+          })
+        })
     },
     updateStatus ({ state, commit, dispatch }, payload) {
       axios({
@@ -378,20 +375,20 @@ export default new Vuex.Store({
           token: localStorage.getItem('token')
         }
       })
-      .then(({ data }) => {
-        dispatch('fetchHistory')
-        Toast.fire({
-          icon: 'success',
-          title: 'Status updated'
+        .then(({ data }) => {
+          dispatch('fetchHistory')
+          Toast.fire({
+            icon: 'success',
+            title: 'Status updated'
+          })
         })
-      })
-      .catch(err => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: err.response.data.errors.join(', ')
+        .catch(err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.response.data.errors.join(', ')
+          })
         })
-      })
     }
   },
   modules: {

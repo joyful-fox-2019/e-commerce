@@ -23,7 +23,7 @@ export default {
   name: 'history',
   data () {
     return {
-      
+
     }
   },
   computed: {

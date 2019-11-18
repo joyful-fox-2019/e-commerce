@@ -57,8 +57,6 @@
 </template>
 
 <script>
-import JQuery from 'jquery'
-let $ = JQuery
 
 export default {
   name: 'login',

@@ -69,24 +69,24 @@ export default {
     }
   },
   methods: {
-    formatNames(files) {
+    formatNames (files) {
       if (files.length === 1) {
         return files[0].name
       } else {
         return `${files.length} files selected`
       }
     },
-    add_tag: function() {
+    add_tag: function () {
       if (this.input_value !== '' && !this.tags.includes(this.input_value)) {
-        this.tags.push(this.input_value.slice(0, this.input_value.length-1));
-        this.input_value = '';    
+        this.tags.push(this.input_value.slice(0, this.input_value.length - 1))
+        this.input_value = ''
       }
     },
-    delete_tag: function(i) {
-      this.tags.splice(i, 1);
+    delete_tag: function (i) {
+      this.tags.splice(i, 1)
     },
-    delete_selected: function(i) {
-      this.delete_tag(i);
+    delete_selected: function (i) {
+      this.delete_tag(i)
     },
     create () {
       this.$store.dispatch('create', {
@@ -104,7 +104,7 @@ export default {
   },
   components: {
 
-}
+  }
 }
 </script>
 

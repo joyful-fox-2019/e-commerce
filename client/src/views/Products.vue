@@ -39,8 +39,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import JQuery from 'jquery'
-let $ = JQuery
 
 export default {
   name: 'products',

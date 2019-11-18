@@ -27,7 +27,7 @@ export default {
     },
     buy () {
       this.$store.dispatch('buy', {
-        productList : this.cart
+        productList: this.cart
       })
     }
   },
