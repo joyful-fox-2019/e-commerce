@@ -1,5 +1,5 @@
 <template>
-  <div class="box-product container">
+  <div class="container" style="min-height:100vh;margin-top: 50px; padding-bottom:100px;">
     <p class="title">All Products</p>
     <div class="container board box">
       <div v-for="(product, i) in products" :key="i" class="row">
@@ -41,16 +41,11 @@ export default {
 }
 </script>
 <style scoped>
-.box-product {
-  margin: 30px auto;
-  min-height: 100vh;
-  padding: 2vw 5vw;
-  padding-bottom: 150px;
-}
 .board {
+  margin: auto;
   display: flex;
   flex-wrap: wrap;
-  padding: 2vw 5vw;
+  padding: 2vw 1.7vw;
   padding-bottom: 70px;
   /* justify-content: space-around; */
 }

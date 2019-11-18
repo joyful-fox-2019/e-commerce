@@ -112,170 +112,170 @@
   </div>
 </template>
 <script>
-import moment from "moment";
+import moment from 'moment'
 
 export default {
-  name: "DetailTransaction",
-  props: ["transaction"],
-  data() {
+  name: 'DetailTransaction',
+  props: ['transaction'],
+  data () {
     return {
       isFullPage: true
-    };
+    }
   },
   methods: {
-    moment(date) {
-      return moment(date).format("llll");
+    moment (date) {
+      return moment(date).format('llll')
     },
-    payment(id) {
+    payment (id) {
       const loadingComponent = this.$buefy.loading.open({
         container: this.isFullPage ? null : this.$refs.element.$el
-      });
+      })
       let payload = {
         id: id
-      };
+      }
       this.$store
-        .dispatch("payment", payload)
+        .dispatch('payment', payload)
         .then(_ => {
-          setTimeout(() => loadingComponent.close(), 1 * 1000);
+          setTimeout(() => loadingComponent.close(), 1 * 1000)
           setTimeout(() => {
             this.$buefy.toast.open({
               message: `Success, confim your payment!`,
-              type: "is-success"
-            });
-          }, 1200);
+              type: 'is-success'
+            })
+          }, 1200)
           if (this.isAdmin) {
-            this.$store.dispatch("getTransactionAdm");
+            this.$store.dispatch('getTransactionAdm')
           } else {
-            this.$store.dispatch("getTransaction");
+            this.$store.dispatch('getTransaction')
           }
         })
         .catch(err => {
-          setTimeout(() => loadingComponent.close(), 1 * 1000);
+          setTimeout(() => loadingComponent.close(), 1 * 1000)
           this.$buefy.toast.open({
             message: `${err.response.data}`,
-            type: "is-danger"
-          });
-        });
+            type: 'is-danger'
+          })
+        })
     },
-    shipping(id) {
+    shipping (id) {
       const loadingComponent = this.$buefy.loading.open({
         container: this.isFullPage ? null : this.$refs.element.$el
-      });
+      })
       let payload = {
         id: id
-      };
+      }
       this.$store
-        .dispatch("shipping", payload)
+        .dispatch('shipping', payload)
         .then(_ => {
-          setTimeout(() => loadingComponent.close(), 1 * 1000);
+          setTimeout(() => loadingComponent.close(), 1 * 1000)
           setTimeout(() => {
             this.$buefy.toast.open({
               message: `Success, change status to Shipped!`,
-              type: "is-success"
-            });
-          }, 1200);
+              type: 'is-success'
+            })
+          }, 1200)
           if (this.isAdmin) {
-            this.$store.dispatch("getTransactionAdm");
+            this.$store.dispatch('getTransactionAdm')
           } else {
-            this.$store.dispatch("getTransaction");
+            this.$store.dispatch('getTransaction')
           }
         })
         .catch(err => {
-          setTimeout(() => loadingComponent.close(), 1 * 1000);
+          setTimeout(() => loadingComponent.close(), 1 * 1000)
           this.$buefy.toast.open({
             message: `${err.response.data}`,
-            type: "is-danger"
-          });
-        });
+            type: 'is-danger'
+          })
+        })
     },
-    delivered(id) {
+    delivered (id) {
       const loadingComponent = this.$buefy.loading.open({
         container: this.isFullPage ? null : this.$refs.element.$el
-      });
+      })
       let payload = {
         id: id
-      };
+      }
       this.$store
-        .dispatch("delivered", payload)
+        .dispatch('delivered', payload)
         .then(_ => {
-          setTimeout(() => loadingComponent.close(), 1 * 1000);
+          setTimeout(() => loadingComponent.close(), 1 * 1000)
           setTimeout(() => {
             this.$buefy.toast.open({
               message: `Success, Your transaction is done!`,
-              type: "is-success"
-            });
-          }, 1200);
+              type: 'is-success'
+            })
+          }, 1200)
           if (this.isAdmin) {
-            this.$store.dispatch("getTransactionAdm");
+            this.$store.dispatch('getTransactionAdm')
           } else {
-            this.$store.dispatch("getTransaction");
+            this.$store.dispatch('getTransaction')
           }
         })
         .catch(err => {
-          setTimeout(() => loadingComponent.close(), 1 * 1000);
+          setTimeout(() => loadingComponent.close(), 1 * 1000)
           this.$buefy.toast.open({
             message: `${err.response.data}`,
-            type: "is-danger"
-          });
-        });
+            type: 'is-danger'
+          })
+        })
     },
-    deleteHistory(id) {
+    deleteHistory (id) {
       const loadingComponent = this.$buefy.loading.open({
         container: this.isFullPage ? null : this.$refs.element.$el
-      });
+      })
       let payload = {
         id: id
-      };
+      }
       this.$store
-        .dispatch("deleteHistory", payload)
+        .dispatch('deleteHistory', payload)
         .then(_ => {
-          setTimeout(() => loadingComponent.close(), 1 * 1000);
+          setTimeout(() => loadingComponent.close(), 1 * 1000)
           setTimeout(() => {
             this.$buefy.toast.open({
               message: `Success, Delete your transaction histoy!`,
-              type: "is-success"
-            });
-          }, 1200);
+              type: 'is-success'
+            })
+          }, 1200)
           if (this.isAdmin) {
-            this.$store.dispatch("getTransactionAdm");
+            this.$store.dispatch('getTransactionAdm')
           } else {
-            this.$store.dispatch("getTransaction");
+            this.$store.dispatch('getTransaction')
           }
         })
         .catch(err => {
-          setTimeout(() => loadingComponent.close(), 1 * 1000);
+          setTimeout(() => loadingComponent.close(), 1 * 1000)
           this.$buefy.toast.open({
             message: `${err.response.data}`,
-            type: "is-danger"
-          });
-        });
+            type: 'is-danger'
+          })
+        })
     }
   },
-  mounted() {
+  mounted () {
     if (this.isAdmin) {
-      this.$store.dispatch("getTransactionAdm");
+      this.$store.dispatch('getTransactionAdm')
     } else {
-      this.$store.dispatch("getTransaction");
+      this.$store.dispatch('getTransaction')
     }
   },
   computed: {
     isAdmin: {
-      get() {
-        return this.$store.state.isAdmin;
+      get () {
+        return this.$store.state.isAdmin
       }
     }
   },
   watch: {
-    isAdmin() {}
+    isAdmin () {}
   },
-  created() {
+  created () {
     if (this.$store.state.isAdmin) {
-      this.$store.dispatch("getTransactionAdm");
+      this.$store.dispatch('getTransactionAdm')
     } else {
-      this.$store.dispatch("getTransaction");
+      this.$store.dispatch('getTransaction')
     }
   }
-};
+}
 </script>
 <style scoped>
 .box-transaction {

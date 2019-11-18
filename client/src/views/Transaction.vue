@@ -19,33 +19,33 @@
 </template>
 
 <script>
-import Navbar from "../components/Navbar";
-import DetailTransaction from "../components/DetailTransaction";
+import Navbar from '../components/Navbar'
+import DetailTransaction from '../components/DetailTransaction'
 
 export default {
-  name: "Transaction",
+  name: 'Transaction',
   components: {
     Navbar,
     DetailTransaction
   },
   computed: {
     transactions: {
-      get(){
+      get () {
         return this.$store.state.transactions
       }
     }
   },
   watch: {
-    transactions(){}
+    transactions () {}
   },
-  created() {
-    if(this.$store.state.isAdmin){
-      this.$store.dispatch("getTransactionAdm");
+  created () {
+    if (this.$store.state.isAdmin) {
+      this.$store.dispatch('getTransactionAdm')
     } else {
-      this.$store.dispatch("getTransaction");
+      this.$store.dispatch('getTransaction')
     }
   }
-};
+}
 </script>
 <style scoped>
 .title {

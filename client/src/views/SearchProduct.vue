@@ -1,10 +1,10 @@
 <template>
 <div>
     <Navbar></Navbar>
-    <div class="box-product">
+    <div class="container" style="min-height:100vh;margin-top: 50px; padding-bottom:100px;">
         <p class="title">Results</p>
           <div v-if="products.length > 0">
-            <div class="container box">
+            <div class="container1 box">
               <div v-for="(product, i) in products" :key="i" class="row">
                   <CardProduct :product="product" class="card"></CardProduct>
               </div>
@@ -41,14 +41,7 @@ export default {
 }
 </script>
 <style scoped>
-.box-product {
-    margin-top: 50px;
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-bottom: 50px;
-    height: 90vh;
-}
-.container {
+.container1 {
     display: flex ;
     flex-wrap: wrap;
     justify-content: flex-start;

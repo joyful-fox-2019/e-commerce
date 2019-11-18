@@ -1,11 +1,11 @@
 <template>
   <div>
     <Navbar></Navbar>
-    <div class="box-product">
+    <div class="container" style="min-height:100vh;margin-top: 50px; padding-bottom:100px;">
       <p class="title">Cart List</p>
       <div v-if="carts.length > 0">
         <div class="columns">
-          <div class="container box column is-two-thirds">
+          <div class="container1 box column is-two-thirds">
             <CartList v-for="cart in carts" :key="cart._id" :cart="cart" />
           </div>
           <div style="margin-left: 55px;" class="column box total">
@@ -35,84 +35,78 @@
 </template>
 
 <script>
-import Navbar from "../components/Navbar.vue";
-import CartList from "../components/CartList.vue";
+import Navbar from '../components/Navbar.vue'
+import CartList from '../components/CartList.vue'
 
 export default {
-  name: "Carts",
+  name: 'Carts',
   components: {
     Navbar,
     CartList
   },
-  data() {
+  data () {
     return {
       isFullPage: true
-    };
+    }
   },
   methods: {
-    checkout() {
+    checkout () {
       const loadingComponent = this.$buefy.loading.open({
         container: this.isFullPage ? null : this.$refs.element.$el
-      });
+      })
       this.$store
-        .dispatch("checkout")
+        .dispatch('checkout')
         .then(_ => {
-          setTimeout(() => loadingComponent.close(), 1 * 1000);
+          setTimeout(() => loadingComponent.close(), 1 * 1000)
           setTimeout(() => {
             this.$buefy.toast.open({
               message: `Success, please check your transaction to confims your payment!`,
-              type: "is-success"
-            });
-          }, 1200);
+              type: 'is-success'
+            })
+          }, 1200)
           if (this.$store.state.isAdmin) {
-            this.$store.dispatch("getTransactionAdm");
+            this.$store.dispatch('getTransactionAdm')
           } else {
-            this.$store.dispatch("getTransaction");
+            this.$store.dispatch('getTransaction')
           }
-          this.$router.push("/");
+          this.$router.push('/')
         })
         .catch(err => {
-          setTimeout(() => loadingComponent.close(), 1 * 1000);
+          setTimeout(() => loadingComponent.close(), 1 * 1000)
           this.$buefy.toast.open({
             message: `${err.response.data}`,
-            type: "is-danger"
-          });
-        });
+            type: 'is-danger'
+          })
+        })
     }
   },
   computed: {
     carts: {
-      get() {
+      get () {
         if (this.$store.state.isAdmin === false) {
-          return this.$store.state.carts;
+          return this.$store.state.carts
         }
       }
     },
     totalPrice: {
-      get() {
-        return this.$store.state.totalPrice;
+      get () {
+        return this.$store.state.totalPrice
       }
     }
   },
   watch: {
-    carts() {},
-    totalPrice() {}
+    carts () {},
+    totalPrice () {}
   },
-  created() {
+  created () {
     if (this.$store.state.isAdmin === false) {
-      this.$store.dispatch("getCart");
+      this.$store.dispatch('getCart')
     }
   }
-};
+}
 </script>
 <style scoped>
-.box-product {
-  margin: 50px auto;
-  width: 70%;
-  height: 87vh;
-  overflow: hidden;
-}
-.container {
+.container1 {
   padding-left: 10%;
   height: 60vh;
   overflow: scroll;
