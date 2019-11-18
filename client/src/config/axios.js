@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const axiosServer = axios.create({
-    baseURL: `http://localhost:3000`,
+    baseURL: `http://34.87.100.62/`,
     headers: {
       "accesstoken": localStorage.getItem('token')
     }
