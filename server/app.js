@@ -1,41 +1,36 @@
-`use strict`
-if (process.env.NODE_ENV) {
+if(process.env.NODE_ENV === 'development') {
     require('dotenv').config()
 }
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const mongoose = require('mongoose');
+const port = process.env.PORT || 3000;
+const routes = require('./routes/index.js');
+const errorHandler = require('./helpers/errorhandler.js');
 
-const express = require('express')
-const port = process.env.port || 3000
-const app = express()
-const routes = require('./routes')
-const mongoose = require('mongoose')
-const morgan = require('morgan')
-const cors = require('cors')
-const errorHandler = require('./middlewares/errorHandler')
+mongoose.connect(process.env.MONGODB_URL, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	useCreateIndex: true,
+	useFindAndModify: false
+})
+	.then(() => {
+	    console.log('mongoose connected')
+	})
+	.catch(function (err) {
+	    console.log('mongoose fail to connect');
+	})
 
-mongoose.
-    connect('mongodb://localhost/e-commerce', {useNewUrlParser: true, useUnifiedTopology: true} )
-    .then( () => {
-        console.log(`server is connected`)
-    })
-    .catch(err => {
-        console.log(err)
-    })
+app.use(cors());
+app.use(express.urlencoded({ extended:false }));
+app.use(express.json());
 
-app.use(express.json())
-app.use(express.urlencoded({extended : false}))
-app.use(cors())
-app.use(morgan('dev'))
+app.use('/', routes);
+app.use(errorHandler);
 
-
-app.use('/', routes)
-app.use(errorHandler)
-
-app.listen(port, function() {
-    console.log(`running on port ${port}`)
+app.listen(port, () => {
+    console.log(`listening to port ${port}`)
 })
 
 module.exports = app
-
-
-
-

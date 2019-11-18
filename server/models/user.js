@@ -1,58 +1,53 @@
-`use strict`
-const {hashPassword} = require('../helpers/bcrypt')
-const {Schema, model} = require('mongoose')
+const mongoose = require('mongoose')
+const Schema  = mongoose.Schema;
+const bcrytpjs = require("../helpers/bcryptjs.js");
 
-const userSchema = Schema({
-    username : {
-        type : String,
-        required : [true, 'you must input username']
+let userSchema = new Schema({
+    name:{
+        type: String,
+        required:true
     },
-    email : {
-        type : String,
-        required : [true, 'you must enter your email'],
-        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Enter valid email'],
-        validate : {
-            validator : function(v) {
-                return User.findOne({
-                    email : v
-                }).then(user => {
-                    if (user) {
-                        return false
-                    } else {
-                        return true
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
-            },
-            msg : `email already registered`
-        }
+    email:{
+        type: String,
+        required:true,
+        validate: function (val) {
+            var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{1,4})?$/;
+            return emailRegex.test(val)
+    }
     },
-    password : {
-        type : String,
-        required : [true, 'you must enter your password'],
+    password: {
+        type: String,
+        required:true
     },
-    photo : {
-        type : String        
+    imageUrl: {
+        type: String,
+        default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfFExj43vNWFXXhr4_S6vYSGqFzjC77uObABaR7mk1biI9Y4eK"
     },
-    role : {
-        type : String,
-        default : 'costumer'
+    accountType: {
+        type: String,
+        default: "default"
     },
-    membership : {
-        type : String,
-        enum : ['silver', 'gold', 'platinum'],
-        default : 'silver'
-    } 
-}, {timestamps : true},{versionKey : false})
+    role: {
+        type: String,
+        default: "customer",
+        required: true
+    },
+    balance: {
+        type: Number,
+        min: 0
+    }
+},{timestamps: true})
 
-
-//bikin hooks
-userSchema.pre('save', function(next) {
-    this.password = hashPassword(this.password)
+userSchema.pre("save", function(next){
+    this.password = encryption.getHashedPassword(this.password)
     next()
 })
 
+userSchema.path('email').validate(async (value) => {
+    let user =  await mongoose.models.User.findOne({email:value});
+    return !user;
+}, 'Email already registered');
 
-const User = model('User', userSchema)
+const User = mongoose.model("User", userSchema);
+
 module.exports = User

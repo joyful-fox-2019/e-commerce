@@ -1,145 +1,116 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from '@/api/server.js'
-import Swal from 'sweetalert2'
-
+import instance from '../connection/axios'
+import axiosErrorHandler from '../connection/axiosErrorHandler'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userTransactions : [],
-    totalMoney : 0,
-    allProducts: [],
-    isLogin : false,
-    carts : [],
-    userProducts : [],
-    user : {
-      username : '',
-      email : '',
-      photo : '',
-      membership : '', 
-      _id : ''     
+    isLogin: false,
+    loginUser: null,
+    products: [],
+    cart: [],
+    orders: [],
+    snackbar: {
+      visible: false,
+      text: null,
+      timeout: 3000
     }
   },
   mutations: {
-    // semua hal yang dilakukan oleh mutations harus syn
-    setTransactios(state, payload) {
-      state.userTransactions = payload
+    SHOW_SNACKBAR (state, payload) {
+      state.snackbar.text = payload.text
+      state.snackbar.visible = true
     },
-    clearCarts(state) {
-      state.carts = []
-      state.totalMoney = []
+    CLOSE_SNACKBAR (state) {
+      state.snackbar.visible = false
+      // state.snackbar.multiline = false
+      // state.snackbar.timeout = 4000
+      // state.snackbar.text = null
     },
-    fillProducts (state, data) {
-      console.log( JSON.stringify(state.user) + 'fsdfsfsdfsmasuk mutations')
-      state.allProducts = data
-      state.userProducts = data.filter(item => {
-        return item.user == state.user._id
-      })
-    },
-    setLogin(state, payload) {
+    SET_LOGIN (state, payload) {
       state.isLogin = payload
     },
-    setUser(state, user) {
-      console.log(user._id, 'masuk set User')
-      state.user._id = user._id
-      state.user.username = user.username,
-      state.user.email = user.email,
-      state.user.photo = user.photo,
-      state.user.membership = user.membership      
-    },    
-    addProduct(state, payload) {
-      console.log('masuk addProduct', state.totalMoney)
-      if (state.carts.length == 0) {
-          state.carts.push({
-            totalItem : 1,
-            product : payload,
-            totalPrice : payload.price
-          })
-          state.totalMoney += payload.price
-      } else {
-        for (let i=0; i<state.carts.length; i++) {
-            if (state.carts[i].product._id == payload._id) {
-                if (state.carts[i].totalItem >= payload.qty) {
-                  Swal.fire({
-                    title: 'Sorry ..',
-                    text: 'Your order exceed the total stocks',
-                    icon: 'error'
-                  })
-                } else {
-                  state.carts[i].totalItem += 1
-                  state.carts[i].totalPrice += payload.price
-                  state.totalMoney += payload.price
-                }
-                return;
-            }            
-        }
-        state.carts.push({
-          totalItem : 1,
-          product : payload,
-          totalPrice : payload.price
-        })
-        state.totalMoney += payload.price
-      }
-      
+    SET_USER (state, payload) {
+      state.loginUser = payload
+    },
+    SET_PRODUCT (state, payload) {
+      state.products = payload
+    },
+    ADD_PRODUCT (state, payload) {
+      state.products.push(payload)
+    },
+    SET_CARD (state, payload) {
+      state.cart = payload
+    },
+    SET_CARD_COUNT (state, payload) {
+      state.cart[payload.index].count = payload.count
+    },
+    ADD_CART (state, payload) {
+      state.cart.push(payload)
+    },
+    SET_ORDERS (state, payload) {
+      state.orders = payload
+    },
+    ADD_ORDER (state, payload) {
+      state.orders.push(payload)
     }
   },
   actions: {
-    // semua hal yang dilakukan oleh actions harus asyn
-    // actions harus selalu memanggil mutations sebelum merubah state
-    getAllProducts (context) {
-      axios
-        .get('/products')
+    getAllProducts ({ commit }) {
+      instance({
+        method: 'GET',
+        url: '/products'
+      })
         .then(({ data }) => {
-          context.commit('fillProducts', data)
-          console.log(data, 'masuk actions')          
+          commit('SET_PRODUCT', data)
         })
-        .catch(err => {
-          Swal.fire({
-            title: 'Opps ..',
-            text: `${err}`,
-            icon: 'warning'
-          })
+        .catch(error => {
+          axiosErrorHandler(error)
         })
     },
-    findUser(context) {
-      console.log('masuk findUser')
-      axios.
-        get(`/user`, {
-          headers : {
-            token : localStorage.getItem('token')
+    getCart ({ commit }) {
+      let itemCount = {}
+      for (let data of this.state.cart) {
+        itemCount[data.product._id] = data.count
+      }
+      instance({
+        method: 'GET',
+        url: '/carts',
+        headers: {
+          'Authorization': localStorage.getItem('token')
+        }
+      })
+        .then(({ data }) => {
+          let result = []
+          for (let cartItem of data) {
+            if (cartItem.product !== null) {
+              cartItem.count = itemCount[cartItem.product._id] || 0
+              result.push(cartItem)
+            }
           }
+          commit('SET_CARD', result)
         })
-        .then(({data}) => {
+        .catch(error => {
+          axiosErrorHandler(error)
+        })
+    },
+    getOrders ({ commit }) {
+      instance({
+        method: 'GET',
+        url: '/transactions',
+        headers: {
+          'Authorization': localStorage.getItem('token')
+        }
+      })
+        .then(({ data }) => {
           console.log(data)
-          context.commit('setUser', data.user)
+          commit('SET_ORDERS', data)
         })
-        .catch(err => {
-          console.log(err)
+        .catch(error => {
+          axiosErrorHandler(error)
         })
-    },  
-    findTransaction(context) {
-      axios.
-        get('/transaction',{
-          headers : {
-            token : localStorage.getItem('token') 
-          }
-        })
-        .then(({data}) => {
-          console.log(data)
-          context.commit('setTransactios', data)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }     
-  },
-  modules: {
-  },
-  // plugins: [
-  //   createPersistedState({
-  //     path : ['user']
-  //   }) 
-  // ]
+    }
+  }
 })

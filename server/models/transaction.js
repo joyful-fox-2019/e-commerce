@@ -1,25 +1,30 @@
-`use strict`
-const { Schema, model} = require('mongoose')
+const mongoose = require('mongoose')
+const Schema  = mongoose.Schema;
 
-const transactionSchema = Schema({
-    user : {
-        type : Schema.Types.ObjectId,
-        ref : 'User'
+let transactionSchema = new Schema({
+     username:{
+        type: String,
+        required: true
     },
-    carts : {
-        type : Array,
-        required : [true, 'you must input the products']
+    carts:[{
+        type: Schema.Types.ObjectId, 
+        ref: 'Cart'
+    }],
+    status:{
+        type: String,
+        enum: ["pendingpayment", "pendingdelivery", "ondelivery", "delivered"],
+        required: true
     },
-    status : {
-        type : String,
-        enum : ['unpaid', 'process', 'complete','expired'],
-        default : "unpaid"
+    total: {
+        type: Number,
+        required: true
     },
-    dueDate : {
-        type : Date,
-    } 
-}, {timestamps : true},{versionKey : false})
+    userId: {
+        type: String,
+        required: true
+    }
+},{versionKey: false})
 
-const Transaction = new model('Transaction', transactionSchema)
+const Transaction = mongoose.model("Transaction", transactionSchema);
 
 module.exports = Transaction

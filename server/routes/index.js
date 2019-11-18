@@ -1,13 +1,8 @@
-`use strict`
-const router = require('express').Router()
-const userRouter = require('./userRouter')
-const productRouter = require('./productRouter')
-const cartRouter = require('./cartRouter')
-const transactionRouter = require('./transactionRouter')
+const router = require("express").Router();
 
-router.use('/', userRouter)
-router.use('/products', productRouter)
-router.use('/cart', cartRouter)
-router.use('/transaction', transactionRouter)
+router.use("/users", require("./users"));
+router.use("/products", require("./products"));
+router.use("/carts",require("./carts"));
+router.use("/transactions",require("./transactions"));
 
 module.exports = router

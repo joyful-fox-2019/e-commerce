@@ -1,35 +1,27 @@
-`use strict`
-const {Schema, model} = require('mongoose')
+const mongoose = require('mongoose')
+const Schema  = mongoose.Schema;
 
-const productSchema = Schema({
-    price : {
-        type : Number,
-        required : [true, 'you must input price']
+let productSchema = new Schema({
+    name: {
+        type: String,
+        required:true
     },
-    qty : {
-        type : Number,
-        required : [true, 'you must input quantity'],
-        min : 0,
-        max : 99
+    image: {
+        type: String,
+        required:true
     },
-    name : {
-        type : String,
-        required : [true, 'you must input name']
+    price: {
+        type:Number,
+        min:0,
+        required:true
     },
-    image : {
-        type : String,
-        require : [true, 'you must input image'],       
-    },
-    user : {
-        type : Schema.Types.ObjectId,
-        ref : 'User'
-    },
-    category : {
-        type : String,
-        required : [true, 'you must input category']
+    stock: {
+        type:Number,
+        min:0,
+        required:true
     }
-}, {timestamps : true},{versionKey : false})
+},{versionKey: false})
 
-const Product = model('Product', productSchema)
+const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product

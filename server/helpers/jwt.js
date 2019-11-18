@@ -1,11 +1,14 @@
-`use strict`
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
+
 module.exports = {
-    generateToken : (user) => {
-        let encoded = jwt.sign({id: user.id, email: user.email}, process.env.JWT_SECRET)
-        return encoded
+    createToken(payload){
+       return jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "3h"})
     },
-    verifyToken : (token) => {
-        return jwt.verify(token, process.env.JWT_SECRET)
+    decodeToken(token){
+        if(!token){
+            throw new Error("Token is undefined")
+        }
+        let decoded =  jwt.verify(token, process.env.JWT_SECRET);
+        return decoded;
     }
 }

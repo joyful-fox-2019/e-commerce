@@ -1,60 +1,65 @@
-'use strict'
-const { verifyToken } = require('../helpers/jwt') // ini dugunaka buat men-decoded token
-const User = require('../models/user')
-const Product = require('../models/product')
+const bcryptjs = require("../helpers/bcryptjs.js");
+const User = require("../models/user.js");
+const Cart = require("../models/cart.js");
 
 module.exports = {
-    authenticate : (req, res, next) => {
-        console.log('masuk authenticate')
-        console.log(req.body)
-        try {    
-            // masukkan data yang telah diencoded
-            const user = verifyToken(req.headers.token)            
-            User.findOne({
-                _id : user.id // cari apakah data dia ada di server
-            })
-            .then (user => {
-                if (user) {
-                    console.log(user, 'user find')
-                    req.user = user // kalo ada maka simpan user di req.user
+    authentication : function(req, res, next){
+        try {
+            let user = bcryptjs.decodeToken(req.headers.authorization)
+            User.findOne({_id:user._id})
+            .then(result=>{
+                if(result){
+                    req.body.user = result;
+                    req.params.user = result;                    
                     next()
-                } else {
-                    next({
-                        name : 'DataError' //kalau tidak ada maka harus login lagi
-                    })
-                }
-                
-            })     
-            
-        } catch(err) {  
-            next(err)    
-        }
-    },
-    authorize : (req, res, next) => {
-        console.log('masuk authorize')
-        Product
-            .findById(req.params.id)
-            .then(product => {
-                if (product) {   
-                    console.log(product )     
-                    console.log(req.user._id)            
-                    if (String(product.user) == req.user._id) {
-                        console.log(product)
-                        next()
-                    } else {
-                        next({
-                            status : 401,
-                            msg : 'Not Authorized'
-                        })
-                    }
-                } else {
-                    next({
-                        status : 404,
-                        msg : 'data not found'
-                    })
+                }else{
+                    throw new Error("User not found")
                 }
             })
-            .catch(next)
-    }        
+        } catch(err) {
+            next(err)
+        }
+       
+    },
+    authorization : function(req,res,next){  
+        let loginUser = req.body.user || req.params.user || null
+
+    },
+    adminOnly: function(req,res,next){
+        let loginUser = req.body.user || req.params.user || null
+
+        if(loginUser && loginUser.role === "admin"){
+            next()
+        }else{
+            next(new Error("Not Authorized"))
+        }
+
+    },
+    customerOnly: function(req,res,next){
+        let loginUser = req.body.user || req.params.user || null
+       
+        if(loginUser && loginUser.role === "customer"){
+            next()
+        }else{
+            next(new Error("Not Authorized"))
+        }
         
-} 
+    },
+    cartAuth: function(req, res, next){
+        let loginUser = req.body.user ? req.params.user:null
+
+        Cart.findOne({_id:req.params.cartId})
+            .then(( result ) => {
+                if(result){
+                    result.userId == loginUser._id ? next():next(new Error("Not Authorized"))
+                } else {
+                    throw new Error("Item id not found")
+                }
+       
+            })
+            .catch(( err ) => {
+                next(err)
+            })
+    }
+
+}

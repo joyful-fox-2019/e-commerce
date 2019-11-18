@@ -1,34 +1,29 @@
-`use strict`
-const {Schema, model} = require('mongoose')
+const mongoose = require('mongoose')
+const Schema  = mongoose.Schema;
 
-const cartSchema = Schema({
-    user : {
-        type : Schema.Types.ObjectId,
-        ref : 'User'
+let cartSchema = new Schema({
+    userId:{
+        type: String,
+        required:true
     },
-    product : {
-        type : Schema.Types.ObjectId,
-        ref : 'Product',
-        required : [true, 'you must input the product']
+    product: {
+        type: Schema.Types.ObjectId,
+        ref: 'Product',
+        required:true
     },
-    isCheckout : {
-        type : Boolean,
-        default : false
+    isCheckout:{
+        type: Boolean,
+        default: false,
+        required: true
     },
-    totalPrice : {
-        type : Number,
-        min : 0,
-        default : 0,
-        required : [true, 'you must enter the price']
-    },
-    totalItem : {
-        type : Number,
-        default : 1,
-        min : 1,
-        required : [true, 'you must enter the item total']
+    count: {
+        type: Number,
+        min: 0,
+        default:0,
+        required:true
     }
-}, {timestamps : true},{versionKey : false})
+},{versionKey: false})
 
-const Cart = model('Cart', cartSchema)
+const Cart = mongoose.model("Cart", cartSchema);
 
 module.exports = Cart

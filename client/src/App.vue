@@ -1,88 +1,93 @@
 <template>
-  <div id="app">
-    <div id="nav" class="sticky-top">
-        <div class="mb-4">
-            <!-- gunakan sticky-top untuk navbar -->
-              <nav class="navbar navbar-expand-md navbar-light bg-white d-flex justify-content-between p-0 border">
-                  <div class="nav navbar d-flex justify-content-start">
-                      <div class="">                          
-                          <router-link style="font-family: 'Lobster', cursive;" class="nav-link text-success h1" to="/">Buka Toko</router-link>
-                      </div>                 
-                  </div>
-                  <ul class="nav justify-content-end navbar-nav">
-                      <li class="nav-item pr-3">
-                          <router-link class="btn btn-outline-success" to="/cart"><i class="fa fa-shopping-cart pr-2"></i>my Cart</router-link>
-                      </li>
-                          <li class="nav-item pr-3 " v-if="!this.$store.state.isLogin">
-                              <router-link class="btn btn-outline-success" to="/login"><i class="fa fa-sign-in pr-2"></i> Sign in</router-link>
-                          </li>
-                          <li class="nav-item pr-3" v-if="!this.$store.state.isLogin">
-                              <router-link class="btn btn-outline-success" to="/register"><i class="fa fa-user-plus pr-2"></i>Register</router-link>
-                          </li>
-                      <div v-if="this.$store.state.isLogin">
-                          <li class="nav-item pr-3">
-                              <button @click.prevent="logout" class="btn btn-outline-danger" to="/"><i class="fa fa-sign-out pr-2"></i>Logout</button>
-                          </li>
-                      </div>
-                  </ul>
-              </nav>
-        </div>
-    </div>
-    <router-view/>
-  </div>
+<v-app id="inspire" red>
+    <v-toolbar app fixed clipped-left>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-title>Nyaa - Art Gallery</v-toolbar-title>
+    </v-toolbar>
+    <Menu
+      @show-login="showLoginForm"
+      @show-register="showRegisterForm"
+      @add-product="showAddProductForm"
+      :drawer="drawer"/>
+    <v-content>
+      <v-container fluid fill-height>
+        <v-layout>
+        <Snackbar />
+          <router-view></router-view>
+        </v-layout>
+      </v-container>
+    </v-content>
+    <Login v-model="showLogin"/>
+    <Register v-model="showRegister"/>
+    <AddProduct v-model="showAddProduct"/>
+    <v-footer app fixed>
+    </v-footer>
+  </v-app>
 </template>
 
-<style scoped>
-
-.nav {
-  padding-top: 0px !important;
-  padding-bottom : 0px !important;
-  margin: 0px;
-}
-
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-
-
-</style>
-
 <script>
+import Menu from './components/Menu.vue'
+import Login from './components/Login.vue'
+import Register from './components/Register.vue'
+import AddProduct from './components/AddProduct.vue'
+import Snackbar from './components/Snackbar.vue'
+import instance from './connection/axios'
+import axiosErrorHandler from './connection/axiosErrorHandler'
+
 export default {
-  methods : {
-    checkLogin(state) {
-      console.log('masuk checkLogin')
-      if (localStorage.getItem('token')) {
-          this.$store.dispatch('findUser')
-          this.$store.commit('setLogin', true)
-          this.$store.dispatch('findTransaction')
-      } else {
-          this.$store.commit('setLogin', false)
-      }
+  data () {
+    return {
+      // drawer: null,
+      showLogin: false,
+      showRegister: false,
+      showAddProduct: false
+    }
+  },
+  components: {
+    Menu,
+    Login,
+    Register,
+    AddProduct,
+    Snackbar
+  },
+  methods: {
+    showLoginForm () {
+      console.log('55')
+      this.showLogin = true
+      console.log(this.showLogin)
     },
-    logout(state) {
-      console.log('masuk logout')
-      localStorage.removeItem('token')
-      this.$router.push("/login")
-      this.checkLogin()
+    showRegisterForm () {
+      this.showRegister = true
+    },
+    showAddProductForm () {
+      this.showAddProduct = true
     }
   },
   created () {
-    console.log('masuk app')
-    this.checkLogin()
     this.$store.dispatch('getAllProducts')
+    if (localStorage.token) {
+      instance({
+        method: 'GET',
+        url: '/users/profile',
+        headers: {
+          'Authorization': localStorage.getItem('token')
+        }
+      })
+        .then(({ data }) => {
+          this.$store.commit('SET_LOGIN', true)
+          this.$store.commit('SET_LOGIN', {
+            token: localStorage.token,
+            ...data
+          })
+          if (data.role === 'customer') {
+            this.$store.dispatch('getCart')
+            this.$store.dispatch('getOrders')
+          }
+        })
+        .catch(error => {
+          axiosErrorHandler(error)
+        })
+    }
   }
 }
 </script>
