@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1>ACCOUNT</h1>
+    <!-- <h1>ACCOUNT</h1> -->
     <router-view/>
   </div>
 </template>

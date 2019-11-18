@@ -29,7 +29,7 @@ export default {
   justify-content: flex-start;
   align-items: flex-end;
   flex-direction: column;
-  margin-right: 490px;
+  margin-right: 370px;
   text-align: center;
 }
 

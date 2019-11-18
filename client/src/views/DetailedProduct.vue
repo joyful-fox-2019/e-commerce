@@ -1,7 +1,7 @@
 <template>
 <div>
-  <div v-if="productDetailed && productDetailed.name">{{productDetailed}}</div>
-  <div v-else>loading...</div>
+  <!-- <div v-if="productDetailed && productDetailed.name">{{productDetailed}}</div>
+  <div v-else>loading...</div> -->
   <!-- add to cart button tambahin ntr validasi ada/gak stock nya kl gak gbs di click -->
   <!-- kasi toast added to your cart, biar user bs browse belanjaan lain lg -->
 
@@ -26,7 +26,7 @@
   </div>
 
   <!-- increment -->
-  <div class="numberContainer">
+  <div v-if="!isAdmin" class="numberContainer">
     <b-field>
         <b-numberinput type="is-dark" size="is-small" v-model="number" controls-position="compact"
             controls-rounded>
