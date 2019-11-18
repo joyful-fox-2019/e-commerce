@@ -5,7 +5,7 @@ const {authentication, authorizationTransaction, authorizationAdmin} = require('
 router.use(authentication)
 
 router.get('/', TransactionController.read)
-// router.get('/admin', authorizationAdmin, TransactionController.readAdmin)
+router.get('/admin', authorizationAdmin, TransactionController.readAdmin)
 router.post('/', TransactionController.create)
 
 router.use('/:id', authorizationTransaction)

@@ -5,7 +5,15 @@ class TransactionController {
   static read(req, res, next){
     Transaction.find({userId:req.loggedUser._id})
       .populate('userId')
-      .populate('productList')
+      .then(data => {
+        res.status(200).json(data)
+      })
+      .catch(next)
+  }
+
+  static readAdmin(req, res, next){
+    Transaction.find()
+      .populate('userId')
       .then(data => {
         res.status(200).json(data)
       })
@@ -36,7 +44,7 @@ class TransactionController {
       .then(() => {
         return Transaction.create({
           userId: req.loggedUser._id,
-          productList: productIdList,
+          productList,
           totalPrice
         })
       })

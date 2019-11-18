@@ -10,7 +10,9 @@
                   <div class="date">
                       <div class="month">stock</div>
                       <div class="day">{{ product.stock }}</div>
-                  </div><img :src="product.image[0]" /></div>
+                  </div>
+                  <img :src="product.image[0]" v-if="product.image" />
+                </div>
               <!-- Post Content-->
               <div class="post-content">
                   <div class="category" v-if="role === 'customer'" @click="addcart(product._id)"><i class="fas fa-cart-plus"></i> Add to cart</div>
@@ -36,8 +38,8 @@
 </template>
 
 <script>
-import JQuery from 'jquery'
 import { mapState } from 'vuex'
+import JQuery from 'jquery'
 let $ = JQuery
 
 export default {

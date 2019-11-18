@@ -23,7 +23,7 @@ export default new Vuex.Store({
     isLogin: 'false',
     username: '',
     role: 'customer',
-    products: [1, 2, 3, 4, 5, 6, 7]
+    products: []
   },
   mutations: {
     login (state, payload) {
@@ -338,10 +338,17 @@ export default new Vuex.Store({
         })
     },
     fetchHistory ({ state, commit, dispatch }) {
+      let urlHistory
+      if(state.role === 'admin'){
+        urlHistory = '/transaction/admin'
+      }
+      else{
+        urlHistory = '/transaction'
+      }
       return new Promise((resolve, reject) => {
         axios({
           method: 'get',
-          url: url + '/transaction',
+          url: url + urlHistory,
           headers: {
             token: localStorage.getItem('token')
           }
