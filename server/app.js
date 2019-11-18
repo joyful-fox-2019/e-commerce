@@ -34,8 +34,8 @@ app.use(morgan('dev'))
 app.use('/', router)
 app.use(errorHandler)
 
-// app.listen(PORT, ()=>{
-//     console.log(`this app is litening to port `, PORT);
-// })
+app.listen(PORT, ()=>{
+    console.log(`this app is litening to port `, PORT);
+})
 
 module.exports = app
