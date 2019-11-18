@@ -44,9 +44,9 @@ import axios from '../config/getdata'
 import Swal from 'sweetalert2'
 
 export default {
-  data(){
-    return{
-      cartData : []
+  data () {
+    return {
+      cartData: []
     }
   },
   methods: {
@@ -67,7 +67,7 @@ export default {
           this.next(err.response.data)
         })
     },
-    plusCart (id,amount) {
+    plusCart (id, amount) {
       amount += 1
       axios({
         url: `/carts/updateAmount/${id}/${amount}`,
@@ -85,8 +85,8 @@ export default {
           this.next(err.response.data)
         })
     },
-    minusCart (id,amount) {
-      if(amount > 1){
+    minusCart (id, amount) {
+      if (amount > 1) {
         amount -= 1
         axios({
           url: `/carts/updateAmount/${id}/${amount}`,
@@ -135,7 +135,7 @@ export default {
         .then(({ data }) => {
           Swal.fire({
             title: 'Thank You!',
-            text: "Your game has been in delivery!",
+            text: 'Your game has been in delivery!',
             icon: 'success'
           })
           this.fetchCartData()
@@ -152,7 +152,7 @@ export default {
   computed: {
     getTotal () {
       let total = 0
-      for(let i = 0; i < this.cartData.length; i++){
+      for (let i = 0; i < this.cartData.length; i++) {
         total += (this.cartData[i].amount * this.cartData[i].ProductPrice)
       }
       return total

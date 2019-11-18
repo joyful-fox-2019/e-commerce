@@ -31,7 +31,7 @@ export default {
       imgUrl: '',
       price: 0,
       qty: 0,
-      file: null,
+      file: null
     }
   },
   methods: {
@@ -45,21 +45,20 @@ export default {
           this.title = data.name
           this.imgUrl = data.imgUrl
           this.price = data.price
-          this.qty = data.qty 
+          this.qty = data.qty
         })
         .catch(err => {
           console.log(err.response.data)
-          next(err.response.data)
+          this.next(err.response.data)
         })
     },
     updateData () {
-      console.log("<<<<<<<<")
+      console.log('<<<<<<<<')
       Swal.showLoading()
       const formData = new FormData()
-      if(this.file == null){
+      if (this.file == null) {
         formData.append('imgUrl', this.imgUrl)
-      }
-      else{
+      } else {
         formData.append('imgUrl', this.file)
       }
       formData.append('name', this.title)
@@ -116,11 +115,10 @@ export default {
             })
         }
       })
-      
     }
   },
   computed: {
-    
+
   },
   created () {
     this.fetchDetailData()

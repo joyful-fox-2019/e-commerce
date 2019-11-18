@@ -33,4 +33,12 @@ function successToast (message) {
   })
 }
 
-export { next, successToast }
+function showLoading () {
+  return Swal.showLoading()
+}
+
+function closeLoading () {
+  return Swal.close()
+}
+
+export { next, successToast, showLoading, closeLoading }

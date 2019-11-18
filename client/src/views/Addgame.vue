@@ -27,21 +27,21 @@ export default {
       title: '',
       price: '',
       qty: '',
-      file: null,
+      file: null
     }
   },
   components: {
 
   },
   methods: {
-    postGame(){
+    postGame () {
       Swal.showLoading()
       const formData = new FormData()
       formData.append('imgUrl', this.file)
       formData.append('name', this.title)
       formData.append('price', this.price)
       formData.append('qty', this.qty)
-    //   formData.append('tags', this.tags === null ? '' : this.tags)
+      //   formData.append('tags', this.tags === null ? '' : this.tags)
 
       axios({
         url: '/products',
@@ -51,15 +51,15 @@ export default {
           access_token: localStorage.getItem('access_token')
         }
       })
-      .then(({ data }) => {
-        console.log(data)
-        this.successToast('Article Successfuly published!')
-        this.$router.push({ path: `/admin/game-list` })
-      })
-      .catch(err => {
-        console.log(err.response.data)
-        this.next(err.response.data)
-      })
+        .then(({ data }) => {
+          console.log(data)
+          this.successToast('Article Successfuly published!')
+          this.$router.push({ path: `/admin/game-list` })
+        })
+        .catch(err => {
+          console.log(err.response.data)
+          this.next(err.response.data)
+        })
     }
   },
   computed: {}

@@ -14,6 +14,7 @@ const upload = gcsUpload({
 })
 
 router.get('/', ProductController.findAll)
+router.get('/search', ProductController.searchProduct)
 router.get('/detail/:_id', ProductController.findDetail)
 router.use(authentication, authorization)
 router.post('/', upload.single('imgUrl'), ProductController.createProduct)

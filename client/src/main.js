@@ -7,6 +7,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import { next, successToast } from './helpers/notif'
+import moment from 'moment'
 
 Vue.mixin({
   methods: {
@@ -16,6 +17,7 @@ Vue.mixin({
 })
 
 Vue.config.productionTip = false
+Vue.prototype.moment = moment
 
 new Vue({
   router,

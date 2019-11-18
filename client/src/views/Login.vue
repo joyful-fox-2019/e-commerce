@@ -96,9 +96,6 @@
 </template>
 
 <script>
-import axios from '../config/getdata'
-import Swal from 'sweetalert2'
-
 export default {
   data () {
     return {

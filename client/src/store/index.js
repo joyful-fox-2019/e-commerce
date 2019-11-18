@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from '../config/getdata'
-import { next, successToast } from '../helpers/notif'
+import { next, successToast, showLoading, closeLoading } from '../helpers/notif'
 import router from '../router'
 
 Vue.use(Vuex)
@@ -83,6 +83,25 @@ export default new Vuex.Store({
           access_token: localStorage.getItem('access_token')
         }
       })
+    },
+    searchData ({ commit, state }, payload) {
+      showLoading()
+      axios({
+        method: 'get',
+        url: `/products/search?filter=${payload}`
+      })
+        .then(({ data }) => {
+          if (data.length !== 0) {
+            commit('CHANGE_GAMELIST', data)
+            closeLoading()
+          } else {
+            next({ message: 'No game found :(' })
+          }
+        })
+        .catch(err => {
+          console.log(err.response.data)
+          next(err.response.data)
+        })
     }
   },
   modules: {

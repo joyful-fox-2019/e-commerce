@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const mongoUri = process.env.MONGODBTEST
+const mongoUri = process.env.MONGODB
 
 const mongoConfig = {
   useCreateIndex: true,

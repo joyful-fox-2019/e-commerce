@@ -23,14 +23,13 @@
 
 <script>
 import axios from '../config/getdata'
-import Swal from 'sweetalert2'
 
 export default {
   name: 'home',
   components: {},
-  data(){
-    return{
-      
+  data () {
+    return {
+
     }
   },
   methods: {
@@ -68,7 +67,7 @@ export default {
       return this.$store.state.gameList
     }
   },
-  created() {
+  created () {
     this.fetchData()
   }
 }

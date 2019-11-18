@@ -1,6 +1,6 @@
 <template>
     <b-navbar class="sticky-top" toggleable="lg" type="dark" variant="dark">
-      <b-navbar-brand class="ml-md-2" to="/">
+      <b-navbar-brand class="ml-md-2" @click="fetchData()" to="/">
         <img src="https://image.flaticon.com/icons/svg/1021/1021220.svg" width="40" class="pr-2">
         <b>DipaE-Commerce</b>
       </b-navbar-brand>
@@ -16,14 +16,14 @@
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-nav-form>
-            <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
+          <b-nav-form @submit.prevent="fetchSearchData()">
+            <b-form-input v-model="searchKey" size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
             <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
-            <b-button v-if="!loginStatus" size="sm" class="my-2 my-sm-0 ml-2 text-light" variant="outline-secondary" type="submit" to="/login">
+            <b-button v-if="!loginStatus" size="sm" class="my-2 my-sm-0 ml-2 text-light" variant="outline-secondary" to="/login">
               <font-awesome-icon icon="clipboard-check"></font-awesome-icon>
               Login
             </b-button>
-            <b-button v-if="loginStatus" @click="logout()" size="sm" class="my-2 my-sm-0 ml-2 text-light" variant="outline-secondary" type="submit" to="/">
+            <b-button v-if="loginStatus" @click="logout()" size="sm" class="my-2 my-sm-0 ml-2 text-light" variant="outline-secondary" to="/">
               <font-awesome-icon icon="sign-out-alt"></font-awesome-icon>
               Logout
             </b-button>
@@ -38,7 +38,7 @@ export default {
   name: 'navbar',
   data () {
     return {
-
+      searchKey: ''
     }
   },
   methods: {
@@ -48,6 +48,13 @@ export default {
       this.$store.commit('CHANGE_LOGIN', false)
       this.$store.commit('CHANGE_ADMIN', false)
       this.successToast('Logout successfuly!')
+    },
+    fetchSearchData () {
+      this.$store.dispatch('searchData', this.searchKey)
+      this.searchKey = ''
+    },
+    fetchData () {
+      this.$store.dispatch('fetchGameData')
     }
   },
   created () {

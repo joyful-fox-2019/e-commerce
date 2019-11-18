@@ -15,6 +15,18 @@ class ProductController {
     }
   }
 
+  static async searchProduct (req, res, next) {
+    let filter = req.query.filter
+    let filterRegex = new RegExp(filter, 'gi')
+    try{
+      const data = await Product.find({name : {$regex : filterRegex}})
+      res.status(200).json(data)
+    }
+    catch(err){
+      next(err)
+    }
+  }
+
   static async findDetail (req,res,next) {
     const { _id } = req.params
     try{
