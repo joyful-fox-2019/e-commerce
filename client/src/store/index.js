@@ -92,7 +92,7 @@ export default new Vuex.Store({
       Swal.showLoading()
       axios({
         method: 'get',
-        url: url + `/product?tag=${payload.tag}&title=${payload.title}`,
+        url: url + `/product?tag=${payload.tag}&name=${payload.name}`,
         headers: {
           token: localStorage.getItem('token')
         }
@@ -134,7 +134,7 @@ export default new Vuex.Store({
         })
           .then(({ data }) => {
             dispatch('fetchProduct', {
-              title: '',
+              name: '',
               tag: ''
             })
             resolve(data)
@@ -162,7 +162,7 @@ export default new Vuex.Store({
       })
         .then(({ data }) => {
           dispatch('fetchProduct', {
-            title: '',
+            name: '',
             tag: ''
           })
           Toast.fire({
@@ -226,7 +226,7 @@ export default new Vuex.Store({
         })
           .then(({ data }) => {
             dispatch('fetchProduct', {
-              title: '',
+              name: '',
               tag: ''
             })
             resolve(data)

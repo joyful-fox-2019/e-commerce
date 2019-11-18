@@ -52,7 +52,7 @@ export default {
   methods: {
     fetchtag (tag) {
       this.$store.dispatch('fetchProduct', {
-        title: '',
+        name: '',
         tag
       })
     },
@@ -69,7 +69,7 @@ export default {
   },
   created () {
     this.$store.dispatch('fetchProduct', {
-      title: '',
+      name: '',
       tag: ''
     })
   },

@@ -6,13 +6,13 @@ class ProductController {
     let condition = {}
     if(req.query.name || req.query.tag){
       condition = {
-          $or:[]
+          $and:[]
       }
       if(req.query.name){
-          condition.$or.push({'name': new RegExp(`${req.query.title}`, 'gi')})
+          condition.$and.push({'name': new RegExp(`${req.query.name}`, 'gi')})
       }
       if(req.query.tag){
-          condition.$or.push({'tags': new RegExp(`${req.query.tag}`, 'gi')})
+          condition.$and.push({'tags': new RegExp(`${req.query.tag}`, 'gi')})
       }
     }
     Product.find(condition)

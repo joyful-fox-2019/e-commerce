@@ -9,9 +9,9 @@
       </div>
     </div>
     <div class="spacearound">
-      <b-nav-form>
-        <b-form-input size="sm" class="mr-sm-2" placeholder="Product Name"></b-form-input>
-        <b-form-input size="sm" class="mr-sm-2" placeholder="Tag"></b-form-input>
+      <b-nav-form @submit.prevent="search">
+        <b-form-input size="sm" class="mr-sm-2" placeholder="Product Name" v-model="name"></b-form-input>
+        <b-form-input size="sm" class="mr-sm-2" placeholder="Tag" v-model="tag"></b-form-input>
         <b-button size="sm" class="my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></b-button>
       </b-nav-form>
     </div>
@@ -21,8 +21,19 @@
 <script>
 export default {
   name: 'navbar',
+  data () {
+    return {
+      name: '',
+      tag: ''
+    }
+  },
   methods: {
-
+    search () {
+      this.$store.dispatch('fetchProduct', {
+        name: this.name,
+        tag: this.tag
+      })
+    }
   },
   mounted () {
 
