@@ -1,4 +1,4 @@
-if(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+if(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing') {
   require('dotenv').config()
 }
 
@@ -9,12 +9,13 @@ const morgan = require('morgan')
 const port = process.env.PORT
 let uri
 
-if(process.NODE_ENV === 'test'){
-  uri = `${process.env.MONGO_URI}-${process.env.NODE_ENV}`
+if(process.env.NODE_ENV === 'testing' ){
+  uri = process.env.MONGO_URI
 } else {
-  uri = process.env.MONGO_URI_PROD
+  // uri = process.env.MONGO_URI_PROD
 }
 
+console.log(uri, 'line 18');
 const errorHandler = require('./middlewares/errorHandler')
 const routes = require('./routes')
 

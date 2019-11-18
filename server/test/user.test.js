@@ -1,7 +1,9 @@
+require('dotenv').config()
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const app = require('../app')
 const User = require('../models/user')
+const { genToken } = require('../helpers/jwt')
 
 const expect = chai.expect
 chai.use(chaiHttp)
@@ -12,14 +14,27 @@ let newUser = {
   password: '1234567'
 }
 
+let newAdmin = {
+  username: 'adminadmin',
+  email: 'adminn@mail.com',
+  password: 'admiin123',
+  role: 'admin'
+}
+
 let userLogin = {
   email : newUser.email,
   password: newUser.password
 }
 
-before( async () =>{
+let adminToken = ''
+let userToken = ''
+
+before( async function () {
   try {
-    await User.create(newUser)
+    user = await User.create(newUser)
+    userToken = genToken({ id: user._id, role: user.role })
+    adm = await User.create(newAdmin)
+    adminToken = genToken({ id: adm._id, role: adm.role })
     console.log('Initial user created')
   }
   catch(err){
@@ -28,7 +43,7 @@ before( async () =>{
 })
 
 after((done) => {
-  if(process.env.NODE_ENV === 'test'){
+  if(process.env.NODE_ENV === 'testing'){
     User.deleteMany()
     .then(()=> {
       console.log('User test finished');
@@ -253,6 +268,133 @@ describe('User Test', function () {
           expect(res.body.message).to.equal('Invalid email/password')
           done()
         })
+    })
+  })
+  describe('GET /verify', function () {
+    it('should return object of (message) with status 200 when successful', function (done) {
+      chai
+        .request(app)
+        .get('/users/verify')
+        .set('token', userToken)
+        .end(function (err, res) {
+          expect(err).to.be.null
+          expect(res).to.have.status(200)
+          expect(res.body).to.be.an('object').to.have.any.keys('message')
+          expect(res.body.message).to.equal('User verified')
+          done()
+        })
+    })
+    it('should return object of (message) with status 401 when not logged in', function (done) {
+      chai
+        .request(app)
+        .get('/users/verify')
+        .end(function (err, res) {
+          expect(err).to.be.null
+          expect(res).to.have.status(401)
+          expect(res.body).to.be.an('object').to.have.any.keys('message')
+          expect(res.body.message).to.equal('You must login first')
+          done()
+        })
+    })
+    it('should return object of (message) with status 401 when invalid token sent', function (done) {
+      chai
+        .request(app)
+        .get('/users/verify')
+        .set('token', 'tokenpalsu')
+        .end(function (err, res) {
+          expect(err).to.be.null
+          expect(res).to.have.status(401)
+          expect(res.body).to.be.an('object').to.have.any.keys('message')
+          expect(res.body.message).to.equal('You must login first')
+          done()
+        })
+    })
+  })
+  describe('GET /users/admin/verify', function () {
+    it('should return object of (message) with status 200 when successful', function (done) {
+      chai
+      .request(app)
+      .get('/users/admin/verify')
+      .set('token', adminToken)
+      .end(function (err, res) {
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an('object').to.have.any.keys('message')
+        expect(res.body.message).to.equal('Admin verified')
+        done()
+      })
+    })
+    it('should return object of (message) with status 401 when not logged in', function (done) {
+      chai
+        .request(app)
+        .get('/users/admin/verify')
+        .end(function (err, res) {
+          expect(err).to.be.null
+          expect(res).to.have.status(401)
+          expect(res.body).to.be.an('object').to.have.any.keys('message')
+          expect(res.body.message).to.equal('You must login first')
+          done()
+        })
+    })
+    it('should return object of (message) with status 401 when invalid token sent', function (done) {
+      chai
+        .request(app)
+        .get('/users/admin/verify')
+        .set('token', 'tokenpalsu')
+        .end(function (err, res) {
+          expect(err).to.be.null
+          expect(res).to.have.status(401)
+          expect(res.body).to.be.an('object').to.have.any.keys('message')
+          expect(res.body.message).to.equal('You must login first')
+          done()
+        })
+    })
+    it('should return object of (message) with status 403 when user not admin logged in', function (done) {
+      chai
+        .request(app)
+        .get('/users/admin/verify')
+        .set('token', userToken)
+        .end(function (err, res) {
+          expect(err).to.be.null
+          expect(res).to.have.status(403)
+          expect(res.body).to.be.an('object').to.have.any.keys('message')
+          expect(res.body.message).to.equal('Verification failed')
+          done()
+        })
+    })
+  })
+  describe('GET /users/cart', function () {
+    it('should return user object with status 200 when successful', function (done) {
+      chai
+        .request(app)
+        .get('/users/cart')
+        .set('token', userToken)
+        .end(function (err, res) {
+          expect(err).to.be.null
+          expect(res).to.have.status(200)
+          expect(res.body).to.be.an('object').to.have.any.keys('message', '_id', 'cart', 'createdAt', 'email', 'notification', 'password', 'role', 'updatedAt', 'username')
+          done()
+        })
+    })
+    it('should return object of (message) with status 401 when not logged in', function (done) {
+      chai
+        .request(app)
+        .get('/users/cart')
+        .end(function (err, res) {
+          expect(err).to.be.null
+          expect(res).to.have.status(401)
+          expect(res.body).to.be.an('object').to.have.any.keys('message')
+          expect(res.body.message).to.equal('You must login first')
+          done()
+        })
+    })
+  })
+  describe('PATCH /users/cart', function () {
+    it('should return object of (user, message) with status 200 when successful', function (done) {
+      chai
+        .request(app)
+        .patch('/users/cart')
+        
     })
   })
 })

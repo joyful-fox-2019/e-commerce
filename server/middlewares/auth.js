@@ -24,7 +24,7 @@ module.exports= {
     } else {
       Transaction.findById(id)
         .then(transaction => {
-          if(transaction && transaction.owner.toString() === req.loggedUser.id){
+          if(transaction && transaction.owner && transaction.owner.toString() === req.loggedUser.id){
             next()
           } else {
             next({status: 403, message: { message: 'Authorization failed'}})

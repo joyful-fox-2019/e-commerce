@@ -1,4 +1,4 @@
-// require('dotenv').config()
+require('dotenv').config()
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const Product = require('../models/product')
@@ -25,34 +25,42 @@ let customer = {
 let token = ''
 let customerToken = ''
 
-before( async () => {
-  try {
-    const user = await User.create(admin)
-    token = await genToken({ id: user._id, role: user.role})
-    const cust = await User.create(customer)
-    customerToken = await genToken({ id: cust._id, role: cust.role})
-    console.log('user created, product-test : 31');
-  }
-  catch(err){
-    console.log(err)
-  }
+before( function (done) {
+  User.deleteMany()
+    .then(() => {
+      return Product.deleteMany()
+    })
+    .then(() => {
+      return User.create(admin)
+    })
+    .then(user => {
+      token = genToken({ id: user._id, role: user.role})
+      console.log('admin created for product test');
+      return User.create(customer)
+    })
+    .then(cust => {
+      customerToken = genToken({ id: cust._id, role: cust.role})
+      console.log('customer created for product test');
+      done()
+    })
+    .catch(console.log)
 })
 
-after((done) => {
-  if(process.env.NODE_ENV === 'test') {
-    User.deleteMany()
-      .then(()=> {
-        console.log('initial user deleted')
-        return Product.deleteMany()
-      })
-      .then(()=> {
-        console.log('product test finished')
-        done()
-      })
-      .catch(console.log)
+// after((done) => {
+//   // if(process.env.NODE_ENV === 'testing') {
+//     User.deleteMany()
+//       .then(()=> {
+//         console.log('initial user deleted for prod test')
+//         return Product.deleteMany()
+//       })
+//       .then(()=> {
+//         console.log('product test finished')
+//         done()
+//       })
+//       .catch(console.log)
       
-  }
-})
+//   // }
+// })
 
 describe('Product Test', function () {
   describe('POST /products', function () {
@@ -189,7 +197,6 @@ describe('Product Test', function () {
         .catch(console.log)
     })
     it('Should return product object with status 200 when get product by id', function(done){
-      console.log(productId, 'ID product, line 194');
       chai
         .request(app)
         .get(`/products/${productId}`)

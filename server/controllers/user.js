@@ -83,7 +83,7 @@ class UserController {
       if(decoded.role === 'admin') {
         res.status(200).json({ message: 'Admin verified'})
       } else {
-        next({ status: 403, message: 'Verification failed'})
+        next({ status: 403, message: { message: 'Verification failed' }})
       }
     }
     catch(err) {

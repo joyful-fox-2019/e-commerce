@@ -19,7 +19,7 @@ module.exports = (err, req, res, next) => {
     message = { message: 'Not found'}
   }
 
-  console.log(JSON.stringify({status, message}));
+  // console.log(JSON.stringify({status, message}));
 
   res.status(status).json(message)
 }
