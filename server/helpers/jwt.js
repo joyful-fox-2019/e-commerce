@@ -1,11 +1,15 @@
-`use strict`
 const jwt = require('jsonwebtoken')
+const secret = process.env.secret
+
+function generateToken (payload) {
+    return jwt.sign( payload,secret,{ expiresIn: 60*60 } )
+}
+
+function tokenVerify (token) {
+    return jwt.verify(token, secret)
+}
+
 module.exports = {
-    generateToken : (user) => {
-        let encoded = jwt.sign({id: user.id, email: user.email}, process.env.JWT_SECRET)
-        return encoded
-    },
-    verifyToken : (token) => {
-        return jwt.verify(token, process.env.JWT_SECRET)
-    }
+    generateToken,
+    tokenVerify
 }

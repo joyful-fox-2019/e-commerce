@@ -1,143 +1,96 @@
 <template>
-  <section class="fdb-block py-0">
-    <div class="container py-2 my-5" style="background-image: url(imgs/shapes/4.svg);">
-      <div class=" row justify-content-end">
-        <div class="col-10 col-md-8 col-lg-6 col-xl-5 text-left border px-3 pb-4 pt-2 bg-white rounded shadow-lg">
-          <div class="fdb-box col-sm-10 offset-1 my-4">
-            <div class="row">
-              <div class="col">
-                <h1 style="font-family: 'Be Vietnam', sans-serif;">Sign in</h1>
-                <p class="lead text-justify text-success py-2" style="font-family: 'Chivo', sans-serif;">Login and you can access full content of our website</p>
-              </div>
-            </div>
-            <!-- form mulai disini -->
-            <form @submit.prevent="login">
-              <div class="row">
-                  <div class="col mt-0">
-                    <label for="email">Enter your email here</label>
-                    <input type="text" class="form-control border" placeholder="Email" v-model="email">
-                  </div>
-              </div>
-              <div class="row mt-3">
-                  <div class="col">
-                    <label for="password">Enter your password</label>
-                    <input type="password" class="form-control" placeholder="Password" v-model="password">
-                  </div>
-              </div>
-              <div class="row mt-4">
-                  <div class="col">
-                  <input class="btn btn-block btn-outline-success mt-2" type="submit" value="sign in">
-                  </div>
-              </div>
-              <div class="row mt-3">
-                
-                <template >
-                  <g-signin-button
-                    class="btn btn-block btn-outline-success mt-2 mx-3"
-                    :params="googleSignInParams"
-                    @success="onSignInSuccess"
-                    @error="onSignInError"><i class="fa fa-google pr-2"></i>
-                    Sign in with Google
-                  </g-signin-button>
-                </template>                   
-              </div>
-
-              
-
-            </form>
-            <!-- form end -->
-            <div>
-            </div>
-          </div>
+<div class="container">
+    <form @submit.prevent="login">
+        <h2 style="float:center;">Login</h2>
+        <div class="field">
+        <label class="label" style="float: left;">Username</label>
+        <div class="control has-icons-left has-icons-right">
+            <input class="input is-success" type="text" placeholder="Username" v-model="username">
+            <span class="icon is-small is-left">
+            <i class="fas fa-user"></i>
+            </span>
+        </div> 
         </div>
-      </div>
+        <div class="field">
+            <label class="label" style="float:left;">Password</label>
+            <div class="control has-icons-left has-icons-right">
+                <input class="input" type="password" placeholder="Password" v-model="password">
+                <span class="icon is-small is-left">
+                <i class="fas fa-lock"></i>
+                </span>
+            </div>
+        </div>
+        <br>
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-link" type="submit" style="background-color:grey;">Sign In</button>
+            </div>
+        </div>
+    </form>
+    <div class="registerShow">
+        <center>
+            <a href="#" @click="registerShow">Don't Have Account?</a>
+        </center>
     </div>
-  </section>
-  
+</div>
 </template>
-<script>
 
-import axios from '../api/server'
-import Swal from 'sweetalert2'
-import GSignInButton from 'vue-google-signin-button'
+<script scoped>
+import axios from 'axios'
+import store from '../store/index'
 
 export default {
-  components : {
-    GSignInButton,
-  },
-  data () {
-    return {
-      email: '',
-      password: '',
-      googleSignInParams : {
-        client_id: '173260689440-3sdbbv7j82sd8eevgenhro99aipst4bl.apps.googleusercontent.com',
-      },
-      
+    name: 'login',
+    data () {
+        return {
+            username: '',
+            password: '',
+            isLogin: false,
+            baseUrl: this.$store.state.baseUrl
+        }
+    },
+    created() {
+       
+    },
+    methods: {
+        login () {
+            let username = this.username
+            let password = this.password
+            this.$store.commit('LoginState', { username, password })
+            this.$store.dispatch('Login')
+        },
+        registerShow() {
+            this.$router.push({path:'/register'})
+        }
     }
-  },
-  methods: {
-    login () {
-      console.log('masuk login')
-      axios
-        .post('/login', {
-          email: this.email,
-          password: this.password
-        })
-        .then(({ data }) => {
-          this.toHome(data)
-          localStorage.setItem('token', data.token)
-          Swal.fire(
-            'You succesfully login',
-            'You can now acces your cart',
-            'success'
-          )
-        })
-        .catch(err => {
-          console.log(err, 'ini error')
-          Swal.fire(
-            'Opps ....!',
-            `${err.response.data.msg}`,
-            'error'
-          )
-        })
-    },
-     onSignInSuccess (googleUser) {
-      console.log('masuk login google')
-      const profile = googleUser.getBasicProfile() // etc etc
-      const id_token = googleUser.getAuthResponse().id_token;      
-      axios.
-          post('/login-google',{          
-              google_token : id_token
-          })
-          .then(({data}) => {
-              console.log(data ,'dapat data')
-              localStorage.setItem("token", data.token)     
-              this.toHome(data)     
-          })
-          .catch(err => {
-              console.log(err)
-              Swal.fire(
-                  'Opps ....!',
-                  `${err.response.data.msg}`,
-                  'error'
-              )
-          })
-    },
-    onSignInError (error) {
-      // `error` contains any error occurred.
-      console.log('OH NOES', error)
-    },
-    toHome(data) {      
-      console.log(data, 'masuk to home')
-      this.$router.push('/')
-      this.$store.commit('setLogin', true)
-      this.$store.commit('setUser', data.user)
-    },
-    
-  }
 }
 </script>
 
-<style >
-.btn { cursor: pointer; }
+<style scoped> 
+
+/* body {
+    background-image: url('../../public/market.jpg')
+} */
+
+.container {
+    width: 450px;
+    margin-top: 130px;
+    background-color: rgb(240, 180, 102);
+    height: 400px;
+    border-radius: 30px;
+}
+
+.label {
+    float: left;
+}
+
+form {
+    padding: 30px;
+    margin-top: 100px;
+}
+
+
+
+
+
 </style>

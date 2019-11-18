@@ -1,35 +1,41 @@
-`use strict`
-const {Schema, model} = require('mongoose')
+const mongoose = require('mongoose')
 
-const productSchema = Schema({
-    price : {
-        type : Number,
-        required : [true, 'you must input price']
+const productSchema = new mongoose.Schema ({
+    productName: {
+        type: String,
+        required: [true, 'Product Name Cannot be Empty']
     },
-    qty : {
-        type : Number,
-        required : [true, 'you must input quantity'],
-        min : 0,
-        max : 99
+    description: {
+        type: String,
+        required: [true, 'Description Cannot be Empty'],
     },
-    name : {
-        type : String,
-        required : [true, 'you must input name']
+    category: {
+        type: String,
     },
-    image : {
-        type : String,
-        require : [true, 'you must input image'],       
+    stocks: {
+        type: Number,
+        min: [1, 'Product Amount must be greater than 0']
     },
-    user : {
-        type : Schema.Types.ObjectId,
-        ref : 'User'
+    price: {
+        type: Number,
+        min: [1, 'Price Must be Greater than Zero']
     },
-    category : {
-        type : String,
-        required : [true, 'you must input category']
-    }
-}, {timestamps : true},{versionKey : false})
+    userId : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    image: {
+        type: String,
+    },
+    rating: {
+        type: Number,
+        default: 0
+    },
+    voting: [
+        {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+    ]
+},{versionKey: false})
 
-const Product = model('Product', productSchema)
+const product = mongoose.model('Product', productSchema)
 
-module.exports = Product
+module.exports = product

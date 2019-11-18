@@ -1,92 +1,108 @@
 <template>
-  <section class="fdb-block py-0">
-  <div class="container py-2 my-5" style="background-image: url(imgs/shapes/4.svg);">
-    <div class=" row justify-content-end">
-      <div class="col-12 col-md-8 col-lg-6 col-xl-5 text-left border px-3 pb-4 pt-2 bg-white rounded shadow-lg">
-        <div class="fdb-box col-sm-10 offset-1 my-4">
-          <div class="row">
-            <div class="col">
-              <h1 style="font-family: 'Be Vietnam', sans-serif;">Register</h1>
-              <p class="lead text-justify text-success py-2" style="font-family: 'Chivo', sans-serif;">New member ?, please register to our website for free</p>
-            </div>
-          </div>
-          <!-- form mulai disini -->
-          <form @submit.prevent="register">
-            <div class="row">
-                <div class="col mt-0">
-                  <label for="password">Enter your Username</label>
-                <input type="text" class="form-control" placeholder="Username" v-model="username">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col mt-3">
-                  <label for="email">Enter your email here</label>
-                <input type="text" class="form-control" placeholder="Email" v-model="email">
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col">
-                  <label for="password">Enter your password</label>
-                <input type="password" class="form-control" placeholder="Password" v-model="password">
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col">
-                <input class="btn btn-outline-success btn-block mt-2" type="submit" value="register">
-                </div>
-            </div>
-          </form>
-          <!-- form end -->
+<div class="container">
+    <form @submit.prevent="register">
+        <h2 style="float:center;">Register</h2>
+        <div class="field">
+        <label class="label" style="float: left;">Username</label>
+        <div class="control has-icons-left has-icons-right">
+            <input class="input is-success" type="text" placeholder="Username" v-model="username">
+            <span class="icon is-small is-left">
+            <i class="fas fa-user"></i>
+            </span>
+        </div> 
         </div>
-      </div>
+
+        <div class="field">
+        <label class="label" style="float: left;">Email</label>
+        <div class="control has-icons-left has-icons-right">
+            <input class="input is-success" type="email" placeholder="Email" v-model="email">
+            <span class="icon is-small is-left">
+            <i class="fas fa-envelope-open-text"></i>
+            </span>
+        </div> 
+        </div>
+
+        <div class="field">
+            <label class="label" style="float:left;">Password</label>
+            <div class="control has-icons-left has-icons-right">
+                <input class="input" type="password" placeholder="Password" v-model="password">
+                <span class="icon is-small is-left">
+                <i class="fas fa-lock"></i>
+                </span>
+            </div>
+        </div>
+        <br>
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-link" type="submit" style="background-color:grey;">Sign Up</button>
+            </div>
+        </div>
+    </form>
+    <div class="registerShow">
+        <center>
+            <a href="#" @click="loginShow">Already have account? Click here..</a>
+        </center>
     </div>
-  </div>
-</section>
+</div>
 </template>
 
-<script>
-
-import axios from '../api/server'
-import Swal from 'sweetalert2'
+<script scoped>
+import axios from 'axios'
+import store from '../store/index'
 
 export default {
-  data () {
-    return {
-        username : '',
-        email: '',
-        password: ''
+    name: 'login',
+    data () {
+        return {
+            username: '',
+            password: '',
+            isLogin: false,
+            email: ''
+        }
+    },
+    created() {
+       
+    },
+    methods: {
+        register () {
+            let username = this.username
+            let email = this.email
+            let password = this.password
+            this.$store.commit('RegisterState', { username, email,password })
+            this.$store.dispatch('Register')
+        },
+        loginShow() {
+            this.$router.push({path:'/login'})
+        }
     }
-  },
-  methods: {
-    register () {
-        console.log('masuk register')
-        axios
-            .post('/register', {
-                username : this.username,
-                email: this.email,
-                password: this.password
-                })
-            .then(({ data }) => {
-                this.$router.push('/login')
-                Swal.fire(
-                    'New User Created!',
-                    'Your account has been registered',
-                    'success'
-                )
-            })
-            .catch(err => {
-                console.log(err, 'ini error')
-                Swal.fire(
-                    'Opps ....!',
-                    `${err.response.data.msg}`,
-                    'error'
-                )
-            })
-    }
-  }
 }
 </script>
 
-<style scoped>
+<style scoped> 
+
+/* body {
+    background-color: rgb(157, 194, 226);
+} */
+
+.container {
+    width: 450px;
+    margin-top: 130px;
+    background-color: rgb(240, 180, 102);
+    height: 500px;
+    border-radius: 30px;
+}
+
+.label {
+    float: left;
+}
+
+form {
+    padding: 30px;
+    /* margin-top: 200px; */
+}
+
+
+
+
 
 </style>

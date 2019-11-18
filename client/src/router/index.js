@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Swal from 'sweetalert2'
 
 Vue.use(VueRouter)
 
@@ -12,9 +11,12 @@ const routes = [
     component: Home
   },
   {
-    path: '/register',
-    name: 'register',
-    component: () => import(/* webpackChunkName: "register" */ '../views/Register.vue')
+    path: '/about',
+    name: 'about',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
     path: '/login',
@@ -22,32 +24,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
   },
   {
-    path: '/cart',
-    name: 'cart',
-    component: () => import(/* webpackChunkName: "cart" */ '../components/Cart.vue'),
-    beforeEnter: (to, from, next) => {
-      if (!localStorage.getItem('token')) {
-        Swal.fire({
-          title: 'Opps ..',
-          text: 'You must login to access cart',
-          icon: 'warning'
-        })
-        next('/login')
-      } else {
-        next()
-      }
-    }
+    path: '/mainpage',
+    name: 'mainpage',
+    component: () => import(/* webpackChunkName: "mainpage" */ '../views/MainPage.vue')
   },
   {
-    path: '/user',
-    name: 'user',
-    component: () => import(/* webpackChunkName: "user" */ '../views/User.vue')
+    path: '/register',
+    name: 'register',
+    component: () => import(/* webpackChunkName: "register" */ '../views/Register.vue')
   },
   {
-    path: '/transaction',
-    name: 'transaction',
-    component: () => import(/* webpackChunkName: "transaction" */ '../components/Transaction.vue')
-  },
+    path: '/userprofile',
+    name: 'userprofile',
+    component: () => import(/* webpackChunkName: "register" */ '../views/UserProfile.vue')
+  }
+
 ]
 
 const router = new VueRouter({

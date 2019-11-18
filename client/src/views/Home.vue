@@ -1,66 +1,66 @@
 <template>
-    <section id="home-page" >
-      <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-2 pl-0">
-                  <sideBar> </sideBar>
-              </div>
-              <div  class="col-md-10">
-                  <!-- ini filter-->
-                  <!-- v-on:submit.prevent='searchArticle' -->
-                  <form class="form-inline md-form form-sm" >
-                          <i class="fa fa-search" aria-hidden="true"></i>
-                          <input class="form-control ml-3" style="width:90%" type="text" placeholder="Search"
-                              aria-label="Search">
-                               <!-- v-model='search' -->
-                              <!-- ini v-model yang menghubungkan -->
-                  </form>
-                <!-- this is room for products -->
-                  <div class="container" >
-                      <div class="row">
-                          <div class="col-sm-12 pt-4" > 
-                              <ProductCard></ProductCard>                                
-                          </div>
-                      </div>
-                  </div>
-                <!-- product container end -->
-              </div>
-          </div>
-      </div>   
-    </section>
+  <div class="home">
     
+
+          <div class="container text-center my-auto masthead" style="margin-top: 100px;">
+            <h1 class="mb-1">𝐖𝐞𝐥𝐥-𝐂𝐨𝐦𝐦𝐞𝐫𝐜𝐞</h1>
+            <br>
+            <br>
+            <a
+              class="btn btn-primary btn-xl js-scroll-trigger"
+              v-on:click="loginShow"
+              href="#"
+            >Get Started</a>
+          </div>
+
+  
+  </div>
 </template>
 
 <script>
-import Modal from '@/components/Modal'
-import axios from '../api/server'
-import Swal from 'sweetalert2'
-import ProductCard from '@/components/ProductCard'
-import sideBar from '@/components/sideBar'
-import Corosel from '@/components/Corosel'
 
+
+import store from 'vuex'
 export default {
-  name: 'Home',
+
+  name: 'home',
   components: {
-    ProductCard,
-    sideBar,
-    Corosel,
-    Modal
+   
   },
-  data () {
-    return {
-      allProducts: []
+  methods: {
+    loginShow() {
+      this.$router.push({path: '/login'})
     }
-  },
-  created () {
-    this.allProducts = this.$store.state.allProducts
-    console.log(this.allProducts, 'ini home')
-  },
-  computed: {
   }
 }
 </script>
 
 <style>
+body {
+  background: url("../../public/market2.jpg") no-repeat center center fixed;
+
+  background-size: cover;
+
+  height: 100vh;
+}
+
+.masthead {
+  min-height: 30rem;
+  position: relative;
+  display: table;
+  width: 100%;
+  height: auto;
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.masthead h1 {
+  font-size: 4rem;
+  margin: 0;
+  padding: 0;
+}
+
 
 </style>
