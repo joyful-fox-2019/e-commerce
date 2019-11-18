@@ -44,7 +44,7 @@ function authorizationAdmin(req, res, next){
 
 function authorizationCart(req, res, next){
     Cart.findById(req.params.id)
-        .then(cart => {
+    .then(cart => {
             if(!cart){
                 next({ status: 404, message: 'Not Found' })
             }
@@ -63,11 +63,11 @@ function authorizationCart(req, res, next){
 
 function authorizationTransaction(req, res, next){
     Transaction.findById(req.params.id)
-        .then(transaction => {
+    .then(transaction => {
             if(!transaction){
                 next({ status: 404, message: 'Not Found' })
             }
-            else if(transaction.userId == req.loggedUser._id){
+            else if(transaction.userId == req.loggedUser._id || req.loggedUser.role == "admin"){
                 next()
             }
             else{

@@ -23,7 +23,8 @@ export default new Vuex.Store({
     isLogin: 'false',
     username: '',
     role: 'customer',
-    products: []
+    products: [],
+    history: []
   },
   mutations: {
     login (state, payload) {
@@ -33,6 +34,9 @@ export default new Vuex.Store({
     },
     fetchProduct (state, payload) {
       state.products = payload
+    },
+    fetchHistory (state, payload) {
+      state.history = payload
     }
   },
   actions: {
@@ -345,23 +349,47 @@ export default new Vuex.Store({
       else{
         urlHistory = '/transaction'
       }
-      return new Promise((resolve, reject) => {
-        axios({
-          method: 'get',
-          url: url + urlHistory,
-          headers: {
-            token: localStorage.getItem('token')
-          }
+      axios({
+        method: 'get',
+        url: url + urlHistory,
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+      .then(({ data }) => {
+        commit('fetchHistory', data)
+      })
+      .catch(err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.errors.join(', ')
         })
-        .then(({ data }) => {
-          resolve(data)
+      })
+    },
+    updateStatus ({ state, commit, dispatch }, payload) {
+      axios({
+        method: 'patch',
+        url: url + `/transaction/${payload.id}`,
+        data: {
+          status: payload.status
+        },
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+      .then(({ data }) => {
+        dispatch('fetchHistory')
+        Toast.fire({
+          icon: 'success',
+          title: 'Status updated'
         })
-        .catch(err => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.response.data.errors.join(', ')
-          })
+      })
+      .catch(err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.errors.join(', ')
         })
       })
     }

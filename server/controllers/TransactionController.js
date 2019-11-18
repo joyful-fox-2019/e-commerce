@@ -55,7 +55,8 @@ class TransactionController {
   }
 
   static updateStatus(req, res, next){
-    Transaction.findByIdAndUpdate({_id:req.params.id}, {status: true})
+    let { status } = req.body
+    Transaction.findByIdAndUpdate({_id:req.params.id}, {status})
       .then(data => {
         res.status(200).json(data)
       })
