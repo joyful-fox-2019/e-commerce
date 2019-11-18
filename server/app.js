@@ -6,6 +6,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const router = require('./routes/index')
 const errorHandler = require('./middlewares/errorHandler')
+const cors = require('cors')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -18,6 +19,7 @@ mongoose.connect(`${process.env.MONGOOSE_URI}-${process.env.NODE_ENV}`, {useUnif
     console.log(err)
   })
 
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 

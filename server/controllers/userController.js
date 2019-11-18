@@ -24,7 +24,8 @@ class UserController {
         if(user && compare(password, user.password)){
           const obj = {
             _id : user._id,
-            email : user.email
+            email : user.email,
+            admin: user.admin
           }
           const token = sign(obj)
 
@@ -103,17 +104,17 @@ class UserController {
     const loggedUser = req.loggedUser
     let isThere = false
     let amount = -1
-    User.findOne({_id: loggedUser})
+    User.findOne({_id: loggedUser._id})
       .then(user=>{
         user.cart.forEach(product=>{
-          if(product.product_id == product_id){
+          if(product.product_id._id == product_id){
             amount = Number(product.amount) - 1
             isThere = true
           }
         })
 
         if(isThere && amount > 0){
-          return User.updateOne({_id: loggedUser, 'cart.product_id': product_id}, {
+          return User.updateOne({_id: loggedUser._id, 'cart.product_id': product_id}, {
             $set: {'cart.$.amount': amount}
           })
         }

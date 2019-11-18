@@ -27,7 +27,7 @@ class ProductController{
   }
 
   static getOne(req, res, next){
-    const _id = req.params._id
+    const _id = req.params.id
     Product.findOne({_id})
     .populate('user_id')
       .then(product=>{

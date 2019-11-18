@@ -47,7 +47,6 @@ class TransactionController{
         console.log(product);
         
         if(product.product_id.stock - product.amount < 0){
-          
           throw {
             msg: 'stock not enough',
             status: 400

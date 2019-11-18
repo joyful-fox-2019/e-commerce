@@ -3,6 +3,7 @@ const Transaction = require('../models/Transaction')
 
 function authentication(req, res, next){
   const token = req.headers.access_token
+  
   try{
     const loggedUser = verify(token)
     req.loggedUser = loggedUser
@@ -37,7 +38,7 @@ function transactionAuthentication(req, res, next){
 
 function adminAuthorization(req, res, next){
   const loggedUser = req.loggedUser
-  if(loggedUser.admin === 'admin'){
+  if(loggedUser.admin){
     next()
   }
   else{
