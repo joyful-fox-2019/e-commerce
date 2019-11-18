@@ -81,7 +81,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          Swal.fire(`Something went wrong`, "Please reload", `Error`);
+          Swal.fire(`Something went wrong`, "Please reload", `error`);
         });
     },
     plus() {

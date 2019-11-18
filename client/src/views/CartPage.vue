@@ -60,6 +60,7 @@
 
 <script>
 import { mapState } from "vuex";
+import Swal from "sweetalert2";
 export default {
   props: ["isLogin"],
   name: "Carts",

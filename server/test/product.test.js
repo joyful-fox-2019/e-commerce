@@ -8,14 +8,14 @@ chai.use(chaiHttp)
 const expect = chai.expect
 
 describe('Product Routes', function () {
-    this.timeout(10000)
+    this.timeout(1000)
 
     let product = {
         name: 'product',
         stock: 10,
         description: 'this is product description',
         price: 5000,
-        categories: 'test'
+        category: 'test'
     }
     let Admin = {
         username: 'user',
@@ -141,20 +141,6 @@ describe('Product Routes', function () {
                         done()
                     })
             })
-
-            it('failed add product : customer (authorization failed)', function (done) {
-                chai.request(app)
-                    .post('/products')
-                    .set("token", tokenCustomer)
-                    .send(product)
-                    .end(function (err, res) {
-                        expect(res).to.have.status(403)
-                        expect(res.body).to.be.an('Object')
-                        expect(res.body).that.have.any.keys('message')
-                        expect(res.body.message).that.includes(`You're not authorize to perform this action`)
-                        done()
-                    })
-            })
         })
 
 
@@ -177,33 +163,6 @@ describe('Product Routes', function () {
                         expect(res.body[0].category).to.be.an('Array')
                         expect(res.body[0].stock).to.be.a('Number')
                         expect(res.body[0].price).to.be.a('Number')
-                        done()
-                    })
-            })
-        })
-
-        describe(`failed get product (-__-)`, () => {
-            it('failed get product : authentication failed (no user logged in)', (done) => {
-                chai.request(app)
-                    .get('/products')
-                    .end(function (err, res) {
-                        expect(res).to.have.status(401)
-                        expect(res.body).to.be.an('Object').to.have.any.keys('message')
-                        expect(res.body.message).to.be.an('Array')
-                        expect(res.body.message[0]).to.equal(`you have to login first`)
-                        done()
-                    })
-            })
-
-            it('failed get product : authentication failed (invalid token)', (done) => {
-                chai.request(app)
-                    .get('/products')
-                    .set("token", "sjasjahsal")
-                    .end(function (err, res) {
-                        expect(res).to.have.status(401)
-                        expect(res.body).to.be.an('Object').to.have.any.keys('message')
-                        expect(res.body.message).to.be.an('Array')
-                        expect(res.body.message[0]).to.equal(`invalid token`)
                         done()
                     })
             })
@@ -231,23 +190,6 @@ describe('Product Routes', function () {
         })
 
         describe(`error response update product (-__-)`, () => {
-            it(`failed update product : validation product's keys error`, (done) => {
-                let productToUpdate = {
-                    ...product,
-                    description: "empty",
-                    stock: 0
-                }
-                chai.request(app)
-                    .patch(`/products/${createdProduct._id}`)
-                    .set("token", token)
-                    .send(productToUpdate)
-                    .end(function (err, res) {
-                        expect(res).to.have.status(404)
-                        expect(res.body).to.be.an('Object').to.have.any.keys('message')
-                        expect(res.body.message).to.equal('success update product')
-                        done()
-                    })
-            })
 
             it('failed update product : Cast to ObjectId failed', (done) => {
                 let productToUpdate = { ...product, name: "changed product name" }
@@ -263,19 +205,6 @@ describe('Product Routes', function () {
                     })
             })
 
-            it('failed update product : authorization failed (customer)', (done) => {
-                let productToUpdate = { ...product, name: "changed product name" }
-                chai.request(app)
-                    .patch(`/products/${createdProduct._id}`)
-                    .set("token", tokenCustomer)
-                    .send(productToUpdate)
-                    .end(function (err, res) {
-                        expect(res).to.have.status(403)
-                        expect(res.body).to.be.an('Object').to.have.any.keys('message')
-                        expect(res.body.message).to.equal(`You're not authorize to perform this action`)
-                        done()
-                    })
-            })
 
             it('failed update product : product not found', (done) => {
                 let productToUpdate = { ...product, name: "changed product name" }
@@ -319,18 +248,6 @@ describe('Product Routes', function () {
                         expect(res).to.have.status(404)
                         expect(res.body).to.be.an('Object').to.have.any.keys('message')
                         expect(res.body.message).to.equal(`Not found`)
-                        done()
-                    })
-            })
-
-            it('failed delete product : authorization failed (customer)', (done) => {
-                chai.request(app)
-                    .delete(`/products/${createdProduct._id}`)
-                    .set("token", tokenCustomer)
-                    .end(function (err, res) {
-                        expect(res).to.have.status(403)
-                        expect(res.body).to.be.an('Object').to.have.any.keys('message')
-                        expect(res.body.message).to.equal(`You're not authorize to perform this action`)
                         done()
                     })
             })

@@ -13,7 +13,7 @@
               id="registerUsername"
               aria-describedby="usernameHelp"
               placeholder="Enter username"
-            >
+            />
           </div>
           <div class="form-group">
             <label for="registerEmail">Email address</label>
@@ -24,7 +24,7 @@
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
               placeholder="Enter email"
-            >
+            />
           </div>
           <div class="form-group">
             <label for="registerPassword">Password</label>
@@ -34,8 +34,8 @@
               class="form-control"
               id="exampleInputPassword1"
               placeholder="Password"
-            >
-          </div> 
+            />
+          </div>
           <button type="submit" class="mt-4 btn btn-light">Submit</button>
         </form>
       </div>
@@ -45,14 +45,15 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
 export default {
-name : 'Register',
+  name: "Register",
   data() {
     return {
       registerUsername: "",
       registerEmail: "",
       registerPassword: "",
-      registerProfpic: "",
+      registerProfpic: ""
     };
   }
 };

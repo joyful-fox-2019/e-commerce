@@ -116,6 +116,7 @@ export default {
           });
           this.loginEmail = "";
           this.loginPassword = "";
+          this.$router.push("/");
         })
         .catch(({ response }) => {
           console.log(response, "masuk err comp");

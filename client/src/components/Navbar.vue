@@ -41,6 +41,7 @@
             <ul class="navbar-nav ml-auto">
               <li class="nav-item">
                 <a
+                  v-if="!statLogin"
                   data-toggle="modal"
                   data-target="#loginmodal"
                   class="nav-link sub active"
@@ -54,22 +55,22 @@
                   <!-- Shop -->
                 </router-link>
               </li>
-              <li class="nav-item">
+              <li v-if="statLogin" class="nav-item">
                 <router-link class="nav-link active" to="/cart">
                   <i class="fas fa-shopping-cart" style="color: rgb(45,45,45); font-size:20px;"></i>
                   <!-- Cart -->
                 </router-link>
               </li>
-              <li class="nav-item">
+              <li v-if="statAdmin" class="nav-item">
                 <router-link class="nav-link sub active" to="/admin">
-                  <i class="fas fa-user" style="color: rgb(45,45,45); font-size:20px;"></i>
+                  <i class="fas fa-user" style="color: rgb(45,45,45); font-size:20px;"></i>Admin
                   <!-- User -->
                 </router-link>
               </li>
-              <li class="nav-item">
-                <router-link v-if="isAdmin" class="nav-link sub active" to="/admin">Admin</router-link>
-              </li>
-              <li @click="signOut" class="nav-item">
+              <!-- <li class="nav-item">
+                <router-link v-if="statAdmin" class="nav-link sub active" to="/admin">Admin</router-link>
+              </li>-->
+              <li v-if="statLogin" @click.prevent="signOut" class="nav-item">
                 <router-link class="nav-link sub active" to="/">
                   <i class="fas fa-sign-out-alt" style="color: rgb(45,45,45); font-size:20px;"></i>
                   <!-- Sign out -->
@@ -89,25 +90,46 @@ export default {
   name: "Navbar",
   data() {
     return {
-      isLogin: false,
-      isAdmin: "",
+      statLogin: false,
+      statAdmin: true,
       searchInput: ""
     };
   },
-  computed() {
-    if (localStorage.getItem("token")) {
-      this.isLogin = true;
+  computed: {
+    getstat() {
+      console.log(localStorage.getItem("isAdmin") === false);
+      if (localStorage.getItem("token")) {
+        this.statLogin = true;
+      } else {
+        this.statLogin = false;
+      }
+      if (localStorage.getItem("isAdmin") === false) {
+        this.statAdmin = false;
+      } else {
+        this.statAdmin = true;
+      }
     }
-    if (localStorage.getItem("isAdmin")) {
-      this.isLogin = true;
+  },
+  created() {
+    console.log(localStorage.getItem("isAdmin") === false);
+
+    if (localStorage.getItem("token")) {
+      this.statLogin = true;
+    } else {
+      this.statLogin = false;
+    }
+    if (localStorage.getItem("isAdmin") === false) {
+      this.statAdmin = false;
+    } else {
+      this.statAdmin = true;
     }
   },
   methods: {
     signOut() {
       localStorage.clear();
-      this.isLogin = false;
-      this.isAdmin = "";
-      this.swal.fire("Logged out", "Have a nice day", "success");
+      this.statLogin = false;
+      this.statAdmin = "";
+      Swal.fire("Logged out", "Have a nice day", "success");
       this.$router.push("/");
     },
     pushSearch() {

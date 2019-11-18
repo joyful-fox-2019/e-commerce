@@ -16,7 +16,7 @@ class UserController {
 
     static login(req, res, next) {
         let { email, password } = req.body
-        console.log(req.body, 'asdasa');
+        // console.log(req.body, 'asdasa');
         User.findOne({
             email: email
         })
@@ -56,7 +56,7 @@ class UserController {
             product_image,
             quantity
         }
-        console.log(newItem);
+        // console.log(newItem);
         User.updateOne({ _id: user_id }, { $push: { cart: newItem } })
             .then(result => {
                 res.status(200).json(result)
@@ -65,7 +65,7 @@ class UserController {
     }
 
     static removeFromCart(req, res, next) {
-        console.log(`ahbsbsbskkbsj`);
+        // console.log(`ahbsbsbskkbsj`);
         const user_id = req.loggedUser.id
         const id = req.params.id
         User.updateOne({ _id: user_id }, { $pull: { cart: { _id: id } } })

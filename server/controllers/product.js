@@ -4,7 +4,7 @@ const gcsDelete = require('../helpers/gcsdelete')
 
 class ProductController {
     static addProduct(req, res, next) {
-        console.log(req.body, 'masuk-===========================');
+        // console.log(req.body, 'masuk-===========================');
         let { name, stock, description, price } = req.body
         Product.create({
             name: name,
@@ -25,7 +25,7 @@ class ProductController {
         Product.find({ name: { $regex: target } })
             .sort({ createdAt: -1 })
             .then(products => {
-                console.log(products)
+                // console.log(products)
                 res.status(200).json(products)
             })
             .catch(next)
@@ -60,7 +60,7 @@ class ProductController {
     static updateField(req, res, next) {
         let dataChanged = toUpdate(["name", "stock", "description", "price"], req.body)
         dataChanged.image = req.file ? req.file.cloudStoragePublicUrl : 'https://discountseries.com/wp-content/uploads/2017/09/default.jpg'
-        console.log(dataChanged);
+        // console.log(dataChanged);
         const _id = req.params.id;
         Product.findByIdAndUpdate(
             _id,

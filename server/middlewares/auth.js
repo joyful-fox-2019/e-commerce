@@ -19,7 +19,7 @@ const authentication = (req, res, next) => {
     }
 }
 
-function adminAuthorization(req, res, next) {
+function authorization(req, res, next) {
     try {
         if (req.loggedUser.isAdmin !== true) {
             throw new Error({ status: 403, message: `You're not authorize to perform this action` })
@@ -32,19 +32,19 @@ function adminAuthorization(req, res, next) {
     }
 }
 
-const authorization = (req, res, next) => {
-    let { id } = req.params
-    Product.findById(id)
-        .then(product => {
-            if (product && product._id == id) {
-                next()
-            } else if (!product) {
-                next({ status: 404, message: "product not found" })
-            }
-        })
-        .catch(next)
-}
+// const authorization = (req, res, next) => {
+//     let { id } = req.params
+//     Product.findById(id)
+//         .then(product => {
+//             if (product && product._id == id) {
+//                 next()
+//             } else if (!product) {
+//                 next({ status: 404, message: "product not found" })
+//             }
+//         })
+//         .catch(next)
+// }
 
 module.exports = {
-    authentication, adminAuthorization, authorization
+    authentication, authorization
 }

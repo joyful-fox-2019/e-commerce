@@ -63,6 +63,7 @@
 <script>
 // @ is an alias to /src
 import Navbar from "@/components/Navbar.vue";
+import Swal from "sweetalert2";
 
 export default {
   name: "Home",

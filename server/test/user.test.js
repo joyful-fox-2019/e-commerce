@@ -7,16 +7,81 @@ chai.use(chaiHttp)
 const expect = chai.expect
 
 describe('User Routes', function () {
-    this.timeout(10000)
+    this.timeout(100000)
 
     let newUser = {
         username: 'user',
-        email: 'user@mail.com',
+        email: 'user1@mail.com',
         password: 'user'
     }
 
+    let product = {
+        product_id: '5dca8614fb55071d413b5c48',
+        quantity: 1,
+        name: 'product',
+        stock: 10,
+        description: 'this is product description',
+        price: 5000,
+        category: 'test'
+    }
+
+    let cart_id = '5dcba28ffc67b809fc48b706'
+
+    let Admin = {
+        username: 'user',
+        email: 'user@mail.com',
+        password: 'user',
+        isAdmin: true
+    }
+    let Customer = {
+        username: 'customer',
+        email: 'customer@mail.com',
+        password: 'customer',
+        isAdmin: false
+    }
+    let createdProduct = {}
+
+    let token = '',
+        tokenCustomer = ''
+
+    before(function (done) {
+        User.create(Admin)
+            .then(result => {
+                chai.request(app)
+                    .post('/user/login')
+                    .send({
+                        email: Admin.email,
+                        password: Admin.password
+                    })
+                    .end(function (err, res) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            token = res.body.token
+                        }
+                    })
+                return User.create(Customer)
+            })
+            .then(created => {
+                chai.request(app)
+                    .post('/user/login')
+                    .send({
+                        email: Customer.email,
+                        password: Customer.password
+                    })
+                    .end(function (err, res) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            tokenCustomer = res.body.token
+                            done()
+                        }
+                    })
+            }).catch(console.log)
+    })
+
     after(function (done) {
-        User.deleteManyn({})
+        User.deleteMany({})
             .then(result => done())
             .catch(console.log)
     })
@@ -161,7 +226,7 @@ describe('User Routes', function () {
                     .send(userFail)
                     .end((err, res) => {
                         expect(err).to.be.null
-                        expect(res).to.have.status(403)
+                        expect(res).to.have.status(400)
                         expect(res.body).to.be.an('Object').to.have.any.keys('message')
                         expect(res.body.message).to.equal('Invalid password or email')
                         done()
@@ -175,7 +240,7 @@ describe('User Routes', function () {
                     .send(userFail)
                     .end((err, res) => {
                         expect(err).to.be.null
-                        expect(res).to.have.status(403)
+                        expect(res).to.have.status(400)
                         expect(res.body).to.be.an('Object').to.have.any.keys('message')
                         expect(res.body.message).to.equal('Invalid password or email')
                         done()
@@ -184,6 +249,95 @@ describe('User Routes', function () {
         })
     })
 
+    describe('Add to cart', function () {
+        describe('success \(^ヮ^)/', function () {
+            it('should return status 200', function (done) {
+                chai
+                    .request(app)
+                    .patch('/user/cart')
+                    .set('token', token)
+                    .send(product)
+                    .end(function (err, res) {
+                        expect(err).to.be.null
+                        expect(res).to.have.status(200)
+                        expect(res.body).to.be.an('object')
+                        done()
+                    })
+            })
+        })
+        describe(`failed! (-__-)`, function () {
+            it('failed add to cart : no user login', function (done) {
+                chai
+                    .request(app)
+                    .patch('/user/cart')
+                    .send(product)
+                    .end(function (err, res) {
+                        expect(err).to.be.null
+                        expect(res).to.have.status(401)
+                        expect(res.body.message[0]).to.equal('you have to login first')
+                        done()
+                    })
+            })
+        })
+    })
+    describe('Remove from cart', function () {
+        describe('success \(^ヮ^)/', function () {
+            it('return state 200', function (done) {
+                chai
+                    .request(app)
+                    .delete(`/user/cart/${cart_id}`)
+                    .set('token', tokenCustomer)
+                    .end(function (err, res) {
+                        expect(err).to.be.null
+                        expect(res).to.have.status(200)
+                        expect(res.body).to.be.an('object')
+                        done()
+                    })
+            })
+        })
+        describe(`failed! (-__-)`, function () {
+            it('failed remove cart : no user login', function (done) {
+                chai
+                    .request(app)
+                    .delete(`/user/cart/${cart_id}`)
+                    .end(function (err, res) {
+                        expect(err).to.be.null
+                        expect(res).to.have.status(401)
+                        expect(res.body.message[0]).to.equal('you have to login first')
+                        done()
+                    })
+            })
+        })
+    })
+    describe('View cart', function () {
+        describe('success \(^ヮ^)/', function () {
+            it('should return status 200', function (done) {
+                chai
+                    .request(app)
+                    .get('/user/cart')
+                    .set('token', token)
+                    .end(function (err, res) {
+                        expect(err).to.be.null
+                        expect(res).to.have.status(200)
+                        expect(res.body).to.be.an('array')
+                        done()
+                    })
+            })
+        })
+        describe(`failed! (-__-)`, function () {
+            it('failed view cart : token is missing', function (done) {
+                chai
+                    .request(app)
+                    .get('/user/cart')
+                    .end(function (err, res) {
+                        expect(err).to.be.null
+                        expect(res).to.have.status(401)
+                        expect(res.body.message[0]).to.equal('you have to login first')
+                        done()
+                    })
+            })
+        })
+    })
 
 
 })

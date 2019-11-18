@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
 import Navbar from "./components/Navbar.vue";
 import ModalLogin from "./components/ModalLogin.vue";
 import ModalRegister from "./components/ModalRegister.vue";
@@ -48,14 +49,11 @@ export default {
       this.fetchProducts();
       this.$router.push("/products");
     },
-    getsinglepage(id) {
-      this.$router.push(`/products/${id}`);
-    },
     signOut() {
       localStorage.clear();
       this.isLogin = false;
       this.isAdmin = "";
-      this.swal.fire("Logged out", "Have a nice day", "success");
+      Swal.fire("Logged out", "Have a nice day", "success");
       this.$router.push("/");
     }
   }

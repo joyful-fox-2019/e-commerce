@@ -49,7 +49,7 @@ export default new Vuex.Store({
             localStorage.setItem("userId", data.user.id);
             localStorage.setItem("username", data.user.username);
             localStorage.setItem("isAdmin", data.user.isAdmin);
-            // this.swal.fire("Logged in", "Have a nice day", "success")
+            // Swal.fire("Logged in", "Have a nice day", "success")
             context.commit("LOGIN", data);
             resolve()
           })
@@ -194,22 +194,22 @@ export default new Vuex.Store({
       })
     },
   },
-  deleteProduct({ commit }, payload) {
-    axios.delete(`http://localhost:3000/products/${payload}`,
-      { headers: { token: localStorage.getItem('token') } })
-      .then(({ data }) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Product Deleted',
-          showConfirmButton: false,
-          timer: 1500
-        })
-        this.dispatch('getAllProducts')
+  deleteProduct(context, payload) {
+    return new Promise(function (resolve, reject) {
+      axios({
+        method: 'DELETE',
+        url: `/products/${payload}/`,
+        headers: {
+          token: localStorage.getItem("token")
+        }
+          .then(({ data }) => {
+            resolve(data)
+          })
+          .catch(err => {
+            reject(data)
+          })
       })
-      .catch(err => {
-        console.log(err)
-        Swal.fire('Errors', `Something went wrong`, `error`)
-      })
+    })
   },
   setUpdateData({ commit }, payload) {
     commit('setDataGonnaBeUpdated', payload)

@@ -124,6 +124,7 @@ export default {
           this.registerEmail = "";
           this.registerPassword = "";
           Swal.fire("Registered", "You may login now", "success");
+          this.$router.push("/login");
         })
         .catch(({ response }) => {
           console.log(response, "masuk err comp");

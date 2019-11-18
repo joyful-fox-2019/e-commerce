@@ -78,7 +78,7 @@
     </div>
     <div v-else>
       <button
-        @click.prevent="editProduct($route.params.id)"
+        @click.prevent="updateProducts($route.params.id)"
         type="submit"
         class="mt-4 adminbtn btn"
       >Edit</button>
@@ -139,13 +139,17 @@ export default {
           this.category = "";
           this.$emit("successaddproduct", this.name);
           Swal.fire("Product added", "View it on your dashboard", "success");
+          this.$router.push("/admin");
+          this.$store.dispatch("fetchProducts").then(data => {
+            this.$router.push("/admin");
+          });
         })
         .catch(err => {
           console.log(err);
           Swal.fire(`Something is wrong`, "Please reload", "error");
         });
     },
-    editProduct(id) {
+    updateProducts(id) {
       let formData = new FormData();
       formData.append("name", this.name);
       formData.append("description", this.description);
@@ -153,9 +157,10 @@ export default {
       formData.append("price", this.price);
       formData.append("category", this.category);
       formData.append("image", this.image);
+      let payload = formData;
 
       this.$store
-        .dispatch("editProduct", payload)
+        .dispatch("updateProduct", payload)
         .then(data => {
           this.name = "";
           this.stock = "";
@@ -164,15 +169,16 @@ export default {
           this.category = "";
 
           Swal.fire("Product updated", "View it on your dashboard", "success");
+          this.$router.push("/admin");
+          this.$store.dispatch("fetchProducts").then(data => {
+            this.$router.push("/admin");
+          });
 
-          this.$emit("successeditproduct");
+          this.$emit("successupdateProducts");
         })
         .catch(err => {
           Swal.fire(`Something is wrong`, "Please reload", "error");
         });
-    },
-    getChosenCategory(opt) {
-      this.category = event.target.value;
     },
     getImage() {
       this.image = event.target.files[0];

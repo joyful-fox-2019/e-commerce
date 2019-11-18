@@ -7,11 +7,14 @@
         </div>
         <div class="col-8 pl-5">
           <router-link to="/admin/add">
-            <button @click.prevent="adprodd" class="btnadmin btn-secondary btn">Add product</button>
+            <button class="btnadmin btn-secondary btn">Add product</button>
           </router-link>
           <br />
           <br />
-          <div v-if="!adprod" class="table-responsive">
+          <router-view v-on:geteditpage="geteditpage"></router-view>
+          <br />
+          <br />
+          <div class="table-responsive">
             <table id="listprod" class="table table-hover">
               <thead>
                 <tr>
@@ -50,16 +53,16 @@
               </tbody>
             </table>
           </div>
-          <router-view v-if="adprod" v-on:geteditpage="geteditpage"></router-view>
         </div>
         <div class="col-2"></div>
       </div>
     </div>
-    <!-- <addProduct></addProduct> -->
+    <addProduct></addProduct>
   </div>
 </template>
 
 <script>
+import Swal from "sweetalert2";
 export default {
   name: "AdminDashboard",
   props: ["productList"],
@@ -68,11 +71,24 @@ export default {
     return {
       currentProduct: {},
       panel: true,
-      adprod: false
+      adprod: false,
+      statLogin: false,
+      statAdmin: true
     };
   },
   created() {
-    this.fetchListProduct();
+    if (localStorage.getItem("token")) {
+      this.statLogin = true;
+    } else {
+      this.statLogin = false;
+    }
+    if (localStorage.getItem("isAdmin") === false) {
+      Swal.fire("Not Authorized", "You cant enter here", "error");
+      this.$router.push("/");
+    } else {
+      this.statAdmin = true;
+      this.fetchListProduct();
+    }
   },
   methods: {
     truncate(content) {
@@ -83,14 +99,19 @@ export default {
       }
     },
     deleteProduct(id) {
+      let payload = id;
       this.$store
-        .dispatch("deleteProduct", id)
+        .dispatch("deleteProduct", payload)
         .then(data => {
           Swal.fire(
             `${data.name} has been deleted`,
             "You may proceed",
             "success"
           );
+          this.$router.push("/admin");
+          this.$store.dispatch("fetchProducts").then(data => {
+            this.$router.push("/admin");
+          });
           this.$emit("successdelete");
         })
         .catch(err => {
@@ -132,7 +153,7 @@ export default {
           this.$router.push(`/admin/edit/${id}`);
         })
         .catch(err => {
-          this.swal.fire(`Something is wrong`, "Please reload", "error");
+          Swal.fire(`Something is wrong`, "Please reload", "error");
         });
     }
   },
@@ -140,6 +161,22 @@ export default {
     $route() {
       if (this.$route.path.username == "admin") {
         this.panel = false;
+        this.fetchListProduct();
+      }
+    }
+  },
+  computed: {
+    getstat() {
+      if (localStorage.getItem("token")) {
+        this.statLogin = true;
+      } else {
+        this.statLogin = false;
+      }
+      if (localStorage.getItem("isAdmin") === false) {
+        Swal.fire("Not Authorized", "You cant enter here", "error");
+        this.$router.push("/");
+      } else {
+        this.statAdmin = true;
         this.fetchListProduct();
       }
     }

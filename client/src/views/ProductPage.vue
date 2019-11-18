@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
 import ProductCard from "../components/ProductBlock";
 // import CategoryBlock from "@/components/CategoryBlock.vue";
 export default {

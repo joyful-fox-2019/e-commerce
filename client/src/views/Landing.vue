@@ -56,6 +56,7 @@
 
 <script>
 import Figure from "@/components/Figure";
+import Swal from "sweetalert2";
 export default {
   components: {
     Figure

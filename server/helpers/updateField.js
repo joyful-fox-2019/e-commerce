@@ -1,6 +1,6 @@
 const toUpdate = (fields, data) => {
     let dataChanged = {}
-    console.log(data);
+    // console.log(data);
 
     for (let key in data) {
         fields.forEach(el => {
