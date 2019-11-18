@@ -24,7 +24,7 @@ const mongoConfig =  {
     useFindAndModify:false
 }
 
-mongoose.connect(process.env.MONGOOSE_URL + process.env.NODE_ENV, mongoConfig, (err) => {
+mongoose.connect(process.env.MONGOOSE_URL, mongoConfig, (err) => {
     if (err) console.log(err)
     console.log('database connected')    
 })
