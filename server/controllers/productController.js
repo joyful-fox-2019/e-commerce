@@ -22,6 +22,7 @@ class productController{
     }
 
     static create(req,res,next){
+        // console.log('test')
         Product.create({
             name : req.body.name,
             description : req.body.description,
@@ -54,6 +55,8 @@ class productController{
         }
         Product.findOneAndUpdate({_id : req.params.id}, {name,description,price,images,stock}, { new : true})
         .then(product => {
+            console.log('success update =>>>>>>>>>>>',product);
+            
             res.status(200).json({message : `product :${name} successfully updated`})
         })
         .catch(next)

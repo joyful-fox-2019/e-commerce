@@ -116,13 +116,13 @@ describe('Test Ecommerce - Product routes', function(){
     })
 
     describe('Success create product' , function(){
-        this.timeout(20000)
+        this.timeout(10000)
         it(`create should return success message with status 201`, function(done){
             chai.request(app)
                 
                 .post('/products')
                 .set('token',tokenUser)
-                .attach('images','/Users/Dwitama\ Alfred/hacktiv8/joyfull-fox/phase-2/week3/mini-ecommerce/server/test/img/product1.jpg')
+                .attach('images','')
                 .field('name', 'Air Jordan IV cactus Jack')
                 .field('description', 'size US 9.5 | BNIB')
                 .field('stock', '1')
@@ -152,10 +152,11 @@ describe('Test Ecommerce - Product routes', function(){
 
     describe('Success update product', function(){
         it('update should return success message with status 200', function(done){
+            this.timeout(10000)
             chai.request(app)
                 .put('/products/'+productId)
                 .set('token',tokenUser)
-                .attach('images','/Users/Dwitama\ Alfred/hacktiv8/joyfull-fox/phase-2/week3/mini-ecommerce/server/test/img/product2.jpg')
+                .attach('images','/Users/dwitamaalfred/hacktiv8/joyful-fox/phase-2/week3/e-commerce/server/test/img/product1.jpg')
                 .field('name', 'Air Jordan IV cactus Jack')
                 .field('description', 'size US 10 | BNIB')
                 .field('stock', '1')
@@ -175,7 +176,7 @@ describe('Test Ecommerce - Product routes', function(){
                 
                 .post('/products')
                 .set('token',tokenCustomer)
-                .attach('images','/Users/Dwitama\ Alfred/hacktiv8/joyfull-fox/phase-2/week3/mini-ecommerce/server/test/img/product1.jpg')
+                .attach('images','/Users/dwitamaalfred/hacktiv8/joyful-fox/phase-2/week3/e-commerce/server/test/img/product1.jpg')
                 .field('name', 'Air Jordan IV cactus Jack')
                 .field('description', 'size US 9.5 | BNIB')
                 .field('stock', '1')
@@ -208,7 +209,7 @@ describe('Test Ecommerce - Product routes', function(){
             chai.request(app)
                 .put('/products/'+productId)
                 .set('token',tokenCustomer)
-                .attach('images','/Users/Dwitama\ Alfred/hacktiv8/joyfull-fox/phase-2/week3/mini-ecommerce/server/test/img/product2.jpg')
+                .attach('images','/Users/dwitamaalfred/hacktiv8/joyful-fox/phase-2/week3/e-commerce/server/test/img/product1.jpg')
                 .field('name', 'Air Jordan IV cactus Jack')
                 .field('description', 'size US 10 | BNIB')
                 .field('stock', '1')
