@@ -129,6 +129,9 @@ export default new Vuex.Store({
         data: {
           email: state.login.email,
           password: state.login.password,
+        },
+        headers: {
+          access_token: localStorage.getItem('token')
         }
       })
         .then(({ data })=>{
@@ -151,6 +154,7 @@ export default new Vuex.Store({
       router.push('/login')
       localStorage.removeItem('token')
       commit('LOGIN_CHECKER', false)
+      commit('CHANGE_ADMIN_STATUS', false)
       Swal.fire({
         icon: 'success',
         title: 'Logout Success'
@@ -176,6 +180,9 @@ export default new Vuex.Store({
             email,
             password,
             username
+          },
+          headers: {
+            access_token: localStorage.getItem('token')
           }
         })
           .then(({ data })=>{
@@ -192,7 +199,10 @@ export default new Vuex.Store({
     fetchProducts({commit}){
       axiosConnect({
         method: 'get',
-        url: '/products'
+        url: '/products',
+        headers: {
+          access_token: localStorage.getItem('token')
+        }
       })
         .then(({ data })=>{
           commit('CHANGE_PRODUCTS', data)
@@ -208,7 +218,10 @@ export default new Vuex.Store({
     fetchProduct({commit}, payload){
       axiosConnect({
         method: 'get',
-        url: `/products/${payload}`
+        url: `/products/${payload}`,
+        headers: {
+          access_token: localStorage.getItem('token')
+        }
       })
         .then(({ data })=>{
           commit('CHANGE_PRODUCT', data)
@@ -224,7 +237,10 @@ export default new Vuex.Store({
     fetchLoggedUser({commit}){
       axiosConnect({
         method: 'get',
-        url: '/users'
+        url: '/users',
+        headers: {
+          access_token: localStorage.getItem('token')
+        }
       })
         .then(({ data })=>{
           commit('CHANGE_LOGGED_USER', data)
@@ -244,7 +260,10 @@ export default new Vuex.Store({
     fetchTransactions({commit}){
       axiosConnect({
         url: '/transactions',
-        method: 'get'
+        method: 'get',
+        headers: {
+          access_token: localStorage.getItem('token')
+        }
       })
         .then(({ data })=>{
           console.log(data)
@@ -263,6 +282,9 @@ export default new Vuex.Store({
           data: {
             product_id: payload.product_id,
             amount
+          },
+          headers: {
+            access_token: localStorage.getItem('token')
           }
         })
           .then(({ data })=>{
@@ -285,6 +307,9 @@ export default new Vuex.Store({
         url: 'users/cart/subtract',
         data: {
           product_id: payload,
+        },
+        headers: {
+          access_token: localStorage.getItem('token')
         }
       })
         .then(({ data })=>{
@@ -298,7 +323,10 @@ export default new Vuex.Store({
     checkout(){
       axiosConnect({
         method: 'post',
-        url: '/transactions'
+        url: '/transactions',
+        headers: {
+          access_token: localStorage.getItem('token')
+        }
       })
         .then(({ data })=>{
           router.push('/')
@@ -312,7 +340,10 @@ export default new Vuex.Store({
     fetchAdminTransaction({commit}){
       axiosConnect({
         method: 'get',
-        url: '/transactions/admin'
+        url: '/transactions/admin',
+        headers: {
+          access_token: localStorage.getItem('token')
+        }
       })
         .then(({ data })=>{
           console.log(data)
@@ -342,7 +373,10 @@ export default new Vuex.Store({
         axiosConnect({
           url: '/products',
           data: bodyFormData,
-          method: 'post'
+          method: 'post',
+          headers: {
+            access_token: localStorage.getItem('token')
+          }
         })
           .then(({ data })=>{
             console.log(data)
@@ -360,7 +394,10 @@ export default new Vuex.Store({
     transactionDone({commit, dispatch}, payload){
       axiosConnect({
         url: `/transactions/${payload}`,
-        method: 'patch'
+        method: 'patch',
+        headers: {
+          access_token: localStorage.getItem('token')
+        }
       })
         .then(({ data })=>{
           console.log(data)
