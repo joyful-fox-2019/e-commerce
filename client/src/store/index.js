@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import axios from 'axios'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -17,8 +17,13 @@ export default new Vuex.Store({
     },
     localStorage: {
       name: '',
-      email: ''
-    }
+      email: '',
+      statusLogin: false
+    },
+    page: 'news',
+    title: 'Announcements & News',
+    bestItem: [],
+    newItem: []
   },
   getters: {
     formNowIn: (state) => {
@@ -29,60 +34,105 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    CHANGEFORM (state, payload) {
+    CHANGEFORM(state, payload) {
       state.formLogin = payload
     },
-    SETNEWUSER (state, payload) {
+    SETNEWUSER(state, payload) {
       state.newUser.name = payload.name
       state.newUser.email = payload.email
       state.newUser.password = payload.password
     },
-    CLEARNEWUSER (state, payload) {
+    CLEARNEWUSER(state, payload) {
       state.newUser.name = ''
       state.newUser.email = ''
       state.newUser.password = ''
     },
-    SETUSERLOGIN (state, payload) {
+    SETUSERLOGIN(state, payload) {
       state.localStorage.name = payload.name
       state.localStorage.email = payload.email
+      state.localStorage.statusLogin = payload.statusLogin
     },
-    CLEARUSERLOGIN (state, payload) {
+    CLEARUSERLOGIN(state, payload) {
       state.localStorage.name = ''
       state.localStorage.email = ''
+      state.localStorage.statusLogin = false
+    },
+    FETCHBESTITEM(state, payload) {
+      state.bestItem = payload
+    },
+    FETCHNEWITEM(state, payload) {
+      state.newItem = payload
     }
   },
   actions: {
-    changeFormAsync ({ commit }, payload) { // change form
+    fetchBestItem({
+      commit
+    }) {
+      axios({
+          url: 'http://localhost:3000/items/bestitem',
+          method: "GET",
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        .then(({
+          data
+        }) => {
+          commit('FETCHBESTITEM', data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    fetchNewItem({
+      commit
+    }) {
+      axios({
+          url: 'http://localhost:3000/items/newitem',
+          method: "GET",
+          headers: {
+            token: localStorage.getItem("token")
+          }
+        })
+        .then(({
+          data
+        }) => {
+          commit('FETCHNEWITEM', data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    changeFormAsync({
+      commit
+    }, payload) { // change form
       return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          commit('CHANGEFORM', payload)
-          resolve(payload)
-        }, 300)
+        commit('CHANGEFORM', payload)
+        resolve(payload)
       })
     },
-    setNewUserAsync ({ commit }, payload) {
+    setNewUserAsync({
+      commit
+    }, payload) {
       return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          commit('SETNEWUSER', payload)
-          resolve(payload)
-        }, 300)
+        commit('SETNEWUSER', payload)
+        resolve(payload)
       })
     },
-    clearNewUser (context) {
+    clearNewUser(context) {
       context.commit('CLEARNEWUSER')
     },
-    setUserLoginAsync ({ commit }, payload) {
+    setUserLoginAsync({
+      commit
+    }, payload) {
       return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          commit('SETUSERLOGIN', payload)
-          resolve()
-        }, 300)
+        commit('SETUSERLOGIN', payload)
+        resolve()
       })
     },
-    clearUserLogin (context) {
+    clearUserLogin(context) {
       context.commit('CLEARUSERLOGIN')
     }
   },
-  modules: {
-  }
+  modules: {}
 })

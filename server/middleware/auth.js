@@ -1,5 +1,6 @@
 const jwt = require('../helpers/jwt');
-const Product = require('../models/product');
+const Item = require('../models/item');
+const User = require('../models/user');
 
 function authentication(req, res, next) {
     try {
@@ -12,10 +13,10 @@ function authentication(req, res, next) {
 };
 
 function authorization(req, res, next) {
-    Product.findById(req.params.id)
-        .then(product => {
-            if (product) {
-                if (product.author == req.decoded.id) {
+    Item.findById(req.params.id)
+        .then(Item => {
+            if (Item) {
+                if (Item.author == req.decoded.id) {
                     next()
                 } else {
                     res.status(401).json({
@@ -31,7 +32,19 @@ function authorization(req, res, next) {
         .catch(next);
 };
 
+function authorizationRole(req, res, next) {
+    // console.log(req.headers.role)
+    if (req.headers.role === 'admin') {
+        next()
+    } else {
+        res.status(401).json({
+            message: 'Just Admin Can Create!'
+        })
+    }
+}
+
 module.exports = {
     authentication,
-    authorization
+    authorization,
+    authorizationRole
 }

@@ -19,6 +19,9 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
+    },
+    rps: {
+        type: Number
     }
 })
 
@@ -26,6 +29,12 @@ userSchema.pre('save', function (next) {
     this.role = 'customer'
     next()
 })
+
+userSchema.pre('save', function (next) {
+    this.rps = 0
+    next()
+})
+
 const User = model('User', userSchema);
 
 module.exports = User;

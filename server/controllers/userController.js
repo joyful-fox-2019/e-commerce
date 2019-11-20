@@ -54,7 +54,8 @@ class UserController {
                         res.status(200).json({
                             token,
                             name: user.name,
-                            email: user.email
+                            email: user.email,
+                            role: user.role
                         })
                     }
                 }
@@ -90,6 +91,14 @@ class UserController {
                 })
             })
             .catch(next);
+    }
+
+    static addRps(req, res, next) {
+        User.findByIdAndUpdate({
+            _id: id
+        }, {
+            rps: req.body.rps
+        })
     }
 };
 

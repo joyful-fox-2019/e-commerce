@@ -3,23 +3,24 @@
     <div id="nav">
       <!-- <app-login /> -->
       <!-- <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> -->
+      <router-link to="/about">About</router-link>-->
     </div>
-    <router-view/>
+    <router-view />
+    <vue-snotify></vue-snotify>
   </div>
 </template>
 <script>
 // import Login from '@/views/Login.vue'
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
     // 'app-login': Login
   }
-}
+};
 </script>
 <style>
 #app {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 </style>
