@@ -11,7 +11,7 @@ const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 3000
 
-mongoose.connect(`${process.env.MONGOOSE_URI}-${process.env.NODE_ENV}`, {useUnifiedTopology: true, useNewUrlParser: true})
+mongoose.connect(`${process.env.MONGOOSE_URI}-${process.env.NODE_ENV}`, {useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true})
   .then(_=>{
     console.log('db connected')
   })
