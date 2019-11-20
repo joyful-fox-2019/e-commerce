@@ -55,13 +55,14 @@ class ProductController{
   }
 
   static createProduct(req, res, next){
-    const {name, description, stock, price, file} = req.body
+    const {name, description, stock, price, file, gender} = req.body
     Product.create({
       name,
       description,
       stock,
       price,
-      image: file
+      image: file,
+      gender
     })
       .then(product=>{
         res.status(201).json(product)

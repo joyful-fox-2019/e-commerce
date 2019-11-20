@@ -19,11 +19,12 @@ function authentication(req, res, next){
 
 function transactionAuthentication(req, res, next){
   const loggedUser = req.loggedUser
-  const _id = req.params
+  const _id = req.params.id
 
   Transaction.findOne({_id})
     .then(transaction=>{
-      if(transaction.user_id === loggedUser._id){
+      console.log(transaction.user_id, loggedUser._id)
+      if(transaction.user_id == loggedUser._id){
         next()
       }
       else {

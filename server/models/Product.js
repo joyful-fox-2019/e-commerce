@@ -30,6 +30,10 @@ const productSchema = new Schema({
   },
   image: {
     type: String
+  },
+  gender: {
+    type: String,
+    required: [true, 'Gender is empty']
   }
 }, {
   timestamps: true

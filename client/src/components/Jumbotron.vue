@@ -19,8 +19,20 @@
               <a href="#" class="badge badge-light">{{ cart.length }}</a>
               <img src="../../public/cart-black.png" style="width: 24px">
             </div>
-            <div class="ml-2 mr-2" v-if="!isLogin">
+            <div class="ml-2 mr-2" v-if="!isLogin"  @click.prevent="toLogin()">
               Login              
+            </div>
+            <div class="ml-2 mr-2">
+              <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Menu
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="#" v-if="!admin" @click.prevent="toTransaction()">Transactions</a>
+                  <a class="dropdown-item" href="#" v-if="admin" @click.prevent="toAdmin()">Admin</a>
+                  <a class="dropdown-item" href="#" @click.prevent="logout()">Logout</a>
+                </div>
+              </div>
             </div>
           </small>
         </div>
@@ -34,6 +46,18 @@ export default {
   methods: {
     toCart(){
       this.$router.push('/cart')
+    },
+    toAdmin(){
+      this.$router.push('/admin/transaction')
+    },
+    toLogin(){
+      this.$router.push('/login')
+    },
+    logout(){
+      this.$store.dispatch('logout')
+    },
+    toTransaction(){
+      this.$router.push('/transactions')
     }
   },
   computed: {
@@ -42,6 +66,9 @@ export default {
     },
     isLogin(){
       return this.$store.state.isLogin
+    },
+    admin(){
+      return this.$store.state.admin
     }
   },
   created(){

@@ -16,12 +16,22 @@
           </small>
         </div>
         <small class="ml-auto d-flex justify-content-around align-items-center">
-          <div class="ml-2 mr-2 d-flex align-items-center" v-if="isLogin">
+          <div class="ml-2 mr-2 d-flex align-items-center" v-if="isLogin" @click.prevent="toCart()">
             <a href="#" class="badge badge-light">{{cart.length}}</a>
-            <img src="../../public/cart-black.png" style="width: 24px">
+            <img src="../../public/cart-black.png" style="width: 24px; cursor: pointer">
           </div>
-          <div class="ml-2 mr-2" v-if="!isLogin">
+          <div class="ml-2 mr-2" v-if="!isLogin" @click.prevent="toLogin()">
             Login              
+          </div>
+          <div class="dropdown">
+            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Menu
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#" v-if="!admin" @click.prevent="toTransaction()">Transactions</a>
+              <a class="dropdown-item" href="#" v-if="admin" @click.prevent="toAdmin()">Admin</a>
+              <a class="dropdown-item" href="#" @click.prevent="logout()">Logout</a>
+            </div>
           </div>
         </small>
       </div>
@@ -37,6 +47,12 @@ export default {
     },
     isLogin(){
       return this.$store.state.isLogin
+    },
+    admin(){
+      return this.$store.state.admin
+    },
+    toLogin(){
+      this.$router.push('/login')
     }
   },
   created() {
@@ -45,8 +61,20 @@ export default {
     }
   },
   methods: {
+    toTransaction(){
+      this.$router.push('/transactions')
+    },
     toHome(){
       this.$router.push('/')
+    },
+    toCart(){
+      this.$router.push('/cart')
+    },
+    toAdmin(){
+      this.$router.push('/admin/transaction')
+    },
+    logout(){
+      this.$store.dispatch('logout')
     }
   }
 }

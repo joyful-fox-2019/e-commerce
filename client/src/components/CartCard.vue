@@ -3,7 +3,7 @@
     <div class="d-flex">
       <!-- img -->
       <div style="width: 200px">
-        <img src="https://cdn.shopify.com/s/files/1/0167/4484/products/sienna-1_1480x1836_crop_center.jpg?v=1573048415" alt="" style="width: 100%; object-fit: cover;">
+        <img :src="item.product_id.image" alt="" style="width: 100%; object-fit: cover;">
       </div>
       <div class="ml-4" style="font-size: 150%">
         {{ item.product_id.name }}

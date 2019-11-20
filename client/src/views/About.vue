@@ -4,7 +4,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-8" style="height: 100vh; width: 100%">
-          <img src="https://cdn.shopify.com/s/files/1/0167/4484/products/sienna-1_1480x1836_crop_center.jpg?v=1573048415" alt="" style="width: 100%; height: 100%;">
+          <img :src="product.image" alt="" style="width: 100%; height: 100%;">
         </div>
         <div class="col-sm-4">
           <div class="mt-4" style="font-size: 200%">
@@ -38,6 +38,7 @@
 
 <script>
 import Navbar from '../components/Navbar.vue'
+import Swal from 'sweetalert2'
 
 export default {
   name: 'about',
@@ -62,6 +63,10 @@ export default {
   methods: {
     addCart(id){
       this.$store.dispatch('addToCart', {product_id: id})
+      Swal.fire({
+        title: 'Success added to cart',
+        icon: 'success'
+      })
     }
   },
   created(){

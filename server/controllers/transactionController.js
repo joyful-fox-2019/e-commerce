@@ -17,8 +17,8 @@ class TransactionController{
   }
 
   static transactionDone(req, res, next){
-    const _id = req.params.id
-    Transaction.updateOne({_id}, {
+    const id = req.params.id
+    Transaction.updateOne({_id: id}, {
       status: true
     })
     .sort({createdAt:'desc'})
@@ -102,6 +102,7 @@ class TransactionController{
 
   static adminFindAll(req, res, next){
     Transaction.find()
+    .populate('products.product_id')
     .sort({createdAt:'desc'})
       .then(transactions=>{
         res.status(200).json(transactions)
