@@ -19,5 +19,6 @@ const upload = gcsUpload({
 router.use(authentication)
 router.post('/', authorizationRole, upload.single('image'), Item.create)
 router.get('/:category', Item.getAll)
+router.get('/detail/:id', Item.getDetail)
 
 module.exports = router;

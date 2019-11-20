@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     statusLogin(value) {
-      this.$snotify.warning("Username/Password Wrong!", {
+      this.$snotify.warning("Email/Password is Wrong!", {
         timeout: 3000,
         showProgressBar: true,
         closeOnClick: true,

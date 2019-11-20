@@ -3,14 +3,14 @@ const Schema = mongoose.Schema;
 const model = mongoose.model;
 const ObjectId = Schema.Types.ObjectId;
 
-const transactionSchema = new Schema({
+const cartSchema = new Schema({
     userId: {
         type: ObjectId,
         ref: 'User'
     },
-    productId: {
+    itemId: {
         type: ObjectId,
-        ref: 'Product',
+        ref: 'Item',
     },
     count: {
         type: Number
@@ -20,6 +20,6 @@ const transactionSchema = new Schema({
     }
 })
 
-const Transaction = model('Transaction', transactionSchema);
+const Cart = model('Cart', cartSchema);
 
-module.exports = Transaction;
+module.exports = Cart;

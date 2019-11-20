@@ -1,13 +1,17 @@
 <template>
   <div class="rightMenu">
-    <div class="itemTitle">Item Mall</div>
+    <div @click="goItemMall" class="itemTitle">Item Mall</div>
+    <div class="rpsTitle">
+      <img src="../../assets/images/rps.gif" alt="rps" />
+      {{$store.state.rpsNow}}
+    </div>
     <div v-if="isAdmin" class="item">
       <p @click="showModal">Add Item</p>
     </div>
-    <div class="item">
-      <p>Check Out</p>
+    <div @click="showCart" class="item">
+      <p>List Item In Cart</p>
     </div>
-    <!--modal-->
+    <!--modal create-->
     <b-modal ref="my-modal" hide-footer title="Hello Admin">
       <div class="d-block text-center">
         <h3>Add New Item</h3>
@@ -30,8 +34,9 @@
         <b-form-group id="input-group-3" label="Category:" label-for="input-3">
           <b-form-select
             class="mb-2 mr-sm-2 mb-sm-0"
+            aria-placeholder="select one"
             v-model="form.category"
-            :options="{ 'bestitem' : 'bestitem', 'newitem' : 'newitem' }"
+            :options="categorys"
             id="inline-form-custom-select-pref"
           ></b-form-select>
         </b-form-group>
@@ -46,6 +51,22 @@
       </b-form>
       <b-button class="mt-3" variant="outline-danger" block @click="hideModal">Close Me</b-button>
     </b-modal>
+    <!--endmodalcreate-->
+    <!--modal cart-->
+    <b-modal ref="my-cart" hide-footer title="Hello Seal Lovers">
+      <div class="d-block text-center">
+        <h3>Detail List Item In Cart</h3>
+      </div>
+      <b-form @submit.prevent="checkOut" v-if="show">
+        <!--detailitem-->
+        {{listCart}}
+        <!--enddetail-->
+
+        <b-button class="mt-3" type="submit" block variant="primary">CheckOut Now</b-button>
+      </b-form>
+      <b-button class="mt-3" variant="danger" block @click="hideModalCart">Close Me</b-button>
+    </b-modal>
+    <!--endmodalcart-->
   </div>
 </template>
 
@@ -64,16 +85,31 @@ export default {
         rps: 0,
         image: null
       },
-      isAdmin: localStorage.getItem("role") === "admin" ? true : false
+      categorys: [{ text: "Select One", value: null }, "bestitem", "newitem"],
+      isAdmin: localStorage.getItem("role") === "admin" ? true : false,
+      showDetailCart: false
     };
   },
   methods: {
+    showCart() {
+      this.$store.dispatch("getDetailCart");
+      this.$refs["my-cart"].show();
+      this.showDetailCart = true;
+    },
+    hideModalCart() {
+      this.$refs["my-cart"].hide();
+    },
     showModal() {
       this.$refs["my-modal"].show();
       this.show = true;
     },
     hideModal() {
       this.$refs["my-modal"].hide();
+      this.form.name = "";
+      this.form.stock = 0;
+      this.form.category = null;
+      this.form.rps = 0;
+      this.image = null;
     },
     onSubmit() {
       let fd = new FormData();
@@ -118,6 +154,16 @@ export default {
             position: "leftTop"
           });
         });
+    },
+    goItemMall() {
+      this.$store.state.page = "itemmall";
+      this.$store.state.title = "Item Mall";
+      this.$router.push("/home/itemmall/bestitem");
+    }
+  },
+  computed: {
+    listCart() {
+      return this.$store.state.detailCart;
     }
   }
 };
@@ -133,6 +179,20 @@ export default {
   flex-direction: column;
   font-size: 25px;
 }
+.rpsTitle {
+  background: rgb(244, 46, 132);
+  background: linear-gradient(
+    90deg,
+    rgba(244, 46, 132, 1) 0%,
+    rgba(0, 97, 210, 0.5844712885154062) 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  height: 100px;
+  color: white;
+}
 .itemTitle {
   background: rgb(0, 97, 210);
   background: linear-gradient(
@@ -146,6 +206,10 @@ export default {
   text-decoration: none;
   height: 100px;
   color: white;
+  cursor: pointer;
+}
+.itemTitle:hover {
+  color: yellow;
 }
 .item {
   background-color: whitesmoke;

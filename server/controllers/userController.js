@@ -94,11 +94,27 @@ class UserController {
     }
 
     static addRps(req, res, next) {
-        User.findByIdAndUpdate({
-            _id: id
-        }, {
-            rps: req.body.rps
-        })
+        User.findOneAndUpdate({
+                email: req.params.email
+            }, {
+                rps: req.body.rps
+            }, {
+                new: true
+            })
+            .then(rps => {
+                res.status(200).json(rps)
+            })
+            .catch(next)
+    }
+
+    static getRps(req, res, next) {
+        User.findOne({
+                email: req.params.email
+            })
+            .then(rps => {
+                res.status(200).json(rps)
+            })
+            .catch(next)
     }
 };
 

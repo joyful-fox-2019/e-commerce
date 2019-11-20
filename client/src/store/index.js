@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+const baseUrl = "http://localhost:3000"
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -23,7 +24,12 @@ export default new Vuex.Store({
     page: 'news',
     title: 'Announcements & News',
     bestItem: [],
-    newItem: []
+    newItem: [],
+    rpsNow: 0,
+    detailItem: null,
+    cartNow: null,
+    totalPaymentNow: 0,
+    detailCart: []
   },
   getters: {
     formNowIn: (state) => {
@@ -62,14 +68,108 @@ export default new Vuex.Store({
     },
     FETCHNEWITEM(state, payload) {
       state.newItem = payload
+    },
+    ADDNEWRPS(state, payload) {
+      state.rpsNow = payload
+    },
+    GETDETAILITEM(state, payload) {
+      state.detailItem = payload
+    },
+    ADDITEMTOCART(state, payload) {
+      state.cartNow = payload
+    },
+    GETDETAILCART(state, payload) {
+      state.detailCart = payload
+    },
+    ADDNEWPAYMENT(state, payload) {
+      state.totalPaymentNow += payload
     }
   },
   actions: {
+    getDetailCart({
+      commit
+    }) {
+      axios({
+          url: baseUrl + `/carts/`,
+          method: "GET",
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        .then(({
+          data
+        }) => {
+          commit('GETDETAILCART', data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    addNewPayment({
+      commit
+    }, payload) {
+      commit('ADDNEWPAYMENT', payload)
+    },
+    addCart({
+      commit
+    }, payload) {
+      axios({
+          url: baseUrl + `/carts`,
+          method: "POST",
+          data: payload,
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        .then(({
+          data
+        }) => {
+          commit('ADDITEMTOCART', data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getDetailItem({
+      commit
+    }, id) {
+      axios({
+          url: baseUrl + `/items/detail/${id}`,
+          method: "GET",
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        .then(({
+          data
+        }) => {
+          commit('GETDETAILITEM', data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    addRps({
+      commit
+    }) {
+      axios({
+          url: baseUrl + `/users/getrps/${localStorage.getItem("email")}`,
+          method: "GET"
+        })
+        .then(({
+          data
+        }) => {
+          commit('ADDNEWRPS', data.rps)
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     fetchBestItem({
       commit
     }) {
       axios({
-          url: 'http://localhost:3000/items/bestitem',
+          url: baseUrl + '/items/bestitem',
           method: "GET",
           headers: {
             token: localStorage.getItem('token')
@@ -88,7 +188,7 @@ export default new Vuex.Store({
       commit
     }) {
       axios({
-          url: 'http://localhost:3000/items/newitem',
+          url: baseUrl + '/items/newitem',
           method: "GET",
           headers: {
             token: localStorage.getItem("token")

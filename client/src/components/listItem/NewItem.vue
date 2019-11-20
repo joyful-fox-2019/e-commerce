@@ -1,11 +1,14 @@
 <template>
   <div id="newitem">
     <div id="cover_item" v-for="item in fetchItem" :key="item._id">
-      <div id="item">
+      <div @click="buy(item._id)" id="item">
         <img :src="item.image" :alt="newitem+item._id" width="100px" height="100px" />
       </div>
-      <p>{{item.name}}</p>
-      <p style="color: red;">rps: {{item.rps}}</p>
+      <p @click="buy(item._id)" id="itemName">{{item.name}}</p>
+      <p @click="buy(item._id)" id="itemRps" style="color: red;">
+        <img src="../../assets/images/rps.gif" alt="rps" />
+        {{item.rps}}
+      </p>
       <p style="color: blue;">stock: {{item.stock}}</p>
     </div>
   </div>
@@ -34,6 +37,17 @@ export default {
 #item {
   padding: 5px 5px;
   background-color: #b2afaf;
+}
+#item:hover {
+  cursor: pointer;
+}
+#itemName:hover {
+  cursor: pointer;
+  color: yellowgreen;
+}
+#itemRps:hover {
+  cursor: pointer;
+  color: yellow;
 }
 #cover_item {
   display: flex;

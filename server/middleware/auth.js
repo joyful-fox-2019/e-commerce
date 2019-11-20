@@ -25,7 +25,7 @@ function authorization(req, res, next) {
                 }
             } else {
                 res.status(404).json({
-                    message: 'article is not found!'
+                    message: 'item is not found!'
                 })
             }
         })

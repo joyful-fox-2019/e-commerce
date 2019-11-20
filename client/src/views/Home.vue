@@ -171,6 +171,7 @@ export default {
         }
       );
     }
+    this.$store.dispatch("addRps");
   }
 };
 </script>
