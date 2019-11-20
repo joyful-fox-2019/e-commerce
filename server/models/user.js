@@ -33,7 +33,8 @@ const userSchema = Schema({
         required : [true, 'you must enter your password'],
     },
     photo : {
-        type : String        
+        type : String,
+        default : 'https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'      
     },
     role : {
         type : String,

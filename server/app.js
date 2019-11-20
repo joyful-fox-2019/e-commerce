@@ -13,7 +13,7 @@ const cors = require('cors')
 const errorHandler = require('./middlewares/errorHandler')
 
 mongoose.
-    connect('mongodb://localhost/e-commerce', {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify : true} )
+    connect(process.env.MONGO_DB, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify : true} )
     .then( () => {
         console.log(`server is connected`)
     })
