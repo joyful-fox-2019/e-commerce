@@ -8,6 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    productEdit : {},
     userTransactions : [],
     totalMoney : 0,
     allProducts: [],
@@ -23,7 +24,27 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    // semua hal yang dilakukan oleh mutations harus syn
+    // semua hal yang dilakukan oleh mutations harus sycn
+    setTotalMoney(state, payload) {
+      state.totalMoney = payload.reduce((total, cart) => {
+        console.log(cart)
+        return total + cart.totalPrice
+      })
+    },
+    deleteCart(state, payload) {
+      state.carts =  state.carts.filter(cart => {   
+          return cart.product._id != payload           
+          });
+      let temp = state.carts
+      state.totalMoney = temp.reduce(function(total, cart) {
+        return total + cart.totalPrice
+      },0)    
+    },
+    setDataEdit(state, payload) {
+      console.log('masuk set data edit', payload)
+      state.productEdit = payload
+      //$bvModal.show('edit-product')
+    },
     setTransactios(state, payload) {
       state.userTransactions = payload
     },
@@ -31,12 +52,17 @@ export default new Vuex.Store({
       state.carts = []
       state.totalMoney = []
     },
+    setUserProduct(state) {
+      console.log('set user Products')
+      console.log(state.userProducts, state.allProducts)
+      state.userProducts = state.allProducts.filter(item => {
+        return item.user == state.user._id
+      })
+    },
     fillProducts (state, data) {
       console.log( JSON.stringify(state.user) + 'fsdfsfsdfsmasuk mutations')
       state.allProducts = data
-      state.userProducts = data.filter(item => {
-        return item.user == state.user._id
-      })
+      
     },
     setLogin(state, payload) {
       state.isLogin = payload
@@ -55,9 +81,9 @@ export default new Vuex.Store({
           state.carts.push({
             totalItem : 1,
             product : payload,
-            totalPrice : payload.price
+            totalPrice : Number(payload.price)
           })
-          state.totalMoney += payload.price
+          state.totalMoney += Number(payload.price)
       } else {
         for (let i=0; i<state.carts.length; i++) {
             if (state.carts[i].product._id == payload._id) {
@@ -69,8 +95,8 @@ export default new Vuex.Store({
                   })
                 } else {
                   state.carts[i].totalItem += 1
-                  state.carts[i].totalPrice += payload.price
-                  state.totalMoney += payload.price
+                  state.carts[i].totalPrice += Number(payload.price)
+                  state.totalMoney += Number(payload.price)
                 }
                 return;
             }            
@@ -78,9 +104,9 @@ export default new Vuex.Store({
         state.carts.push({
           totalItem : 1,
           product : payload,
-          totalPrice : payload.price
+          totalPrice : Number(payload.price)
         })
-        state.totalMoney += payload.price
+        state.totalMoney += Number(payload.price)
       }
       
     }
@@ -88,11 +114,25 @@ export default new Vuex.Store({
   actions: {
     // semua hal yang dilakukan oleh actions harus asyn
     // actions harus selalu memanggil mutations sebelum merubah state
+    addCartToDataBase(context) {
+      axios.post('/cart', context.state.carts,{
+        headers : {
+          token : localStorage.getItem('token')
+        }
+      })
+      .then(({data}) => {
+        console.log(data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
     getAllProducts (context) {
       axios
         .get('/products')
         .then(({ data }) => {
           context.commit('fillProducts', data)
+          //context.commit('')
           console.log(data, 'masuk actions')          
         })
         .catch(err => {
@@ -133,13 +173,8 @@ export default new Vuex.Store({
         .catch(err => {
           console.log(err)
         })
-    }     
+    },
   },
   modules: {
   },
-  // plugins: [
-  //   createPersistedState({
-  //     path : ['user']
-  //   }) 
-  // ]
 })

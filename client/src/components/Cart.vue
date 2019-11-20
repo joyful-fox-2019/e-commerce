@@ -11,7 +11,7 @@
                         <h4 class="card-title border-bottom border-success pb-2">Transactions Summary</h4>
                         <h5 class="card-text text-danger">{{totalPrice}}</h5>
                         <a class="btn btn-block btn-success mt-4 text-white" @click.prevent="checkout">Check Out</a> 
-                        <a class="btn btn-block btn-danger mt-3 text-white" @click.prevent="deleteCart">Delete Cart</a> 
+                        <a class="btn btn-block btn-danger mt-3 text-white" @click.prevent="deleteAllCart">Delete Cart</a> 
                       </div>
                     </div>
                 </div>
@@ -27,8 +27,8 @@
                             <p class="card-text">{{cart.totalItem}}</p>
                             <p class="card-text text-danger">{{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(cart.totalPrice)}}</p>
                             <div class="d-flex justify-content-between pt-3" >
-                                <a class="btn btn-outline-success" @click.prevent="showUpdate(article._id)" href=""><i class="fa fa-cart-plus pr-1"></i>Edit</a>
-                                <a class="btn btn-outline-danger" @click.prevent="deleteArticle(article._id)" href=""><i class="fa fa-cart-arrow-down pr-1"></i>Delete</a> 
+                                <a class="btn btn-outline-success" @click.prevent="updateCart(cart.product._id)" href=""><i class="fa fa-cart-plus pr-1"></i>Edit</a>
+                                <a class="btn btn-outline-danger" @click.prevent="deleteCart(cart.product._id)" href=""><i class="fa fa-cart-arrow-down pr-1"></i>Delete</a> 
                             </div>
                           </div>
                         </div>
@@ -55,6 +55,9 @@ export default {
     }
   },
   methods : {
+    deleteCart(id) {
+      this.$store.commit('deleteCart',id)
+    },
     checkout() {
       this.prepareData(this.carts)
       console.log('masuk checkout', this.userOrders)
@@ -109,7 +112,7 @@ export default {
         }
       }
     },
-    deleteCart() {
+    deleteAllCart() {
       if (this.carts.length == 0) {
         Swal.fire(
             'Ops ....',

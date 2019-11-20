@@ -1,14 +1,14 @@
 <template>
   <div>
     <b-modal
-      id="modal-prevent-closing"
+      id="edit-product"
       ref="modal"
       title="Add Product To Your Store"
       @show="resetModal"
       @hidden="resetModal"
       @ok="handleOk"
     >
-      <form ref="form" @submit.stop.prevent="handleSubmit">
+      <form ref="form" @click="handleSubmit(productEdit._id)">
           <!-- name -->
         <b-form-group
           label="name"
@@ -19,12 +19,11 @@
             id="name-input"
             v-model="name"
             type="text"
+            :placeholder="productEdit.name"
             required
           ></b-form-input>
         </b-form-group>
-
             <!-- quantity -->
-
         <b-form-group
           label="quantity"
           label-for="qty-input"
@@ -33,6 +32,7 @@
           <b-form-input
             id="qty-input"
             v-model="qty"
+            :placeholder="String(productEdit.qty)"
             type="number"
             required
           ></b-form-input>
@@ -61,6 +61,7 @@
           <b-form-input
             id="price-input"
             v-model="price"
+            :placeholder="String(productEdit.price)"
             required
             type="number"
           ></b-form-input>
@@ -80,7 +81,6 @@
             ></b-form-file>
         </b-form-group>
 
-
       </form>
     </b-modal>
   </div>
@@ -92,6 +92,11 @@ import axios from '@/api/server.js'
 import Swal from 'sweetalert2'
 
 export default {
+    computed : {
+      productEdit() {
+        return this.$store.state.productEdit
+      }
+    },
     created() {    
     },
     data () {
@@ -123,34 +128,39 @@ export default {
             // Trigger submit handler
             this.handleSubmit()
         },
-        handleSubmit () {
+        handleSubmit (id) {
         // Exit when the form isn't valid
+        console.log(id)
             if (!this.checkFormValidity()) {
                 return
             }
             // Push the name to submitted names
             let data = new FormData();                
             data.append('name', this.name)
-            data.append('qty', this.qty)
+            data.append('qty', Number(this.qty))
             data.append('image', this.image)
-            data.append('price', this.price)
+            data.append('price', Number(this.price))
             data.append('category', this.category)           
             console.log(data.values(), 'ini data add product')
             axios.
-                post('/products',data , {
+                put(`/products/${id}`,data , {
                     headers : {
                         token : localStorage.getItem('token')
                     }
                 })
                 .then(({data}) => {
                     Swal.fire(
-                      'Add product success',
-                      'Now Our seller can buy yout product',
+                      'Edit product success',
+                      'Now Our seller can buy your product',
                       'success'
                     )  
                 })
                 .catch(err => {
-                    console.log(err)
+                    Swal.fire(
+                      'Edit product success',
+                      `${err.response.data.msg}`,
+                      'success'
+                    )  
                 })
             
             // Hide the modal manually

@@ -41,7 +41,12 @@ const routes = [
   {
     path: '/user',
     name: 'user',
-    component: () => import(/* webpackChunkName: "user" */ '../views/User.vue')
+    component: () => import(/* webpackChunkName: "user" */ '../views/User.vue'),
+    children : [{
+      name : 'productEdit',
+      path : 'edit-product',
+      component : () => import(/* webpackChunkName: "productEdit" */ '../components/productEdit.vue'),
+    }]
   },
   {
     path: '/transaction',

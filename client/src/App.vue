@@ -62,7 +62,7 @@
 <script>
 export default {
   methods : {
-    checkLogin(state) {
+    checkLogin() {
       console.log('masuk checkLogin')
       if (localStorage.getItem('token')) {
           this.$store.dispatch('findUser')
@@ -72,7 +72,7 @@ export default {
           this.$store.commit('setLogin', false)
       }
     },
-    logout(state) {
+    logout() {
       console.log('masuk logout')
       localStorage.removeItem('token')
       this.$router.push("/login")

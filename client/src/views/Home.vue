@@ -6,14 +6,10 @@
                   <sideBar> </sideBar>
               </div>
               <div  class="col-md-10">
-                  <!-- ini filter-->
-                  <!-- v-on:submit.prevent='searchArticle' -->
                   <form class="form-inline md-form form-sm" >
                           <i class="fa fa-search" aria-hidden="true"></i>
                           <input class="form-control ml-3" style="width:90%" type="text" placeholder="Search"
                               aria-label="Search">
-                               <!-- v-model='search' -->
-                              <!-- ini v-model yang menghubungkan -->
                   </form>
                 <!-- this is room for products -->
                   <div class="container" >
@@ -32,20 +28,16 @@
 </template>
 
 <script>
-import Modal from '@/components/Modal'
 import axios from '../api/server'
 import Swal from 'sweetalert2'
 import ProductCard from '@/components/ProductCard'
 import sideBar from '@/components/sideBar'
-import Corosel from '@/components/Corosel'
 
 export default {
   name: 'Home',
   components: {
     ProductCard,
     sideBar,
-    Corosel,
-    Modal
   },
   data () {
     return {
@@ -53,6 +45,7 @@ export default {
     }
   },
   created () {
+    this.$store.dispatch('getAllProducts')
     this.allProducts = this.$store.state.allProducts
     console.log(this.allProducts, 'ini home')
   },

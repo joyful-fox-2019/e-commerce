@@ -19,6 +19,7 @@
 
 <script>
 import axios from '@/api/server.js'
+import Swal from 'sweetalert2'
 
 export default {
   props: ['product'],
@@ -35,29 +36,38 @@ export default {
     findUser(id) {
     },
     addProducttoCart(product) {
+      if (!this.isLogin) {
+          Swal.fire({
+              title: 'Opps ..',
+              text: 'You must login to buy product',
+              icon: 'warning'
+          })    
+          return     
+      }
       console.log('masuk add Product', product)
       this.addCart(product)
       this.$store.commit('addProduct', product)      
       console.log(this.$store.state.carts)
     },
     addCart(payload) {
-      console.log(payload, 'addcart')
-      axios.
-        post('/cart', {
-          product : payload._id,
-          totalPrice : payload.price,
-          totalItem : 1
-        }, {
-          headers : {
-            token : localStorage.getItem('token')},          
-        })
-        .then(({data}) => {
-          console.log('add cart succes')
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
+      console.log(payload, 'addcart')      
+        axios.
+            post('/cart', {
+              product : payload._id,
+              totalPrice : payload.price,
+              totalItem : 1
+            }, {
+              headers : {
+                token : localStorage.getItem('token')},          
+            })
+            .then(({data}) => {
+              console.log('add cart succes')
+            })
+            .catch(err => {
+              console.log(err)
+            })
+      }
+    
   },
   computed : {
     allProducts() {
@@ -65,6 +75,9 @@ export default {
     },
     carts() {
       return this.$store.state.carts
+    },
+    isLogin() {
+      return this.$store.state.isLogin
     }
   }
 }
