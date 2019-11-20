@@ -51,7 +51,8 @@ module.exports = {
             .catch(next)
     },
     updateQty(req,res,next){
-        const { quantities, id } = req.body
+        const { id } = req.params
+        const { quantities } = req.body
         const formProduct = { quantities }
         productModel.findOneAndUpdate({ _id : id }, formProduct ,{ new : true })
             .then(products=>{

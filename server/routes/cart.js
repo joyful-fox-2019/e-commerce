@@ -7,7 +7,8 @@ routes.use(authentication)
 routes.get('/mycarts', cartController.findMyCart)
 routes.delete('/', cartController.deleted)
 routes.post('/', cartController.create)
+routes.patch('/:id/status', cartController.updateStatus)
 routes.patch('/:id', authorizationCart, cartController.updateQuantities)
-routes.delete('/', authorizationCart, cartController.deleted)
+routes.delete('/:id', authorizationCart, cartController.deleted)
 
 module.exports = routes

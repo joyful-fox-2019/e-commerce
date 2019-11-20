@@ -15,10 +15,12 @@
     <b-card-text>
         Qty : {{item.quantities}} pcs
     </b-card-text>
-    <b-button variant="success" @click="checkout(item.productId._id,item.quantities,item.productId.quantities,item._id)">checkout</b-button>
-    <b-button variant="danger" @click="deleted(item._id)" class="ml-1">delete</b-button>
-
+    <b-button variant="secondary" v-if="item.status == true" class="disabled btn-sm">Complete</b-button>
+    <b-button variant="success" v-if="item.status == false" class="btn-sm" @click="checkout(item.productId._id,item.quantities,item.productId.quantities,item._id)">checkout</b-button>
+    <b-button variant="danger" @click="deleted(item._id)" class="ml-1 btn-sm">delete</b-button>
   </b-card>
+  <div>
+</div>
   </div>
 </template>
 
@@ -41,6 +43,7 @@ export default {
             id: id,
             quantities: calt
         }
+        this.$store.dispatch('updateProduct',{ id : checkoutId })
         this.$store.dispatch('updateCart', form)
           .then(({ data })=>{
               const Toast = Swal.mixin({
@@ -58,7 +61,6 @@ export default {
                 icon: 'success',
                 title: 'CheckOut successfully'
               })
-              this.deleted(checkoutId)
           })
           .catch(err=>{
               Swal.fire({
@@ -67,6 +69,7 @@ export default {
                   text: "Checkout Failed!"
               });
           })
+      this.$store.dispatch('getMyCart')
     },
     deleted(id){
         let form = {
@@ -89,6 +92,7 @@ export default {
                 icon: 'success',
                 title: 'Delete successfully'
               })
+              this.$store.dispatch('getMyCart')
           })
           .catch(err=>{
               Swal.fire({
@@ -97,6 +101,7 @@ export default {
                   text: "Delete Failed!"
               });
           })
+          this.$store.dispatch('getMyCart')
     },
     mounted () {
       this.$store.dispatch('getMyCart')

@@ -7,10 +7,16 @@
     <!-- LIST Product -->
     <div class="container">
       <div class="jumbotron">
-
+      <h1 class="display-3">My Product</h1>
+      <p class="lead"></p>
+      <hr class="my-2">
+      <!-- <p class="lead"> -->
+        <!-- <a class="btn btn-primary btn-lg" href="Jumbo action link" role="button">Jumbo action name</a> -->
+        <div class="wrapper mt-5">
+          <cart-item v-for="item in allMyProduct" :key="item._id" :item="item"/>
+        </div>
       <!-- </p> -->
-        <router-view/>
-      </div>
+    </div>
     </div>
   </div>
 </template>
@@ -18,11 +24,11 @@
 <script>
 // @ is an alias to /src
 import { mapState } from 'vuex'
-// import Item from '@/components/cardCart.vue'
+import Item from '@/components/cardBookmark.vue'
 export default {
-  name: 'cart',
+  name: 'mylist',
   components: {
-    // 'cart-item': Item
+    'cart-item': Item
   },
   data () {
     return {
@@ -31,12 +37,12 @@ export default {
   methods: {
   },
   created () {
-    this.$store.dispatch('getMyCart')
+    this.$store.dispatch('getMyProduct')
   },
   mounted () {
-    this.$store.dispatch('getMyCart')
+    this.$store.dispatch('getMyProduct')
   },
-  computed: mapState([ 'myCart' ])
+  computed: mapState([ 'allMyProduct' ])
 }
 </script>
 

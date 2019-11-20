@@ -1,16 +1,18 @@
 <template>
   <div>
-  <b-navbar toggleable="sm"  class="navbarStore" style="background-color:#FFFFFF">
+  <b-navbar toggleable="sm" class="navbarStore" style="cursor:pointer;background-color:#FFFFFF">
+  <router-link to="/">
     <div class="ml-5">
         <img src="https://pngimage.net/wp-content/uploads/2018/06/logo-store-png-5.png"
         class="ml-5"
         style="height:35px;"
         alt="icon">
     </div>
+  </router-link>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
           <router-link to="/login">
-            <button type="submit" @click="$store.commit('SET_BACK')" v-if="!isLogin" v-show="!back"  class="btn p-0">
+            <button type="submit" v-if="!isLogin"  class="btn p-0">
                 <i class="fas fa-user-circle fa-2x mr-3"></i>
             </button>
           </router-link>
@@ -18,18 +20,23 @@
               <i class="fas fa-address-card fa-2x"></i>
           </button>
           <router-link to="/mycart">
-            <button type="submit" v-if="isLogin" @click="$store.commit('SET_BACK')" class="btn p-0 ml-2">
+            <button type="submit" v-if="isLogin" v-show="!mycart" :@click="mycart=false" class="btn p-0 ml-2">
               <i class="fas fa-cart-arrow-down fa-2x mr-3"></i>
             </button>
           </router-link>
           <router-link to="/addproduct">
-            <button type="submit" v-if="isLogin" @click="$store.commit('SET_BACK')" class="btn p-0 ml-2">
+            <button type="submit" v-if="isLogin" class="btn p-0">
               <i class="fas fa-plus-circle fa-2x mr-3"></i>
             </button>
           </router-link>
-          <button type="submit" v-if="back" class="btn p-0">
-            <i @click="$router.go(-1),$store.commit('SET_BACK')" class="fas fa-arrow-circle-right fa-2x"></i>
-          </button>
+          <router-link to="/mycart/mylist">
+            <button type="submit" v-if="isLogin" class="btn p-0">
+              <i class="fas fa-bookmark fa-2x mr-3"></i>
+            </button>
+          </router-link>
+          <!-- <button type="submit" class="btn p-0"> -->
+            <!-- <i @click="$router.go(-1)" class="fas fa-arrow-circle-right fa-2x"></i> -->
+          <!-- </button> -->
       </b-navbar-nav>
   </b-navbar>
   </div>
@@ -41,6 +48,7 @@ import { mapState } from 'vuex'
 export default {
     data () {
         return {
+          mycart: false
         }
     },
     methods: {
@@ -56,7 +64,7 @@ export default {
         .then(result => {
             if(result.value){
                 localStorage.removeItem('token')
-                localStorage.removeItem('name')
+                localStorage.removeItem('userId')
                 this.$store.commit('SET_LOGIN')
                 const Toast = Swal.mixin({
                   toast: true,
@@ -74,6 +82,7 @@ export default {
                   title: 'Logout in successfully'
                 })
             }
+            this.$router.push('/')
         })
         .catch(err=>{
             Swal.fire({

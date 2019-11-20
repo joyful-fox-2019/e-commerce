@@ -2,36 +2,59 @@ const chai  = require('chai')
 const chaiHttp = require('chai-http')
 const app = require('../app.js')
 const userModel = require('../models/user')
+const productModel = require('../models/product')
 const expect = chai.expect
 const fs = require('fs')
+const { generateToken } = require('../helpers/jwt')
 
 chai.use(chaiHttp)
 
+const formProduct = {
+    name : 'javascript',
+    price : 200,
+    description : 'with nodejs version',
+    quantities : 100,
+    imgUrl : './img/profil_avatdwdar.jpg'
+}
+
 const userSignUp = {
-    name : 'mail bin mail',
-    email : 'mail@mail.com',
-    password : 'mailsimail',
-    imgUrl : './img/profil_avatdwdar.jpg',
-    role : 'customer'
+    name : 'accountTumbal',
+    email : 'accountTumbal@mail.com',
+    password : 'mawang8080',
+    imgUrl : './img/profil_avatdwdar.jpg'
 }
-
-const userSignIn = {
-    email : 'mail@mail.com',
-    password : 'mailsimail'
-}
-
+let token = ''
+let productId = ''
+let userId = ''
 // create account user
-// before(function(){
-//     userModel.create({
-//         name : 'ipin bin upin',
-//         email : 'mail@mail.com',
-//         password : 'mailsimail',
-//         imgUrl : './img/profil_avatdwdar.jpg'
-//     })
-//     .then(user=>{ console.log('testing: success create user') })
-//     .catch(console.log)
-// })
-
+before(function(done){
+    userModel.create(userSignUp)
+    .then(user => {
+        token = generateToken({
+            email: user.email,
+            id: user._id,
+            name: user.name
+        })
+        userId = user._id
+        console.log('testing: success create user and generate token status 201')
+        let formProd = {
+            name : formProduct.name,
+            price : formProduct.price,
+            description : formProduct.description,
+            quantities : formProduct.quantities,
+            imgUrl: formProduct.imgUrl,
+            userId : userId,
+        }
+        productModel.create(formProd)
+        .then(product => {
+            productId = product._id
+            console.log('testing: success create user and generate token status 201')
+            done()
+        })
+        .catch(console.log)
+    })
+    .catch(console.log)
+})
 // delete data after testing
 after(function(done){
     userModel.deleteMany({})
@@ -42,17 +65,39 @@ after(function(done){
         .catch(console.log)
 })
 
+// delete product
+after(function(done){
+    productModel.deleteMany({})
+        .then(()=>{
+            console.log(`testing: delete all data products success`);
+            done()
+        })
+        .catch(console.log)
+})
+
 // process validation with mochajs
-describe('User Routes',function(){
-    describe('POST /user/signup',function(){
-        describe('success process',function(){
-            it('create user with 201 status code',function(done){
+describe('Product Routes',function(){
+    describe('success process',function(){
+        describe('GET /product',function(){
+            it('find all data products success with 200 status code',function(done){
                 chai.request(app)
-                .post('/user/signup')
-                .field('name', userSignUp.name)
-                .field('email', userSignUp.email)
-                .field('password', userSignUp.password)
-                .field('role', userSignUp.role)
+                .get('/product')
+                .end(function(err,res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(200)
+                    done()
+                })
+            })
+        })
+        describe('POST /product',function(){
+            it('create product with 201 status code',function(done){
+                chai.request(app)
+                .post('/product')
+                .set('token', token)
+                .field('name', formProduct.name)
+                .field('price', formProduct.price)
+                .field('description', formProduct.description)
+                .field('quantities', formProduct.quantities)
                 .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
                 .end(function(err,res){
                     imgUrl = res.body.imgUrl
@@ -62,85 +107,12 @@ describe('User Routes',function(){
                 })
             })
         })
-        describe('error process without name',function(){
-            it('create user with 400 status code without name',function(done){
+        describe('GET /product/myproducts',function(){
+            it('findAll product with 200 status code',function(done){
+                this.timeout(500);
                 chai.request(app)
-                .post('/user/signup')
-                .field('email', userSignUp.email)
-                .field('password', userSignUp.password)
-                .field('role', userSignUp.role)
-                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
-                .end(function(err,res){
-                    imgUrl = res.body.imgUrl
-                    expect(err).to.be.null
-                    expect(res).to.have.status(400)
-                    expect(res.body.message).to.equal('Validation Error')
-                    expect(res.body.errors).to.be.an('array').that.includes('name is required')
-                    done()
-                })
-            })
-        })
-        describe('error process without email',function(){
-            it('create user with 400 status code without email',function(done){
-                chai.request(app)
-                .post('/user/signup')
-                .field('name', userSignUp.name)
-                .field('password', userSignUp.password)
-                .field('role', userSignUp.role)
-                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
-                .end(function(err,res){
-                    imgUrl = res.body.imgUrl
-                    expect(err).to.be.null
-                    expect(res).to.have.status(400)
-                    expect(res.body.message).to.equal('Validation Error')
-                    expect(res.body.errors).to.be.an('array').that.includes('email is required')
-                    done()
-                })
-            })
-        })
-        describe('error process without password',function(){
-            it('create user with 400 status code without password',function(done){
-                chai.request(app)
-                .post('/user/signup')
-                .field('name', userSignUp.name)
-                .field('email', userSignUp.email)
-                .field('role', userSignUp.role)
-                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
-                .end(function(err,res){
-                    imgUrl = res.body.imgUrl
-                    expect(err).to.be.null
-                    expect(res).to.have.status(400)
-                    expect(res.body.message).to.equal('Validation Error')
-                    expect(res.body.errors).to.be.an('array').that.includes('password is required')
-                    done()
-                })
-            })
-        })
-        describe('error process with password less than 4 character',function(){
-            it('create user with 400 status code password less than 4 character',function(done){
-                chai.request(app)
-                .post('/user/signup')
-                .field('name', userSignUp.name)
-                .field('email', userSignUp.email)
-                .field('password', 'tes')
-                .field('role', userSignUp.role)
-                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
-                .end(function(err,res){
-                    expect(err).to.be.null
-                    expect(res).to.have.status(400)
-                    expect(res.body.message).to.equal('Validation Error')
-                    expect(res.body.errors).to.be.an('array').that.includes('Password Minimum Contain 4 Character')
-                    done()
-                })
-            })
-        })
-    })
-    describe('POST /user/signin',function(){
-        describe('succes login with 200 status code',function(){
-            it('login user success',function(done){
-                chai.request(app)
-                .post('/user/signin')
-                .send(userSignIn)
+                .get('/product')
+                .set('token', token)
                 .end(function(err,res){
                     expect(err).to.be.null
                     expect(res).to.have.status(200)
@@ -148,28 +120,274 @@ describe('User Routes',function(){
                 })
             })
         })
-        describe('failed login without email',function(){
-            it('login failed without email',function(done){
-                const withoutEmailLogin = { ...userSignIn }
-                delete withoutEmailLogin.email
+        describe('PATCH /product/:id',function(){
+            it('update quantities product with 200 status code',function(done){
                 chai.request(app)
-                .post('/user/signin')
-                .send(withoutEmailLogin)
+                .patch(`/product/`+ productId)
+                .set('token', token)
+                .send({ quantities : 5 })
                 .end(function(err,res){
                     expect(err).to.be.null
-                    expect(res).to.have.status(404)
-                    expect(res.body.errors).to.be.an('array').that.includes('Email Not Found')
+                    expect(res).to.have.status(200)
                     done()
                 })
             })
         })
-        describe('failed login with wrong password',function(){
-            it('login failed with wrong password',function(done){
-                const withoutPassLogin = { ...userSignIn }
-                withoutPassLogin.password = 'asas'
+        describe('PUT /product/:id',function(){
+            it('update all data product with 200 status code',function(done){
                 chai.request(app)
-                .post('/user/signin')
-                .send(withoutPassLogin)
+                .put(`/product/${productId}`)
+                .set('token', token)
+                .field('name', 'testing')
+                .field('price', '999999')
+                .field('description', 'testing desc')
+                .field('quantities', '10')
+                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
+                .end(function(err,res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(200)
+                    done()
+                })
+            })
+        })
+        describe('DELETE /product/:id',function(){
+            it('delete data product with 200 status code',function(done){
+                chai.request(app)
+                .delete(`/product/${productId}`)
+                .set('token', token)
+                .end(function(err,res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(200)
+                    done()
+                })
+            })
+        })
+    })
+    describe('fail process',function(){
+        describe('POST /product',function(){
+            it('create data without token with 400 status code',function(done){
+                chai.request(app)
+                .post('/product')
+                .set('token', null)
+                .field('name', formProduct.name)
+                .field('price', formProduct.price)
+                .field('description', formProduct.description)
+                .field('quantities', formProduct.quantities)
+                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
+                .end(function(err,res){
+                    imgUrl = res.body.imgUrl
+                    expect(err).to.be.null
+                    expect(res).to.have.status(400)
+                    done()
+                })
+            })
+        })
+        describe('POST /product',function(){
+            it('create data without name with 400 status code',function(done){
+                chai.request(app)
+                .post('/product')
+                .set('token', token)
+                .field('price', formProduct.price)
+                .field('description', formProduct.description)
+                .field('quantities', formProduct.quantities)
+                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
+                .end(function(err,res){
+                    imgUrl = res.body.imgUrl
+                    expect(err).to.be.null
+                    expect(res).to.have.status(400)
+                    done()
+                })
+            })
+        })
+        describe('POST /product',function(){
+            it('create data without price with 400 status code',function(done){
+                chai.request(app)
+                .post('/product')
+                .set('token', token)
+                .field('name', formProduct.name)
+                .field('description', formProduct.description)
+                .field('quantities', formProduct.quantities)
+                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
+                .end(function(err,res){
+                    imgUrl = res.body.imgUrl
+                    expect(err).to.be.null
+                    expect(res).to.have.status(400)
+                    done()
+                })
+            })
+        })
+        describe('POST /product',function(){
+            it('create data without description with 400 status code',function(done){
+                chai.request(app)
+                .post('/product')
+                .set('token', token)
+                .field('name', formProduct.name)
+                .field('price', formProduct.price)
+                .field('quantities', formProduct.quantities)
+                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
+                .end(function(err,res){
+                    imgUrl = res.body.imgUrl
+                    expect(err).to.be.null
+                    expect(res).to.have.status(400)
+                    done()
+                })
+            })
+        })
+        describe('POST /product',function(){
+            it('create data without image with 400 status code',function(done){
+                chai.request(app)
+                .post('/product')
+                .set('token', token)
+                .field('name', formProduct.name)
+                .field('price', formProduct.price)
+                .field('description', formProduct.description)
+                .field('quantities', formProduct.quantities)
+                .end(function(err,res){
+                    imgUrl = res.body.imgUrl
+                    expect(err).to.be.null
+                    expect(res).to.have.status(400)
+                    done()
+                })
+            })
+        })
+        describe('PATCH /product/:id',function(){
+            it('update quantities without id product with 404 status code',function(done){
+                chai.request(app)
+                .patch(`/product/`)
+                .set('token', token)
+                .send({ quantities : 5 })
+                .end(function(err,res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(404)
+                    done()
+                })
+            })
+        })
+        describe('PATCH /product/:id',function(){
+            it('update quantities without token product with 400 status code',function(done){
+                chai.request(app)
+                .patch(`/product/${productId}`)
+                .send({ quantities : 5 })
+                .end(function(err,res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(400)
+                    done()
+                })
+            })
+        })
+        describe('PUT /product/:id',function(){
+            it('update all data product without id with 404 status code',function(done){
+                chai.request(app)
+                .put(`/product/`)
+                .set('token', token)
+                .field('name', 'testing')
+                .field('price', '999999')
+                .field('description', 'testing desc')
+                .field('quantities', '10')
+                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
+                .end(function(err,res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(404)
+                    done()
+                })
+            })
+        })
+        describe('PUT /product/:id',function(){
+            it('update all data product without token with 400 status code',function(done){
+                chai.request(app)
+                .put(`/product/${productId}`)
+                .field('name', 'testing')
+                .field('price', '999999')
+                .field('description', 'testing desc')
+                .field('quantities', '10')
+                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
+                .end(function(err,res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(400)
+                    done()
+                })
+            })
+        })
+        describe('PUT /product/:id',function(){
+            it('update all data product without name with 404 status code',function(done){
+                chai.request(app)
+                .put(`/product/${productId}`)
+                .set('token', token)
+                .field('price', '999999')
+                .field('description', 'testing desc')
+                .field('quantities', '10')
+                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
+                .end(function(err,res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(404)
+                    done()
+                })
+            })
+        })
+        describe('PUT /product/:id',function(){
+            it('update all data product without price with 404 status code',function(done){
+                chai.request(app)
+                .put(`/product/${productId}`)
+                .set('token', token)
+                .field('name', 'testing')
+                .field('description', 'testing desc')
+                .field('quantities', '10')
+                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
+                .end(function(err,res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(404)
+                    done()
+                })
+            })
+        })
+        describe('PUT /product/:id',function(){
+            it('update all data product without description with 404 status code',function(done){
+                chai.request(app)
+                .put(`/product/${productId}`)
+                .set('token', token)
+                .field('name', 'testing')
+                .field('price', '999999')
+                .field('quantities', '10')
+                .attach('imgUrl', fs.readFileSync("./test/img/profil_avatdwdar.jpg"), "profil_avatdwdar.jpg")
+                .end(function(err,res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(404)
+                    done()
+                })
+            })
+        })
+        describe('PUT /product/:id',function(){
+            it('update all data product without image with 404 status code',function(done){
+                chai.request(app)
+                .put(`/product/${productId}`)
+                .set('token', token)
+                .field('name', 'testing')
+                .field('price', '999999')
+                .field('description', 'testing desc')
+                .field('quantities', '10')
+                .end(function(err,res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(404)
+                    done()
+                })
+            })
+        })
+        describe('DELETE /product/:id',function(){
+            it('delete data product without product id with 404 status code',function(done){
+                chai.request(app)
+                .delete(`/product/`)
+                .set('token', token)
+                .end(function(err,res){
+                    expect(err).to.be.null
+                    expect(res).to.have.status(404)
+                    done()
+                })
+            })
+        })
+        describe('DELETE /product/:id',function(){
+            it('delete data product without token with 400 status code',function(done){
+                chai.request(app)
+                .delete(`/product/${productId}`)
                 .end(function(err,res){
                     expect(err).to.be.null
                     expect(res).to.have.status(400)

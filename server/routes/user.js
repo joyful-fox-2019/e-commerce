@@ -14,7 +14,6 @@ const upload = gcsUpload({
 
 routes.get('/', userController.findAll)
 routes.post('/signup', upload.single('imgUrl') ,userController.register)
-// routes.post('/signup' ,userController.register)
 routes.post('/signin', userController.login)
 routes.delete('/:id', userController.delete)
 

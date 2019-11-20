@@ -32,10 +32,10 @@ function authentication(req, res, next){
 function authorization(req, res, next){    
     productModel.findById(req.params.id)
         .then(product => {
-            if(!product){
+            if(!product){                
                 next({ status: 404, message: 'Not Found' })
             }
-            else if(product.userId == req.loggedUser.id){
+            else if(product.userId == req.loggedUser.id){                
                 next()
             }
             else{
@@ -51,6 +51,9 @@ function authorization(req, res, next){
 function authorizationCart(req, res, next){    
     cartModel.findById(req.params.id)
         .then(cart => {
+            console.log(cart);
+            
+            console.log(req.params);
             if(!cart){
                 next({ status: 404, message: 'Not Found' })
             }

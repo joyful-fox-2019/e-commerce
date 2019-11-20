@@ -12,7 +12,7 @@ module.exports = {
             .catch(next)
     },
     deleted(req,res,next){
-        const { id } = req.body
+        const { id } = req.params
         cartModel.findByIdAndDelete({ _id : id })
             .then(cart=>{
                 res.status(200).json(cart)
@@ -39,10 +39,17 @@ module.exports = {
     },
     updateQuantities(req,res,next){
         const { quantities } = req.body
-        cartModel.findOneAndUpdate({ _id : req.params.id }, { quantities } ,{ new : true })
+        cartModel.findOneAndUpdate({ _id : req.params.id }, { quantities} ,{ new : true })
             .then(cart=>{
                 res.status(200).json(cart)
             })
             .catch(next)
-    }
+    },
+    updateStatus(req,res,next){
+        cartModel.findOneAndUpdate({ _id : req.params.id }, { status: true } ,{ new : true })
+            .then(cart=>{
+                res.status(200).json(cart)
+            })
+            .catch(next)
+    },
 }

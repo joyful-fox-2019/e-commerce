@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" v-show="!lagiRegister">
     <b-jumbotron class="mt-5">
     <template v-slot:header>Login</template>
     <template v-slot:lead>
@@ -36,7 +36,7 @@
         <hr>
     <template>
         tidak memiliki akun?
-        <router-link to="/register">
+        <router-link to="/register" @click="$store.commit('SETTER_LOGINREGIST')">
             <input class="btn btn-sm btnHoverOne" type="submit" value="daftar sekarang">
         </router-link>
     </template>
@@ -44,17 +44,19 @@
         <input class="btn btn-sm btn-success" @click="$store.commit('SET_BACK')" type="submit" @click.prevent="$router.go(-1)" value="Back">
     </div>
   </b-jumbotron>
+  <router-view/>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Swal from 'sweetalert2'
 export default {
   name: 'login',
   data () {
       return {
           email: '',
-          password: ''
+          password: '',
       }
   },
   methods: {
@@ -82,10 +84,10 @@ export default {
                   title: 'Signin in successfully'
                 })
                 localStorage.setItem('token', data.token)
-                localStorage.setItem('name', data.name)
+                localStorage.setItem('userId', data.userId)
                 this.$store.commit('SET_BACK')
                 this.$store.commit('SET_LOGIN')
-                this.$router.go(-1)
+                this.$router.push('/')
             })
             .catch(err=>{
                 Swal.fire({
@@ -96,6 +98,7 @@ export default {
             })
     }
   },
+  computed: mapState([ 'lagiRegister' ])
 }
 </script>
 

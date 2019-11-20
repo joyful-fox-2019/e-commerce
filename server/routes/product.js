@@ -16,8 +16,8 @@ const upload = gcsUpload({
 routes.get('/',productController.findAll)
 routes.use(authentication)
 routes.get('/myproducts', productController.findMyAll)
-routes.patch('/',productController.updateQty)
 routes.post('/', upload.array('imgUrl') ,productController.create)
+routes.patch('/:id', productController.updateQty)
 routes.put('/:id', authorization, upload.array('imgUrl'), productController.updateAll)
 routes.delete('/:id', authorization, productController.delete)
 

@@ -1,7 +1,7 @@
 <template>
     <div class="container">
     <b-jumbotron class="mt-5">
-    <template v-slot:header>Sell Product</template>
+    <template v-slot:header>Update Product</template>
     <template v-slot:lead>
         jualah yang harus dijual ok!
     </template>
@@ -13,7 +13,7 @@
                 <div class="col-md-4 mb-3">
                     <label for="last_name">Name Of Product</label>
                     <input v-model="name" type="text" class="form-control text-center" name="last_name" id="last_name"
-                        placeholder="Name" aria-describedby="helpId">
+                        :placeholder="dataUpdate.name" aria-describedby="helpId">
                 </div>
                 <div class="col-md-4 mb-3">
                 </div>
@@ -24,7 +24,7 @@
                 <div class="col-md-4 mb-3">
                     <label for="last_name">price</label>
                     <input v-model="price" type="number" class="form-control text-center" name="last_name" id="last_name"
-                        placeholder="Price" aria-describedby="helpId">
+                        :placeholder="dataUpdate.price" aria-describedby="helpId">
                 </div>
                 <div class="col-md-4 mb-3">
                 </div>
@@ -35,7 +35,7 @@
                 <div class="col-md-4 mb-3">
                     <label for="last_name">Description Of Product</label>
                     <input v-model="description" type="text" class="form-control text-center" name="last_name" id="last_name"
-                        placeholder="description" aria-describedby="helpId">
+                        :placeholder="dataUpdate.description" aria-describedby="helpId">
                 </div>
                 <div class="col-md-4 mb-3">
                 </div>
@@ -45,6 +45,8 @@
                 </div>
                 <div class="col-md-4 mb-3">
                         <label for="last_name">Choose Your Image</label>
+                        <p>Before Change</p>
+                        <img :src="dataUpdate.imgUrl[0]" alt="gambar tidak ditemukan" class="mb-2" style="height:200px;">
                     <div class="custom-file">
                         <input v-on:change="imageInput" type="file" class="custom-file-input" id="validatedCustomFile" required>
                         <label  class="custom-file-label" for="validatedCustomFile">Choose file...</label>
@@ -58,6 +60,8 @@
                 </div>
                 <div class="col-md-4 mb-3">
                         <label for="last_name">Choose Your Image</label>
+                        <p>Before Change</p>
+                        <img :src="dataUpdate.imgUrl[1]" alt="gambar tidak ditemukan" class="mb-2" style="height:200px;">
                     <div class="custom-file">
                         <input v-on:change="imageInput1" type="file" class="custom-file-input" id="validatedCustomFile" required>
                         <label  class="custom-file-label" for="validatedCustomFile">Choose file...</label>
@@ -72,25 +76,25 @@
                 <div class="col-md-4 mb-3">
                     <label for="last_name">Quantities</label>
                     <input v-model="quantities" type="number" class="form-control text-center" name="last_name" id="last_name"
-                        placeholder="pcs.." aria-describedby="helpId">
+                        :placeholder="dataUpdate.quantities + '/pcs'" aria-describedby="helpId">
                 </div>
                 <div class="col-md-4 mb-3">
                 </div>
             </div>
             <div class="text-center">
-                <button @click.prevent="addProduct" class="btn btn-primary" type="submit" >Create Product</button>
+                <button @click.prevent="update()" class="btn btn-primary" type="submit" >Update Product</button>
             </div>
         </form>
         <hr>
     <div class="text-center mt-2">
-        <input class="btn btn-sm btn-success" type="submit" @click="$router.push('/')" value="Back">
+        <input class="btn btn-sm btn-success" type="submit" @click="$router.go(-1)" value="Back">
     </div>
   </b-jumbotron>
-  <router-view/>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Swal from 'sweetalert2'
 export default {
   name: 'register',
@@ -99,9 +103,9 @@ export default {
           name: '',
           price: '',
           description: '',
-          image: '',
+          image:  '',
           image1: '',
-          quantities: ''
+          quantities: '',
       }
   },
   methods: {
@@ -111,16 +115,16 @@ export default {
       imageInput1(){
           this.image1 = event.target.files[0]
       },
-      addProduct(){
+      update(){
           let formData = new FormData()
-          formData.append("name",this.name)
-          formData.append("price",this.price)
-          formData.append("description",this.description)
-          formData.append("quantities",this.quantities)
-          formData.append("imgUrl",this.image)
-          formData.append("imgUrl",this.image1)
+          this.name ? formData.append("name",this.name) : formData.append("name",this.dataUpdate.name)
+          this.price ? formData.append("price",this.price) : formData.append("price",this.dataUpdate.price)
+          this.description ? formData.append("description",this.description) : formData.append("description",this.dataUpdate.description)
+          this.quantities ? formData.append("quantities",this.quantities) : formData.append("quantities",this.dataUpdate.quantities)
+          this.image ? formData.append("imgUrl",this.image) : formData.append("imgUrl", this.dataUpdate.imgUrl[0])
+          this.image1 ? formData.append("imgUrl",this.image1) : formData.append("imgUrl", this.dataUpdate.imgUrl[1])
           Swal.showLoading()
-          this.$store.dispatch('createProduct',formData)
+          this.$store.dispatch('updateMyProduct', { formData , id : this.dataUpdate._id})
             .then(user=>{
                 const Toast = Swal.mixin({
                   toast: true,
@@ -128,14 +132,14 @@ export default {
                   showConfirmButton: false,
                   timer: 3000,
                   timerProgressBar: true,
-                  onOpen: (toast) => {
+                  onOpen: (toast) => { 
                     toast.addEventListener('mouseenter', Swal.stopTimer)
                     toast.addEventListener('mouseleave', Swal.resumeTimer)
                   }
                 })
                 Toast.fire({
                   icon: 'success',
-                  title: 'Create Product in successfully'
+                  title: 'Update Product in successfully'
                 })
                 this.$router.go(-1)
             })
@@ -143,11 +147,15 @@ export default {
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
-                    text: "Create Product is Failed!"
+                    text: "Update Product is Failed!"
                 });
             })
       }
-  }
+  },
+  started  () {
+      this.$store.state.dataUpdate
+  },
+  computed: mapState([ 'dataUpdate' ])
 }
 </script>
 

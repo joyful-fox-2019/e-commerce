@@ -6,8 +6,6 @@ module.exports = {
         return bcrypt.hashSync(password, saltRound)
     },
     comparePassword(password,hashPassword){
-        console.log(password,hashPassword);
-        
         return bcrypt.compareSync(password, hashPassword)
     }
 }

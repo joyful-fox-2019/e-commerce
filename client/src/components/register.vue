@@ -1,7 +1,7 @@
 <template>
     <div class="container">
     <b-jumbotron class="mt-5">
-    <template v-slot:header>Login</template>
+    <template v-slot:header>Register</template>
     <template v-slot:lead>
         selamat datang silahkan register terlebih dahulu
     </template>
@@ -60,12 +60,12 @@
         <hr>
     <template>
         sudah memiliki akun?
-        <router-link to="/login">
+        <router-link to="/login" @click="$store.commit('SETTER_LOGINREGIST')">
             <input class="btn btn-sm btnHoverOne" type="submit" value="masuk sekarang">
         </router-link>
     </template>
     <div class="text-center mt-2">
-        <input class="btn btn-sm btn-success" type="submit" @click="$router.go(-1)" value="Back">
+        <input class="btn btn-sm btn-success" type="submit" @click="$router.push('/'), $store.commit('SETTER_LOGINREGIST')" value="Back">
     </div>
   </b-jumbotron>
   </div>

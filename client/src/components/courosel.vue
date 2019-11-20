@@ -16,7 +16,7 @@
             class="d-block"
             width="100%"
             height="700"
-            src="https://blog.pcm.com/wp-content/uploads/2019/04/1200x500_AdobeCC_BlogBanner_042319_AU-1200x500.jpg"
+            src="../img/giphy1.gif"
             alt="image slot"
             caption="First slide"
             text="Nulla vitae elit libero, a pharetra augue mollis interdum."
@@ -29,8 +29,8 @@
           <img
             class="d-block"
             width="100%"
+            src="../img/ec1.jpg"
             height="700"
-            src="https://www.webtechcoupons.com/wp-content/uploads/2019/05/coreldraw-coupon-code.jpg"
             alt="image slot"
           >
         </template>
@@ -42,7 +42,7 @@
             class="d-block"
             width="100%"
             height="700"
-            src="https://www.motionmedia.com/product_images/uploaded_images/loyalty-offer.jpg"
+            src="../img/gihs.gif"
             alt="image slot"
           >
         </template>
@@ -54,7 +54,7 @@
             class="d-block"
             width="100%"
             height="700"
-            src="http://www.office365promocode.com/img/officeimgs/studentoffers1.jpg"
+            src="../img/giphy.gif"
             alt="image slot"
           >
         </template>
@@ -65,7 +65,7 @@
             class="d-block"
             width="100%"
             height="700"
-            src="https://pics.imgrapid.com/wp-content/uploads/2019/07/09112635/190701-728-360-EURO.jpg"
+            src="../img/ec2.jpg"
             alt="image slot"
           >
         </template>

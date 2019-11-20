@@ -21,7 +21,7 @@ module.exports = {
                     if (comparePassword(password, user.password)) {
                         let payload = { email: user.email, id: user._id, name: user.name }
                         let token = generateToken(payload)
-                        res.status(200).json({ token, name:user.name })
+                        res.status(200).json({ token, userId:user._id })
                     } else {
                         next({ status: 400, message: 'Wrong Password' })
                     }

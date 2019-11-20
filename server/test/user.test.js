@@ -46,7 +46,10 @@ after(function(done){
 describe('User Routes',function(){
     describe('POST /user/signup',function(){
         describe('success process',function(){
+            // this.timeout(15000);
             it('create user with 201 status code',function(done){
+                // this.timeout(15000);
+                // setTimeout(done, 15000);
                 chai.request(app)
                 .post('/user/signup')
                 .field('name', userSignUp.name)

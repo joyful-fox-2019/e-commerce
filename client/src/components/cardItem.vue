@@ -15,8 +15,8 @@
     <b-card-text>
         stock : {{item.quantities}}pcs
     </b-card-text>
-    <b-button  v-b-modal="'my-modal'+item._id" variant="primary">Details</b-button>
-    <button v-if="isLogin" class="btn ml-2" v-b-modal="'my-modal'+item._id+1">
+    <b-button v-b-modal="'my-modal'+item._id" variant="primary">Details</b-button>
+    <button v-if="item.userId._id !== idUser" v-show="isLogin" class="btn ml-2" v-b-modal="'my-modal'+item._id+1">
         <i class="fas fa-cart-plus fa-2x btnNone"></i>
     </button>
     <button v-if="!isLogin" class="btn ml-2" @click="$router.push('/login'),$store.commit('SET_BACK')" >
@@ -114,7 +114,8 @@ export default {
   data () {
     return {
         quantities: '',
-        show: false
+        show: false,
+        idUser: localStorage.getItem('userId')
     }
   },
   methods: {
