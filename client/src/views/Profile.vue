@@ -205,7 +205,6 @@ export default {
       handler (val) {
         if(val) {
           setTimeout(() => {
-            console.log('masuk ', val)
             this.confirmVerify()
           }, 5000);
         }
@@ -220,7 +219,6 @@ export default {
     }
   },
   created () {
-    console.log('lelel')
   }
 }
 </script>

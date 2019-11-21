@@ -16,7 +16,6 @@ function updateProduct(data) {
         }
       })
       .then(product => {
-        console.log(product)
         resolve(product);
       })
       .catch(reject)
@@ -45,7 +44,6 @@ module.exports = {
       .catch(next)
   },
   getTransaction (req, res, next) {
-    console.log(req.loggedUser)
     Transaction.find().populate('UserId')
       .then(transactions => {
         res.status(200).json({ transaction: transactions })
@@ -64,7 +62,6 @@ module.exports = {
     Cart.product.forEach((el, i) => {
       getStoreId.push(el.storeId)
     })
-    // prosses pengurangan stock
     
     let tempUpdateProduct = []
     setTimeout(() => {
@@ -80,7 +77,6 @@ module.exports = {
     // prosess membuat transaction
     let tempTrasaction
     let tempCart
-    console.log(getStoreId)
     setTimeout(() => {
       if(tempUpdateProduct.length == 0) next({msg: 404, msg: 'no have Cart'})
       else {
@@ -98,8 +94,8 @@ module.exports = {
               res.status(201).json({transaction: tempTrasaction, product: tempUpdateProduct, cart: tempCart, user})
             })
             .catch(next)
-        }, 6000);
+        }, 6200);
       }
-    }, 2000);
+    }, 3500);
   }
 }

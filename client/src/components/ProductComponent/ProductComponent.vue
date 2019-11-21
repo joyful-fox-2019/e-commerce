@@ -91,7 +91,6 @@ export default {
     }
   },
   created () {
-    console.log(this.$route)
     if(this.$route.name == 'wishlist')  {
       this.isWish = true;
     }

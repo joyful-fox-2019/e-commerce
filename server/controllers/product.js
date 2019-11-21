@@ -76,14 +76,14 @@ module.exports = {
       })
       .catch(next)
   },
-  updateStock (req, res, next) {
-    const stock = req.body.stock;
-    Product.findByIdAndUpdate(req.params.id, { stock })
-      .then(product => {
-        res.status(200).json({product})
-      })
-      .catch(next)
-  },
+  // updateStock (req, res, next) {
+  //   const stock = req.body.stock;
+  //   Product.findByIdAndUpdate(req.params.id, { stock })
+  //     .then(product => {
+  //       res.status(200).json({product})
+  //     })
+  //     .catch(next)
+  // },
   deleteProduct (req, res, next) {
     const id = req.params.id
     let tempStoreId
@@ -142,5 +142,23 @@ module.exports = {
         }
       })
       .catch(next)
+  },
+  updateProduct (req, res, next) {
+    const id = req.params.id;
+    const url = req.file.cloudStoragePublicUrl;
+    const { name, description, price, stock, category, condition } = req.body;
+    const newCategory = category.split(',')
+    if(!name || !description || !price || !stock || !category || !condition) next({status: 400, msg: 'cannot update empty value'})
+    else {
+      Product.findById(id)
+        .then(product => {
+          deleteFileFromGCS(product.product_image)
+          return Product.findByIdAndUpdate(id, { name, description, price, stock, category: newCategory, condition, product_image: url}, {new: true})
+        })
+        .then(newProduct => {
+          res.status(201).json({product: newProduct})
+        })
+        .catch(next)
+    }
   }
 }

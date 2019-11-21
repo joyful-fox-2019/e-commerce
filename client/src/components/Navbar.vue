@@ -240,7 +240,6 @@ export default {
     setTimeout(() => {
       this.isSignin = this.$store.state.isSignin
     }, 3000);
-    console.log(this.$store.state.userCart.product.length)
   }
 }
 </script>

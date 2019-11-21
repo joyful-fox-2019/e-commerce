@@ -53,19 +53,16 @@ module.exports = {
     else {
       User.findByIdAndUpdate(req.loggedUser.id, { $push: { address } }, {new: true})
         .then(user => {
-          console.log(user)
           res.status(201).json({user})
         })
         .catch(next)
     }
   },
   verifyEmail (req, res, next) {
-    console.log(req.body)
     const { code } = req.body;
     const id = req.loggedUser.id;
     User.findByIdAndUpdate(id, { verification: true})
       .then(user => {
-        console.log(compareCode(id, code))
         if(user && compareCode(id, code)) {
           res.status(201).json({user, msg: 'Your Account now Verified'})
         } else {

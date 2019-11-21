@@ -14,7 +14,7 @@ Route.post('/',  images.multer.single('image'), images.sendUploadToGCS, Product.
 Route.patch('/wish/:id', Product.addToWishList);
 Route.patch('/wish/remove/:id', Product.removeWishList)
 
-Route.patch('/stock/:id', authorCrudProduct, Product.updateStock);
+Route.put('/:id', images.multer.single('image'), images.sendUploadToGCS, authorCrudProduct, Product.updateProduct);
 Route.delete('/:id', authorCrudProduct, Product.deleteProduct);
 
 module.exports = Route;

@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class=" mt-3" v-if='store'>
-        <h5>My Store</h5> {{pageAdmin}}
+        <h5>My Store</h5>
         <div class='mt-2 ml-3'>
           <router-link to='/product/create' class='link'><v-icon name='plus' class='vicon'></v-icon>Create Product</router-link>
         </div>
@@ -81,7 +81,6 @@ export default {
       return this.$store.state.userSignin.profile_image
     },
     name () {
-      console.log(this.$store.state.userSignin)
       return this.$store.state.userSignin.username
     },
     store () {
@@ -115,7 +114,6 @@ export default {
     },
     userr: {
       handler (val) {
-        console.log(val)
         if(val) {
           this.userr = val
         }

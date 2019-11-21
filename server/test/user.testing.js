@@ -334,53 +334,6 @@ describe('UserRoutes', function () {
     })
   })
 
-
-  describe('PATCH /users/upload', function () {
-    let link = '/users/upload'
-    describe('success process', function () {
-      it('Should return status 201 after success creating product', function (done) {
-        chai.request(app)
-            .patch(link)
-            .set('token', initialToken)
-            .attach('image', '../newslRoadster.jpg')
-            .end(function (err, res) {
-                expect(err).to.be.null
-                expect(res).to.have.status(201)
-                expect(res).to.be.an('object').to.have.any.keys('user', 'msg')
-                expect(res.body.msg).to.equal('uploading success')
-                done()
-            })
-      })
-    })
-    describe('error process', function () {
-      it('Should send error with 400 status code because token is undefined', function (next) {
-        chai.request(app)
-          .patch(link)
-          .attach('image', '../newslRoadster.jpg')
-          .end(function (err,res) {
-            expect(err).to.be.null
-            expect(res).to.have.status(403)
-            expect(res.body).to.be.an('object').to.have.any.keys('msg')
-            expect(res.body.msg).to.equal('Authentication Error')
-            done()
-          })
-      })
-      it('should send an error with 400 status code because Authentication Error', function(next) {
-        chai.request(app)
-          .patch(link)
-          .attach('image', '../newslRoadster.jpg')
-          .set('token', falseToken)
-          .end(function (err,res) {
-            expect(err).to.be.null
-            expect(res).to.have.status(400)
-            expect(res.body).to.be.an('object').to.have.any.keys('msg')
-            expect(res.body.msg).to.equal('Authentication Error')
-            done()
-          })
-      })
-    })
-  })
-
   const updateAddress = {
     address: 'jl.radial'
   }

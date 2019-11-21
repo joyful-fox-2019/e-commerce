@@ -4,7 +4,6 @@ const User = require('../models/user');
 module.exports = {
   createStore (req, res, next) {
     const id = req.loggedUser.id;
-    console.log(req.body)
     const { name, location, link } = req.body;
     let tempStore
     User.findById(id)

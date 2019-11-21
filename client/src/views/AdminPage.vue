@@ -32,8 +32,6 @@
                             </div>
                           </div>
                           <div>
-
-                          {{ transactions[0] }}
                           </div>
                     </div>
                   </div>
@@ -98,7 +96,6 @@ export default {
         }
       })
         .then(({data}) => {
-          console.log(data)
           this.$awn.success('success get all transactions')
           data.transaction.forEach((el, i) => {
             if(!el.confirm) {

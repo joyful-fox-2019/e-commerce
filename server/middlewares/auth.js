@@ -8,7 +8,6 @@ module.exports = {
   authentication (req, res, next) {
     try {
       if(req.headers.token) {
-        console.log(req.headers.token)
         const decode = decodeToken(req.headers.token);
         User.findOne({ email: decode.email })
           .then(user => {
@@ -45,11 +44,8 @@ module.exports = {
   },
   authorCrudProduct (req, res, next) {
     try {
-      console.log('dari crud ', req.params.id)
       Store.findOne({Owner: req.loggedUser.id})
         .then(store => {
-          console.log(store)
-          console.log(req.params.id)
           let pass = false;
           store.ProductId.forEach((el, i) => {
             if(el == req.params.id) {
@@ -82,11 +78,8 @@ module.exports = {
   },
   isAdmin (req, res, next) {
     try {
-      console.log('masuk middlewar isAdmin')
-      console.log(req.loggedUser)
       User.findById(req.loggedUser.id)
         .then(user => {
-          console.log(user)
           if(user.role == 'admin') {
             next()
           } else {

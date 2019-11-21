@@ -27,15 +27,90 @@
 
           <a class="cart" href="#">
             <span class="price">{{ price }}</span>
-            <span class="add-to-cart">
-              <span class="txt" @click='updateStock' v-if='!restock'>Update Stock</span>
+            <span class="add-to-cart d-flex">
+              <b-button v-b-modal.modal-lg variant="primary" @click='getAllChange(getProduct)'>edit</b-button>
+              <!-- <span class="txt" @click='updateStock' v-if='!restock'>Update Stock</span>
               <div v-else>
                 <input type='number' v-model='stock'>
                 <span class="txt" @click='reStock(getProduct._id)' v-if='restock'>Save</span>
-              </div>
+              </div> -->
+
 
               <button class="btn-sm btn-outline-danger btn ml-4" @click='deleteProduct(getProduct._id)'>delete</button>
             </span>
+              <b-modal id="modal-lg" size="lg" title="Large Modal"  @ok='updateProduct(getProduct._id)'>
+                <div class="divTable">
+                  <table>
+                    <tr>
+                      <td>
+                        <label>Product Name</label>
+                      </td>
+                      <td>
+                        <input type="text" v-model='newName' placeholder="product name">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label>Description</label>
+                      </td>
+                      <td>
+                        <input type="text" v-model='newDescription' placeholder="description">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label>Price</label>
+                      </td>
+                      <td>
+                        <input type="number" v-model='newPrice' placeholder="00000">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label>Stock</label>
+                      </td>
+                      <td>
+                        <input type="number" v-model='newStock' placeholder="00">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label>Category</label>
+                      </td>
+                      <td>
+                        <input-tag v-model="newTags" style='font-size: 20px;'></input-tag>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label>Condition</label>
+                      </td>
+                      <td>
+                        <select v-model='newCondition'>
+                          <option value='new'>New</option>
+                          <option value="second">Second</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label>Product Image</label>
+                      </td>
+                      <td>
+                        <b-form-file
+                          ref="file"
+                          type="file"
+                          name='file'
+                          v-model="file"
+                          :state="Boolean(file)"
+                          placeholder="Choose a file or drop it here..."
+                          drop-placeholder="Drop file here..."
+                        ></b-form-file>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </b-modal>
           </a>
         </div>
       </div>
@@ -52,35 +127,67 @@ export default {
   data () {
     return {
       isWish: false,
-      restock: false,
-      stock: null
+      newStock: null,
+      file: null,
+      newTags: [],
+      newPrice: null,
+      newName: null,
+      newDescription: null,
+      newCondition: null
     }
   },
   props: ['getProduct'],
+  watch: {
+    getProduct (val) {
+      this.getProduct = val
+    }
+  },
   methods: {
-    updateStock () {
-      this.restock = true;
+    getAllChange (data) {
+      this.newStock = data.stock;
+      this.newTags = data.category
+      this.newPrice = data.price;
+      this.newName = data.name;
+      this.newDescription = data.description;
+      this.newCondition = data.condition;
     },
-    reStock(id) {
-      axios({
-        method: 'patch',
-        url: `/products/stock/${id}`,
-        data: {
-          stock: this.stock
-        },
-        headers :{
-          token: localStorage.getItem('token')
-        }
-      })
-        .then(({data}) => {
-          return this.$store.dispatch('checkSignIn')
-        })
+    updateProduct (id) {
+      let formData = new FormData()
+      formData.append('image', this.file)
+      formData.append('name', this.newName)
+      formData.append('description', this.newDescription)
+      formData.append('stock', this.newStock)
+      formData.append('price', this.newPrice)
+      formData.append('condition', this.newCondition)
+      formData.append('category', this.newTags)
+      this.$awn.asyncBlock(
+        this.updateAction(id, formData),
+        null,
+        null,
+        'Updating'
+      )
         .then(() => {
-          this.$awn.success('update success')
+          this.$store.dispatch('checkSignIn')
         })
         .catch(err => {
           this.$awn.warning(err.response.data.msg)
         })
+    },
+    updateAction (id, payload) {
+      return new Promise ((resolve, reject) => {
+        axios({
+          method: 'put',
+          url: `/products/${id}`,
+          headers: {
+            token: localStorage.getItem('token')
+          },
+          data: payload
+        })
+          .then(({data}) => {
+            resolve(data.product)
+          })
+          .catch(reject)
+      })
     },
     deleteAction (id) {
       return new Promise ((resolve, reject) => {
@@ -191,7 +298,16 @@ export default {
 body {
   background-color: #f7f7f7;
 }
-
+.divTable {
+  display: flex;
+  justify-content: center;
+}
+/* td {
+  display: inline-block;
+} */
+/* td:last-child{
+  margin-left: 50px
+} */
 .page-wrapper {
   height: 100%;
   display: table;

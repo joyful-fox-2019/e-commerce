@@ -43,7 +43,6 @@ export default {
         return this.$store.dispatch('fetchCategory')
       })
       .then(() => {
-        this.$awn.success('hello')
       })
       .catch(err => {
         this.$awn.warning(err)

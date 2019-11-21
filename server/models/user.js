@@ -60,7 +60,6 @@ function randomImage () {
 }
 
 UserSchema.path('email').validate(function () {
-  console.log(this.email)
   return User.findOne({ email: this.email })
     .then(user => {
       if(user) return false

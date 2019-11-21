@@ -78,8 +78,6 @@ export default {
         'Creating Transaction'
       )
         .then(transaction => {
-          console.log('ini dari transaction')
-          console.log(transaction)
           this.getTransaction = transaction;
           return this.$store.dispatch('getUserCart')
         })
