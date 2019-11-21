@@ -55,6 +55,34 @@ class ItemController {
             })
             .catch(next)
     }
+
+    static update(req, res, next) {
+        // console.log('masuk update')
+        // console.log(req.body)
+        let {
+            name,
+            stock,
+            category,
+            rps,
+            image
+        } = req.body
+        let id = req.params.id
+        Item.findByIdAndUpdate({
+                _id: id
+            }, {
+                name,
+                stock,
+                category,
+                rps,
+                image
+            }, {
+                new: true
+            })
+            .then(item => {
+                res.status(200).json(item)
+            })
+            .catch(next)
+    }
 }
 
 module.exports = ItemController;

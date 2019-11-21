@@ -26,6 +26,7 @@ export default new Vuex.Store({
     bestItem: [],
     newItem: [],
     rpsNow: 0,
+    userNow: '',
     detailItem: null,
     cartNow: null,
     totalRpsNow: 0,
@@ -73,6 +74,9 @@ export default new Vuex.Store({
     ADDRPSNOW(state, payload) {
       state.rpsNow = payload
     },
+    SETUSERNOW(state, payload) {
+      state.userNow = payload
+    },
     GETDETAILITEM(state, payload) {
       state.detailItem = payload
     },
@@ -84,6 +88,36 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    editItem({
+      commit,
+      dispatch
+    }, payload) {
+      axios({
+          url: baseUrl + `/items/edit/${payload.id}`,
+          method: "PUT",
+          headers: {
+            token: localStorage.getItem("token"),
+            role: localStorage.getItem("role")
+          },
+          data: payload.fd
+        })
+        .then(({
+          data
+        }) => {
+          dispatch(payload.category)
+          console.log(data)
+        })
+        .catch(err => {
+          this.$snotify.warning(`Failed update Item Mall`, {
+            timeout: 3000,
+            showProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            position: "leftTop"
+          });
+          console.log(err)
+        })
+    },
     deleteItem({
       commit
     }, id) {
@@ -225,8 +259,9 @@ export default new Vuex.Store({
         .then(({
           data
         }) => {
-          // console.log(data)
+          console.log(data)
           commit('ADDRPSNOW', data.rps)
+          commit('SETUSERNOW', data.name)
         })
         .catch(err => {
           console.log(err);

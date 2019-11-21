@@ -21,5 +21,6 @@ router.post('/', authorizationRole, upload.single('image'), Item.create)
 router.get('/:category', Item.getAll)
 router.get('/detail/:id', Item.getDetail)
 router.delete('/:id', authorizationRole, Item.remove)
+router.put('/edit/:id', authorizationRole, upload.single('image'), Item.update)
 
 module.exports = router;
