@@ -45,6 +45,16 @@ class ItemController {
             })
             .catch(next)
     }
+
+    static remove(req, res, next) {
+        Item.deleteOne({
+                _id: req.params.id
+            })
+            .then(data => {
+                res.status(200).json(data)
+            })
+            .catch(next)
+    }
 }
 
 module.exports = ItemController;

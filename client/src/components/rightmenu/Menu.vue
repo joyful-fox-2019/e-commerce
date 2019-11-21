@@ -8,7 +8,7 @@
     <div v-if="isAdmin" class="item">
       <p @click="showModal">Add Item</p>
     </div>
-    <div @click="showCart" class="item">
+    <div v-if="!isAdmin" @click="showCart" class="item">
       <p>List Item In Cart</p>
     </div>
     <!--modal create-->

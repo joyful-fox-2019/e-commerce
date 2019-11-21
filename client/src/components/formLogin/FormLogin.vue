@@ -76,6 +76,8 @@ export default {
           return this.$store.dispatch("setUserLoginAsync", payload);
         })
         .then(_ => {
+          this.$store.state.page = 'news'
+          this.$store.state.title = 'Announcements & News'
           this.$router.push("/home");
           this.formLogin.email = "";
           this.formLogin.password = "";

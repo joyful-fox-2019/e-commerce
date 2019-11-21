@@ -29,7 +29,8 @@ export default new Vuex.Store({
     detailItem: null,
     cartNow: null,
     totalRpsNow: 0,
-    detailCart: []
+    detailCart: [],
+    isAdmin: false
   },
   getters: {
     formNowIn: (state) => {
@@ -83,6 +84,26 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    deleteItem({
+      commit
+    }, id) {
+      axios({
+          url: baseUrl + `/items/${id}`,
+          method: "DELETE",
+          headers: {
+            token: localStorage.getItem("token"),
+            role: localStorage.getItem('role')
+          }
+        })
+        .then(({
+          data
+        }) => {
+
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     checkOut({
       commit,
       dispatch

@@ -171,6 +171,9 @@ export default {
         }
       );
     }
+    if (localStorage.getItem("role") === "admin") {
+      this.$store.state.isAdmin = true;
+    }
     this.$store.dispatch("addRps");
   }
 };
