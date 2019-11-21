@@ -3,7 +3,7 @@
   <b-navbar toggleable="sm" class="navbarStore" style="cursor:pointer;background-color:#FFFFFF">
   <router-link to="/">
     <div class="ml-5">
-        <img src="https://pngimage.net/wp-content/uploads/2018/06/logo-store-png-5.png"
+        <img src="../img/logo-store-png-5.png"
         class="ml-5"
         style="height:35px;"
         alt="icon">
