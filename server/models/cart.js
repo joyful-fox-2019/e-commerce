@@ -15,7 +15,7 @@ const cartSchema = new Schema({
     count: {
         type: Number
     },
-    totalPayment: {
+    totalRps: {
         type: Number
     }
 })

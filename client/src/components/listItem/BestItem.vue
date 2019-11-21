@@ -7,9 +7,9 @@
       <p @click="showModal(item._id)" id="itemName">{{ item.name }}</p>
       <p @click="showModal(item._id)" id="itemRps" style="color: red;">
         <img src="../../assets/images/rps.gif" alt="rps" />
-        {{item.rps}}
+        {{ item.rps }}
       </p>
-      <p style="color: blue;">stock: {{item.stock}}</p>
+      <p style="color: blue;">stock: {{ item.stock }}</p>
     </div>
     <!--modal-->
     <b-modal ref="my-modal" hide-footer title="Hello Seal Lovers">
@@ -67,23 +67,30 @@ export default {
       this.qtyBuy = null;
     },
     addToCart(idItem) {
-      this.$store.dispatch("addNewPayment", Number(this.getDetailItem.rps));
+      // this.$store.dispatch("getDetailCart");
       let payload = {
         idItem,
         qty: this.qtyBuy,
-        totalPayment: this.getInfoPayment
+        totalRps: this.getDetailItem.rps
       };
       this.$store.dispatch("addCart", payload);
       this.hideModal();
       this.qtyBuy = null;
+      this.$snotify.info(
+        `Success Add Item : ${this.getDetailItem.name}, to Your Cart :)`,
+        {
+          timeout: 3000,
+          showProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          position: "leftTop"
+        }
+      );
     }
   },
   computed: {
     getInfoCart() {
       return this.$store.state.cartNow;
-    },
-    getInfoPayment() {
-      return this.$store.state.totalPaymentNow;
     },
     getDetailItem() {
       return this.$store.state.detailItem;

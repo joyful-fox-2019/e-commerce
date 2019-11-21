@@ -28,7 +28,7 @@ export default new Vuex.Store({
     rpsNow: 0,
     detailItem: null,
     cartNow: null,
-    totalPaymentNow: 0,
+    totalRpsNow: 0,
     detailCart: []
   },
   getters: {
@@ -69,7 +69,7 @@ export default new Vuex.Store({
     FETCHNEWITEM(state, payload) {
       state.newItem = payload
     },
-    ADDNEWRPS(state, payload) {
+    ADDRPSNOW(state, payload) {
       state.rpsNow = payload
     },
     GETDETAILITEM(state, payload) {
@@ -80,12 +80,60 @@ export default new Vuex.Store({
     },
     GETDETAILCART(state, payload) {
       state.detailCart = payload
-    },
-    ADDNEWPAYMENT(state, payload) {
-      state.totalPaymentNow += payload
     }
   },
   actions: {
+    checkOut({
+      commit,
+      dispatch
+    }) {
+      return new Promise((resolve, reject) => {
+        dispatch('addRps')
+        // dispatch('clearCart')
+        resolve()
+      })
+    },
+    clearCart({
+      commit
+    }) {
+      console.log('masuk clear caart')
+      axios({
+          url: baseUrl + `/carts/delete/cart`,
+          method: "DELETE",
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        .then(({
+          data
+        }) => {
+          console.log(data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    deleteItemInCart({
+      commit,
+      dispatch
+    }, payload) {
+      axios({
+          url: baseUrl + `/carts/${payload}`,
+          method: "DELETE",
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+        .then(({
+          data
+        }) => {
+          console.log(data)
+          dispatch('getDetailCart')
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     getDetailCart({
       commit
     }) {
@@ -99,16 +147,12 @@ export default new Vuex.Store({
         .then(({
           data
         }) => {
+          console.log(data)
           commit('GETDETAILCART', data)
         })
         .catch(err => {
           console.log(err)
         })
-    },
-    addNewPayment({
-      commit
-    }, payload) {
-      commit('ADDNEWPAYMENT', payload)
     },
     addCart({
       commit
@@ -124,6 +168,7 @@ export default new Vuex.Store({
         .then(({
           data
         }) => {
+          console.log(data)
           commit('ADDITEMTOCART', data)
         })
         .catch(err => {
@@ -159,7 +204,8 @@ export default new Vuex.Store({
         .then(({
           data
         }) => {
-          commit('ADDNEWRPS', data.rps)
+          // console.log(data)
+          commit('ADDRPSNOW', data.rps)
         })
         .catch(err => {
           console.log(err);

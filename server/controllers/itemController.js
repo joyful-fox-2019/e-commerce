@@ -34,13 +34,13 @@ class ItemController {
     }
 
     static getDetail(req, res, next) {
-        console.log('masuk getOne')
+        // console.log('masuk getOne')
         Item.findOne({
                 _id: req.params.id
             })
             .then(item => {
-                console.log('masuk one')
-                console.log(item)
+                // console.log('masuk one')
+                // console.log(item)
                 res.status(200).json(item)
             })
             .catch(next)

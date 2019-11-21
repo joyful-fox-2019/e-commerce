@@ -57,16 +57,58 @@
       <div class="d-block text-center">
         <h3>Detail List Item In Cart</h3>
       </div>
-      <b-form @submit.prevent="checkOut" v-if="show">
-        <!--detailitem-->
-        {{listCart}}
-        <!--enddetail-->
+      <hr />
+      <!--detailitem-->
+      <div id="cover_item" v-for="item in listCart.detailCart" :key="item._id">
+        <div id="item">
+          <img :src="item.itemId.image" alt="bestitem1" width="100px" height="100px" />
+        </div>
+        <p id="itemName">{{ item.itemId.name }}</p>
+        <p id="itemRps" style="color: red;">
+          <img src="../../assets/images/rps.gif" alt="rps" />
+          {{item.itemId.rps}}
+        </p>
+        <p style="color: blue;">qty: {{item.count}}</p>
+        <b-button
+          @click="deleteItem({id:item.itemId._id,name:item.itemId.name})"
+          class="mt-3"
+          variant="warning"
+        >Delete From Cart</b-button>
+        <hr />
+      </div>
+      <!--enddetail-->
 
-        <b-button class="mt-3" type="submit" block variant="primary">CheckOut Now</b-button>
-      </b-form>
+      <b-button
+        @click="checkOut"
+        id="btn-checkout"
+        class="mt-3"
+        type="submit"
+        block
+        variant="success"
+      >CheckOut Now : {{listCart.totalRpsCart}} rps</b-button>
+
       <b-button class="mt-3" variant="danger" block @click="hideModalCart">Close Me</b-button>
     </b-modal>
     <!--endmodalcart-->
+    <!--modalCartZonk-->
+    <b-modal ref="my-cart-zonk" hide-footer title="Hello Seal Lovers">
+      <div class="d-block text-center">
+        <h3>Oppsss...</h3>
+      </div>
+      <hr />
+      <!--detailitem-->
+      <div id="cover_item" style="display: flex; justify-content:center;">
+        <p>
+          Go Buy Some Item First :), click
+          <span>
+            <u style="color:red;">Here</u>
+          </span>
+        </p>
+      </div>
+      <!--enddetail-->
+      <b-button class="mt-3" variant="danger" block @click="hideModalCart">Close Me</b-button>
+    </b-modal>
+    <!--modalCartZonk-->
   </div>
 </template>
 
@@ -91,13 +133,135 @@ export default {
     };
   },
   methods: {
+    deleteItem(item) {
+      this.$snotify.confirm(`item: ${item.name}`, `Want Delete This?`, {
+        timeout: 5000,
+        showProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        buttons: [
+          {
+            text: "Yes",
+            action: toast => {
+              this.$store.dispatch("deleteItemInCart", item.id);
+              // this.$store.dispatch("getDetailCart");
+              this.$snotify.remove(toast.id);
+              this.$snotify.success(
+                `Success Delete ${item.name} from your cart`,
+                {
+                  timeout: 3000,
+                  showProgressBar: true,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  position: "leftTop"
+                }
+              );
+            },
+            bold: false
+          },
+          {
+            text: "No",
+            action: toast => {
+              this.$snotify.info(`Cancel Delete ${item.name} from your cart`, {
+                timeout: 3000,
+                showProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                position: "leftTop"
+              });
+              this.$snotify.remove(toast.id);
+            }
+          },
+          {
+            text: "Close",
+            action: toast => {
+              console.log("Clicked: No");
+              this.$snotify.remove(toast.id);
+            },
+            bold: true
+          }
+        ]
+      });
+    },
     showCart() {
       this.$store.dispatch("getDetailCart");
+      // if (this.listCart.detailCart.length === 0) {
+      // this.$refs["my-cart-zonk"].show();
+      // this.showDetailCart = false;
+      // } else {
       this.$refs["my-cart"].show();
       this.showDetailCart = true;
+      // }
     },
     hideModalCart() {
+      // this.$store.dispatch("getDetailCart");
+      // if (this.listCart.detailCart.length == 0) {
+      // this.$refs["my-cart-zonk"].hide();
+      // } else {
       this.$refs["my-cart"].hide();
+      // }
+    },
+    checkOut() {
+      let rpsUser = 0;
+      this.$store.dispatch("clearCart");
+      this.$store
+        .dispatch("checkOut")
+        .then(() => {
+          rpsUser = Number(this.fetchRps);
+          return this.$store.dispatch("getDetailCart");
+        })
+        .then(() => {
+          if (rpsUser < this.listCart.totalRpsCart) {
+            this.$snotify.warning(
+              `Your RPS: ${rpsUser} Less Then Total Payment RPS : ${this.listCart.totalRpsCart}`,
+              {
+                timeout: 5000,
+                showProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                position: "leftTop"
+              }
+            );
+            setTimeout(() => {
+              this.$snotify.info(
+                `Go Buy Some RPS in Menu Add RPS, OR Go Delete Some Item in Your List Cart :)`,
+                {
+                  timeout: 5000,
+                  showProgressBar: true,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  position: "leftTop"
+                }
+              );
+            }, 3000);
+          } else {
+            return axios({
+              url: baseUrl + `/users/addrps/${localStorage.getItem("email")}`,
+              method: "PATCH",
+              data: {
+                rps: Number(rpsUser) - Number(this.listCart.totalRpsCart)
+              }
+            });
+          }
+        })
+        .then(({ data }) => {
+          this.$store.dispatch("addRps");
+          this.hideModalCart();
+          // console.log(this.listCart.detailCart);
+          this.$snotify.success(
+            `Thank's, For Buying Item's, Your Rps Now ${data.rps}`,
+            {
+              timeout: 3000,
+              showProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              position: "leftTop"
+            }
+          );
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     showModal() {
       this.$refs["my-modal"].show();
@@ -163,7 +327,14 @@ export default {
   },
   computed: {
     listCart() {
-      return this.$store.state.detailCart;
+      let totalRpsCart = 0;
+      this.$store.state.detailCart.forEach(item => {
+        totalRpsCart += item.totalRps;
+      });
+      return { detailCart: this.$store.state.detailCart, totalRpsCart };
+    },
+    fetchRps() {
+      return this.$store.state.rpsNow;
     }
   }
 };
@@ -171,6 +342,9 @@ export default {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css?family=Roboto:500&display=swap");
+#btn-checkout:hover {
+  color: red;
+}
 .rightMenu {
   font-family: "Roboto", sans-serif;
   margin-top: 30px;

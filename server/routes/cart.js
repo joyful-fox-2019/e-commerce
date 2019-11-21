@@ -8,5 +8,7 @@ const {
 router.use(authentication)
 router.post('/', Cart.create)
 router.get('/', Cart.infoCart)
+router.delete('/:itemId', Cart.removeItem)
+router.delete('/delete/cart', Cart.removeCart)
 
 module.exports = router

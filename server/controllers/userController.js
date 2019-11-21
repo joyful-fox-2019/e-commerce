@@ -108,10 +108,12 @@ class UserController {
     }
 
     static getRps(req, res, next) {
+        // console.log('cek rps')
         User.findOne({
                 email: req.params.email
             })
             .then(rps => {
+                // console.log(rps)
                 res.status(200).json(rps)
             })
             .catch(next)

@@ -85,7 +85,7 @@ export default {
         url: baseUrl + `/users/addrps/${localStorage.getItem("email")}`,
         method: "PATCH",
         data: {
-          rps: this.rps + this.$store.state.rpsNow
+          rps: Number(this.rps) + Number(this.$store.state.rpsNow)
         }
       })
         .then(({ data }) => {
