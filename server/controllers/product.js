@@ -11,15 +11,28 @@ class ProductController {
             })
     }
 
+    static getProduct(req,res,next){
+        Product.findOne({
+            _id: req.params.id
+        })
+        .then(product => {
+            res.status(200).json(product)
+        })
+        .catch(err => {
+            next(err)
+        })
+    }
+
     static createProduct(req, res, next) {
         Product.create({
                 productName: req.body.name,
                 description: req.body.desc,
                 quantity: req.body.quantity,
-                price: req.body.price
+                price: req.body.price,
+                imageUrl: req.body.url
             })
             .then(product => {
-                res.status(200).json(product)
+                res.status(201).json(product)
             })
             .catch(err => {
                 next(err)

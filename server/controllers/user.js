@@ -4,7 +4,6 @@ const Password = require('../helpers/hashPassword')
 
 class UserController {
     static register(req, res, next) {
-        console.log('masuk disini')
         User.findOne({
                 email: req.body.email
             })
@@ -37,14 +36,13 @@ class UserController {
             .then(user => {
                 if (user) {
                     let valid = Password.compare(req.body.password, user.password)
-                    console.log(valid)
                     if (valid) {
                         let token = jwt.generateToken({
                             id: user._id
                         })
                         res.status(200).json({
                             token,
-                            username: user.username
+                            user
                         })
                     } else {
                         throw ({

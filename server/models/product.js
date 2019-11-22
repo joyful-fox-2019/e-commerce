@@ -20,9 +20,6 @@ const productSchema = new Schema({
         min: [0, "Price cannot have negative value"],
         required: [true, "quantity cannot be empty"]
     },
-    adminId: {
-        type: Schema.Types.ObjectId
-    },
     imageUrl:{
         type: String
     }

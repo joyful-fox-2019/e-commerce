@@ -1,22 +1,26 @@
 <template>
   <div>
     <carousel></carousel>
-    <collect></collect>
+    <custproduct></custproduct>
   </div>
 </template>
+
 <script>
 
 import carousel from '../components/Carousel'
-import collect from '../components/Collection'
+import custproduct from '../components/CustomerProduct'
 
 export default {
-  name: 'home',
   components: {
     carousel,
-    collect
+    custproduct
+  },
+  created () {
+    this.$store.dispatch('fetchingProduct')
   }
 }
 </script>
-<style scoped>
+
+<style>
 
 </style>

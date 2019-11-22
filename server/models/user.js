@@ -23,6 +23,10 @@ const userSchema = new Schema({
         type: String,
         required: [true, 'password cannot be empty'],
         minlength: [8, "Password minimal 8 digits"]
+    },
+    role: {
+        type: String,
+        default: 'user'
     }
 },
 {

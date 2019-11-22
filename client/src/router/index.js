@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
@@ -8,28 +7,39 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue')
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/main-page',
+    name: 'mainpage',
+    component: () => import(/* webpackChunkName: "mainpage" */ '@/views/MainPage.vue')
   },
   {
-    path: '/profile',
-    name: 'profile',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Profile.vue')
+    path: '/admin-page',
+    name: 'adminpage',
+    component: () => import(/* webpackChunkName: "adminpage" */ '@/views/AdminPage.vue')
+  },
+  {
+    path: '/customer-page',
+    name: 'customerpage',
+    component: () => import(/* webpackChunkName: "customerpage" */ '@/views/CustomerPage.vue')
+  },
+  {
+    path: '/cart',
+    name: 'cart',
+    component: () => import(/* webpackChunkName: "cart" */ '@/views/ListCart.vue')
+  },
+  {
+    path: 'edit-product',
+    name: 'editproduct',
+    component: () => import(/* webpackChunkName: "editproduct" */ '../components/EditProduct.vue')
   }
 ]
 
 const router = new VueRouter({
-  routes
+  routes,
+  mode: 'history',
+  base: process.env.BASE_URL
 })
 
 export default router
