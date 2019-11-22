@@ -31,7 +31,7 @@
 <script>
 import { mapGetters } from "vuex";
 import axios from "axios";
-const baseUrl = "http://localhost:3000";
+const baseUrl = "http://seal-server.edwinsatya.online";
 
 export default {
   name: "formregister",

@@ -10,7 +10,7 @@
           <img src="../../assets/images/rps.gif" alt="rps" />
           {{ item.rps }}
         </p>
-        <p style="color: blue;">stock: {{ item.stock }}</p>
+        <!-- <p style="color: blue;">stock: {{ item.stock }}</p> -->
       </div>
     </div>
     <!--modalAdmin-->
@@ -98,7 +98,7 @@
           <img src="../../assets/images/rps.gif" alt="rps" />
           {{ item.rps }}
         </p>
-        <p style="color: blue;">stock: {{ item.stock }}</p>
+        <!-- <p style="color: blue;">stock: {{ item.stock }}</p> -->
       </div>
       <!--modal-->
       <b-modal v-if="!isAdmin" ref="my-modal" hide-footer title="Hello Seal Lovers">
@@ -116,7 +116,7 @@
               <img src="../../assets/images/rps.gif" alt="rps" />
               {{getDetailItem.rps}}
             </p>
-            <p style="color: blue; margin-left:30px;">stock: {{getDetailItem.stock}}</p>
+            <!-- <p style="color: blue; margin-left:30px;">stock: {{getDetailItem.stock}}</p> -->
           </div>
           <!--enddetail-->
           <b-form-group id="input-group-2" label="Buy Qty:" label-for="input-2">

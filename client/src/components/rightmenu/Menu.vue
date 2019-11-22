@@ -115,7 +115,7 @@
 
 <script>
 import axios from "axios";
-const baseUrl = "http://localhost:3000";
+const baseUrl = "http://seal-server.edwinsatya.online";
 export default {
   name: "rightmenu",
   data() {
@@ -204,7 +204,6 @@ export default {
     },
     checkOut() {
       let rpsUser = 0;
-      this.$store.dispatch("clearCart");
       this.$store
         .dispatch("checkOut")
         .then(() => {
@@ -248,6 +247,7 @@ export default {
         .then(({ data }) => {
           this.$store.dispatch("addRps");
           this.hideModalCart();
+          this.$store.dispatch("clearCart");
           // console.log(this.listCart.detailCart);
           this.$snotify.success(
             `Thank's, For Buying Item's, Your Rps Now ${data.rps}`,

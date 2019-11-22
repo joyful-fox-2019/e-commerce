@@ -29,7 +29,7 @@
 <script>
 import { mapGetters } from "vuex";
 import axios from "axios";
-const baseUrl = "http://localhost:3000";
+const baseUrl = "http://seal-server.edwinsatya.online";
 
 export default {
   name: "formlogin",
@@ -76,8 +76,8 @@ export default {
           return this.$store.dispatch("setUserLoginAsync", payload);
         })
         .then(_ => {
-          this.$store.state.page = 'news'
-          this.$store.state.title = 'Announcements & News'
+          this.$store.state.page = "news";
+          this.$store.state.title = "Announcements & News";
           this.$router.push("/home");
           this.formLogin.email = "";
           this.formLogin.password = "";

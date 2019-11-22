@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-const baseUrl = "http://localhost:3000"
+const baseUrl = "http://seal-server.edwinsatya.online"
 Vue.use(Vuex)
 
 export default new Vuex.Store({
