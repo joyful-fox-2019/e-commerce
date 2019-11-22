@@ -20,6 +20,7 @@ module.exports = {
       .catch(next)
   },
   create: (req, res, next) => {
+    console.log('masukgan', req.body)
     const { name, description, price, stock, published, writer, penciler, image } = req.body
     Product.create({ name, description, price, stock, published, writer, penciler, image })
       .then(product => {
@@ -32,7 +33,8 @@ module.exports = {
     Product.findByIdAndUpdate(req.params.id,
       { name, description, price, stock, published, writer, penciler }, {
       omitUndefined: true,
-      new: true
+      new: true,
+      runValidators: true
     })
       .then(product => {
         res.status(200).json(product)
