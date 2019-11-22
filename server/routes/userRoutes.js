@@ -5,7 +5,7 @@ const isLogin = require('../middlewares/isLogin')
 router.post('/register', userController.register)
 router.post('/login', userController.login)
 // router.get('/profile', isLogin, userController.getOne)
-router.get('/wishlist', userController.getWishlist)
-router.patch('/wishlist/add', userController.addToWishlist)
+// router.get('/wishlist', userController.getWishlist)
+// router.patch('/wishlist/add', userController.addToWishlist)
 
 module.exports = router
