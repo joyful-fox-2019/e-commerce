@@ -11,7 +11,7 @@ export default {
     if (localStorage.getItem('token')) {
       this.$store.commit('login', {
         username: localStorage.getItem('username'),
-        role: 'admin'
+        role: 'customer'
       })
     }
   }

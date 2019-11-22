@@ -261,6 +261,8 @@ export default new Vuex.Store({
       })
         .then(({ data }) => {
           dispatch('fetchCart')
+          console.log("masuk ke add cart", data);
+          
           Toast.fire({
             icon: 'success',
             title: 'Added to cart success'
@@ -275,6 +277,7 @@ export default new Vuex.Store({
         })
     },
     fetchCart ({ state, commit, dispatch }) {
+      
       Swal.showLoading()
       axios({
         method: 'get',
@@ -283,7 +286,8 @@ export default new Vuex.Store({
           token: localStorage.getItem('token')
         }
       })
-        .then(({ data }) => {
+      .then(({ data }) => {
+        console.log("masuk ke fetch", data);
           Swal.close()
           commit('fetchCart', data)
         })

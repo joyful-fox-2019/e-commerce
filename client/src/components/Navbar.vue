@@ -43,7 +43,7 @@ export default {
 
 <style>
 #nav {
-  padding: 30px;
+  padding: 32px;
   /* background-color: #2c3e50; */
   background-color: rgb(21, 172, 114);
   display: flex;
