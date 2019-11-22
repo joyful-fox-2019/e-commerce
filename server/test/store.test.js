@@ -30,10 +30,11 @@ var falseId = '748jrp32njnfjfnfdfa'
 var falseToken = 'wifjpw3ihgi42-hf924-fji3fj-fji3fjei0fs'
 
 before(function (done) {
+  let tempUser 
   User.create({ username: 'eric', email: 'ericsudhartio@mgail.com', password: 'lalalalala' })
     .then(user => {
       initialId = user._id
-      initialUser = user;
+      tempUser = user;
       const token = signToken({ id: user._id, username: user.username, email: user.email })
       firstToken = token;
       user.verification = true;
@@ -45,7 +46,7 @@ before(function (done) {
       })
     })
     .then(store => {
-      initialUser.StoreId = store._id
+      tempUser.StoreId = store._id
       data.StoreId = store._id
       initialStore = store;
       return Product.create(data)
@@ -53,10 +54,15 @@ before(function (done) {
     .then(product => {
       initialStore.ProductId.push(product._id)
       initialProduct = product
-      return Cart.create({ UserId: initialUser._id })
+      return Cart.create({ UserId: tempUser._id })
     })
     .then(cart => {
       initialCart = cart
+      return User.findByIdAndUpdate(tempUser._id, { verification: true }, {new:true})
+    })
+    .then(user => {
+      console
+      initialUser = user;
       done()
     })
     .catch(console.log)
@@ -84,28 +90,30 @@ after(function (done) {
       .catch(console.log)
   }
 })
-describe('cartRoutes', function () {
+
+describe('Store Route', function () {
   this.timeout(10000)
-  describe('POST /carts', function () {
-    let product = {
-      product_image: 'http://lalalala.com',
-      description: 'dnakf;adsnkfasf',
-      name: 'product name',
-      price: 900,
-      count: 1,
-      storeName: 'fjdsakfa',
-      stock: 12
+  describe('POST /stores', function () {
+    let store = {
+      name: 'store name',
+      location: 'palembang',
+      link: 'linkapa.js'
     }
-    let link = '/carts'
+    let link = '/stores'
     describe('success process', function () {
       it('should send an object with 201 status code', function (done) {
-        product.id = initialProduct._id;
-        product.storeId = initialStore._id
+        let store2 = {
+          name: 'store name',
+          location: 'palembang',
+          link: 'linkapa.js'
+        }
+        console.log(initialUser, '/////???')
         chai.request(app)
           .post(link)
-          .send(product)
           .set('token', firstToken)
+          .send(store2)
           .end(function(err,res) {
+            console.log(firstToken)
             expect(err).to.be.null
             expect(res).to.have.status(201)
             // expect(res.body).to.be.an('object').to.have.any.keys('msg', 'cart')
@@ -115,10 +123,58 @@ describe('cartRoutes', function () {
       })
     })
     describe('error process', function () {
+      it('should send an error with status 400 because empty name', function (done) {
+        const noName = { ...store }
+        delete noName.name
+        chai.request(app)
+          .post(link)
+          .set('token', firstToken)
+          .send(noName)
+          .end(function (err,res ) {
+            expect(err).to.be.null;
+            expect(res).to.have.status(400)
+            expect(res.body).to.be.an('object').to.have.any.keys('msg', 'errors')
+            expect(res.body.msg).to.equal('Validation Error');
+            expect(res.body.errors).to.be.an('array').that.includes('name is required')
+            done()
+          })
+      })
+      it('should send an error with status 400 becausr empty location', function (done) {
+        const noLocation = { ...store }
+        delete noLocation.location;
+        chai.request(app)
+          .post(link)
+          .set('token', firstToken)
+          .send(noLocation)
+          .end(function (err, res) {
+            expect(err).to.be.null;
+            expect(res).to.have.status(400)
+            expect(res.body).to.be.an('object').to.have.any.keys('msg', 'errors')
+            expect(res.body.msg).to.equal('Validation Error');
+            expect(res.body.errors).to.be.an('array').that.includes('location is required')
+            done()
+          })
+      })
+      it('should send an error with status 400 because empty link', function (done) {
+        const noLink = { ...store }
+        delete noLink.link
+        chai.request(app)
+          .post(link)
+          .send(noLink)
+          .set('token', firstToken)
+          .end(function(err,res) {
+            expect(err).to.be.null;
+            expect(res).to.have.status(400)
+            expect(res.body).to.be.an('object').to.have.any.keys('msg', 'errors')
+            expect(res.body.msg).to.equal('Validation Error');
+            expect(res.body.errors).to.be.an('array').that.includes('link is required')
+            done()
+          })
+      })
       it('should send an error with status 403 because authentication', function (done) {
         chai.request(app)
           .post(link)
-          .send(product)
+          .send(store)
           .end(function (err,res) {
             expect(err).to.be.null
             expect(res).to.have.status(403)
@@ -130,7 +186,7 @@ describe('cartRoutes', function () {
       it('should send an error with status 400 because Authentication Error', function (done) {
         chai.request(app)
           .post(link)
-          .send(product)
+          .send(store)
           .set('token', falseToken)
           .end(function (err,res) {
             expect(err).to.be.null
@@ -142,99 +198,30 @@ describe('cartRoutes', function () {
       })
     })
   })
-  describe('GET /carts', function () {
-    const link = '/carts'
-    describe('success progress', function () {
-      it('should send an object with 200 status code', function (done) {
-        chai.request(app)
-          .get(link)
-          .set('token', firstToken)
-          .end(function(err,res) {
-            expect(err).to.be.null
-            expect(res).to.have.status(200)
-            done()
-          })
-      })
+  describe('GET /stores', function () {
+    let link = '/stores'
+    it('should send an error with status 403 because authentication', function (done) {
+      chai.request(app)
+        .post(link)
+        .end(function (err,res) {
+          expect(err).to.be.null
+          expect(res).to.have.status(403)
+          expect(res.body).to.be.an('object').to.have.any.keys('msg')
+          expect(res.body.msg).to.equal('Authentication Error')
+          done()
+        })
     })
-    describe('error process', function () {
-      it('should send an error with status 403 because authentication', function (done) {
-        chai.request(app)
-          .get(link)
-          .end(function (err,res) {
-            expect(err).to.be.null
-            expect(res).to.have.status(403)
-            expect(res.body).to.be.an('object').to.have.any.keys('msg')
-            expect(res.body.msg).to.equal('Authentication Error')
-            done()
-          })
-      })
-      it('should send an error with status 400 because Authentication Error', function (done) {
-        chai.request(app)
-          .get(link)
-          .set('token', falseToken)
-          .end(function (err,res) {
-            expect(err).to.be.null
-            expect(res).to.have.status(400)
-            expect(res.body).to.be.an('object').to.have.any.keys('msg')
-            expect(res.body.msg).to.equal('Authentication Error')
-            done()
-          })
-      })
-    })
-  })
-
-  describe('PUT /carts/:name', function () {
-    let newproduct = {
-      product_image: 'http://lalalala.com',
-      description: 'dnakf;adsnkfasf',
-      name: 'product name',
-      price: 900,
-      count: 1,
-      storeName: 'fjdsakfa',
-      stock: 12
-    }
-    const link = `/carts/product name`
-    describe('success progress', function () {
-      it('should send an object with 200 status code', function (done) {
-        chai.request(app)
-          .put(link)
-          .send(newproduct)
-          .set('token', firstToken)
-          .end(function(err,res) {
-            expect(err).to.be.null
-            expect(res).to.have.status(200)
-            done()
-          })
-      })
-    })
-    describe('error process', function () {
-      it('should send an error with status 403 because authentication', function (done) {
-        chai.request(app)
-          .put(link)
-          .send(newproduct)
-          .end(function (err,res) {
-            expect(err).to.be.null
-            expect(res).to.have.status(403)
-            expect(res.body).to.be.an('object').to.have.any.keys('msg')
-            expect(res.body.msg).to.equal('Authentication Error')
-            done()
-          })
-      })
-      it('should send an error with status 400 because Authentication Error', function (done) {
-        chai.request(app)
-          .put(link)
-          .send(newproduct)
-          .set('token', falseToken)
-          .end(function (err,res) {
-            expect(err).to.be.null
-            expect(res).to.have.status(400)
-            expect(res.body).to.be.an('object').to.have.any.keys('msg')
-            expect(res.body.msg).to.equal('Authentication Error')
-            done()
-          })
-      })
+    it('should send an error with status 400 because Authentication Error', function (done) {
+      chai.request(app)
+        .post(link)
+        .set('token', falseToken)
+        .end(function (err,res) {
+          expect(err).to.be.null
+          expect(res).to.have.status(400)
+          expect(res.body).to.be.an('object').to.have.any.keys('msg')
+          expect(res.body.msg).to.equal('Authentication Error')
+          done()
+        })
     })
   })
 })
-
-

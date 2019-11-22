@@ -3,7 +3,7 @@ const { model, Schema } = require('mongoose');
 const StoreSchema = new Schema({
   name: {
     type: String,
-    required: [true, 'Store need name'],
+    required: [true, 'name is required'],
     unique: true
   },
   Owner: {
@@ -20,11 +20,11 @@ const StoreSchema = new Schema({
   background_image: String,
   link: {
     type: String,
-    required: [true, 'store need link']
+    required: [true, 'link is required']
   },
   location: {
     type: String,
-    required: [true, 'Store need location']
+    required: [true, 'location is required']
   }
 }, {timestamps: true})
 

@@ -14,7 +14,7 @@ let initialCode = 'codeini'
 let falseId = '748jrp32njnfjfnfdfa'
 let falseToken = 'wifjpw3ihgi42-hf924-fji3fj-fji3fjei0fs'
 
-before(function () {
+before(function (done) {
   const data = {
     username: 'Eric S',
     email: 'ericsudhartio@gmail.com',
@@ -25,6 +25,7 @@ before(function () {
       initialId = user._id;
       const token = signToken({ id: user._id, username: user.username, email: user.email })
       initialToken = token;
+      done()
     })
     .catch(console.log)
 })
