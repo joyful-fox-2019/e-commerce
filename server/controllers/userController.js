@@ -3,29 +3,29 @@ const jwtHelper = require("../helpers/jwtHelper");
 const hashHelper = require("../helpers/hashHelper");
 
 class UserController {
-    static deleteCart(req, res, next){
+    static deleteCart(req, res, next) {
         User.findByIdAndUpdate(req.user.id,
-        {$pull: {cart: req.params.id} })
-        .then(user=>{
-            res.status(201).json(user);
-        })
-        .catch(next)
+            { $pull: { cart: req.params.id } })
+            .then(user => {
+                res.status(201).json(user);
+            })
+            .catch(next)
     }
-    static getCart(req, res, next){
+    static getCart(req, res, next) {
         User.findById(req.user.id)
-        .populate('cart')
-        .then(user=>{
-            res.status(200).json(user.cart);
-        })
-        .catch(next)
+            .populate('cart')
+            .then(user => {
+                res.status(200).json(user.cart);
+            })
+            .catch(next)
     }
-    static addCart(req, res, next){
+    static addCart(req, res, next) {
         User.findByIdAndUpdate(req.user.id,
-        {$push: {cart: req.params.id} })
-        .then(user=>{
-            res.status(201).json(user);
-        })
-        .catch(next)
+            { $push: { cart: req.params.id } })
+            .then(user => {
+                res.status(201).json(user);
+            })
+            .catch(next)
     }
     static register(req, res, next) {
         User.findOne({
@@ -33,7 +33,11 @@ class UserController {
         })
             .then(user => {
                 if (user) {
-                    throw new Error('email already registered')
+                    throw {
+                        name: 'ValidationError',
+                        message: 'Validation Error',
+                        resp: [`E-mail already registered`]
+                    }
                 }
                 return User.findOne({
                     username: req.body.username
@@ -41,14 +45,18 @@ class UserController {
             })
             .then(user => {
                 if (user) {
-                    throw new Error('username already taken')
+                    throw {
+                        name: 'ValidationError',
+                        message: 'Validation Error',
+                        resp: [`Username already registered`]
+                    }
                 }
                 return User.create({
                     email: req.body.email,
                     password: req.body.password,
                     username: req.body.username,
                     privilege: 'customer',
-                    cart:[]
+                    cart: []
                 })
             })
             .then(user => {
@@ -58,16 +66,34 @@ class UserController {
     }
 
     static login(req, res, next) {
+        if (!req.body.email) {
+            throw {
+                status: 400,
+                name: 'Validation Error',
+                message: 'Please enter your email',
+            }
+        }
+        if (!req.body.password) {
+            throw {
+                status: 400,
+                name: 'Validation Error',
+                message: 'Please enter your password',
+            }
+        }
         User.findOne({
             email: req.body.email
         })
             .then(user => {
                 if (hashHelper.compare(req.body.password, user.password)) {
-                    let token = jwtHelper.generate({id: user.id, privilege: user.privilege});
+                    let token = jwtHelper.generate({ id: user.id, privilege: user.privilege });
                     res.status(200).json({ token });
                 }
                 else {
-                    throw new Error('wrong email / password')
+                    throw {
+                        status: 401,
+                        name: 'Validation Error',
+                        message: 'Incorrect password',
+                    }
                 }
             })
             .catch(next)

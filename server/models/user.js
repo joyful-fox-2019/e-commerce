@@ -4,7 +4,7 @@ const hashHelper = require("../helpers/hashHelper");
 const userSchema = new Schema({
     email:{
         type: String,
-        required: true,
+        required: [true, `Please enter your email`],
         validate:{
             validator(value){
                 return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
@@ -16,7 +16,7 @@ const userSchema = new Schema({
     },
     password:{
         type: String,
-        required: true,
+        required: [true, `Please input your password`],
         validate:{
             validator(value){
                 return value.length >= 5
@@ -28,7 +28,7 @@ const userSchema = new Schema({
     },
     username:{
         type: String,
-        required: true,
+        required: [true, `Please input your name`],
         validate:{
             validator(value){
                 return value.length >= 4 && value.length <= 12

@@ -9,12 +9,15 @@ module.exports = (err, req, res, next) => {
             errors.push(err.errors[key].message)
         }
         res.status(400).json({
-            message: 'validation error',
+            message: 'Validation Error',
             errors
         })
     } else if (err.message.name === 'JsonWebTokenError') {
         res.status(status).json({ message: err.message.message })
-    } else {
+    } else if(err.message === `Cannot read property \'password\' of null`){
+        res.status(401).json({message: 'Email is not registered'})
+    }
+    else {
         res.status(status).json({ message })
     }
 }

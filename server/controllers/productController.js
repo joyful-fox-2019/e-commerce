@@ -14,7 +14,7 @@ class ProductController {
             genre: req.body.genre
         })
         .then(product=>{
-            res.status(200).json('product updated')
+            res.status(200).json({message: 'product updated'})
         })
         .catch(next)
     }
@@ -31,7 +31,7 @@ class ProductController {
             genre: req.body.genre
         })
         .then(product=>{
-            res.status(201).json('product added')
+            res.status(201).json({message: 'product added'})
         })
         .catch(next)
     }
