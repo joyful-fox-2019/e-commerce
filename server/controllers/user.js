@@ -16,13 +16,14 @@ class UserController {
             role
         } = req.body
         User.create({
-                name,
-                email,
-                password,
-                full_address,
-                role
-            })
+            name,
+            email,
+            password,
+            full_address,
+            role
+        })
             .then(user => {
+                // console.log(user)
                 res.status(201).json({
                     message: 'Successfull registration'
                 })
@@ -39,8 +40,8 @@ class UserController {
             password
         } = req.body
         User.findOne({
-                email
-            })
+            email
+        })
             .then(user => {
                 if (!user) {
                     throw 'UNF'

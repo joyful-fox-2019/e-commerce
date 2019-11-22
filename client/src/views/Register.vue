@@ -1,7 +1,6 @@
 <template>
   <div>
     <router-link class="a" to="/">Home</router-link>
-    <router-link class="a" to="/login">Login</router-link>
     <b-card class="text-center" title="Please Sign Up" style="width: 50%; margin: 5% auto;">
       <b-form @submit.prevent="registerUser" v-if="show" autocomplete="off">
         <b-form-input
@@ -26,14 +25,19 @@
           required
           placeholder="Enter email"
         ></b-form-input>
-
-        <b-form-input
-          id="input-2"
-          type="password"
-          v-model="form.password"
-          required
-          placeholder="Enter Password"
-        ></b-form-input>
+        <b-form-group
+          id="input-group-2"
+          label-for="input-2"
+          description="Minimum password length is 7"
+        >
+          <b-form-input
+            id="input-2"
+            type="password"
+            v-model="form.password"
+            required
+            placeholder="Enter Password"
+          ></b-form-input>
+        </b-form-group>
         <b-button type="submit" variant="primary">Sign Up</b-button>
       </b-form>
     </b-card>

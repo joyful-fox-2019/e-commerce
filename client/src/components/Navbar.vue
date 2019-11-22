@@ -9,13 +9,13 @@
       style="transition: 0.8s ease-in-out;"
     >
       <b-navbar-nav v-if="checkLogin">
-        <b-nav-item href="#" v-b-modal.modal-2>
+        <b-nav-item href="#" to="/cart">
           <img src="../assets/shopping-cart.png" alt="cart" />
         </b-nav-item>
       </b-navbar-nav>
 
       <b-navbar-nav v-if="checkLogin && isAdmin">
-        <b-nav-item href="#" v-b-modal.modal-4>
+        <b-nav-item href="#" to="/create">
           <p>| Create</p>
         </b-nav-item>
       </b-navbar-nav>
@@ -35,12 +35,12 @@
               <b>User</b>
             </template>
             <b-dropdown-item href="#" v-if="checkLogin" @click="signOut">Sign Out</b-dropdown-item>
-            <b-dropdown-item v-b-modal.modal-1 href="#" v-else>Sign In</b-dropdown-item>
+            <b-dropdown-item to="/login" href="#" v-else>Sign In</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <b-modal ref="modalku" id="modal-1" title="BootstrapVue" hide-footer>
+    <!-- <b-modal ref="modalku" id="modal-1" title="BootstrapVue" hide-footer>
       <b-form @submit.prevent="onSubmit">
         <b-form-group id="input-group-1" label="Email address:" label-for="input-1">
           <b-form-input
@@ -64,9 +64,11 @@
 
         <b-button type="submit" variant="primary">Sign In</b-button>
       </b-form>
-    </b-modal>
+      <p>OR</p>
+      <b-button type="submit" variant="primary" to="/register">Sign Up</b-button>
+    </b-modal>-->
 
-    <b-modal ref="modalcreate" id="modal-4" title="BootstrapVue" hide-footer>
+    <!-- <b-modal ref="modalcreate" id="modal-4" title="BootstrapVue" hide-footer>
       <b-form @submit.prevent="onCreate">
         <b-form-group id="input-group-1" label="Name:" label-for="input-1">
           <b-form-input id="input-1" type="text" required v-model="create.name"></b-form-input>
@@ -94,9 +96,9 @@
         </b-form-group>
         <b-button type="submit" variant="primary">Create</b-button>
       </b-form>
-    </b-modal>
+    </b-modal>-->
 
-    <b-modal v-if="checkLogin" ref="modalku" id="modal-2" title="Cart" hide-footer>
+    <!-- <b-modal v-if="checkLogin" ref="modalku" id="modal-2" title="Cart" hide-footer>
       <ul v-for="transaction in transactionList.transaction" :key="transaction._id">
         <hr />
         <img :src="transaction.product.image" style="width: 200px; height: 200px;" />
@@ -106,7 +108,7 @@
         <li>SubTotal: {{transaction.subTotal}}</li>
       </ul>
       <b-button variant="primary" @click="onCheckout">Checkout</b-button>
-    </b-modal>
+    </b-modal>-->
   </div>
 </template>
 
@@ -119,64 +121,10 @@ export default {
       variant: "faded",
       type: "light",
       transactionList: [],
-      navbarChanged: false,
-      form: {
-        email: "",
-        password: ""
-      },
-      create: {
-        name: "",
-        description: "",
-        stock: 0,
-        price: 0,
-        file: null
-      }
+      navbarChanged: false
     };
   },
   methods: {
-    onCheckout() {
-      axios({
-        url: "http://localhost:3000/transactions/checkout",
-        method: "PUT",
-        headers: {
-          token: localStorage.getItem("token")
-        }
-      })
-        .then(({ data }) => {
-          this.getCart();
-          this.$swal({
-            type: "success",
-            title: "Checkout Success"
-          });
-        })
-        .catch(err => {
-          this.$swal({
-            type: "error",
-            title: "Oops...",
-            text: "Something went wrong!"
-          });
-        });
-    },
-    getTransaction() {
-      axios({
-        url: "http://localhost:3000/transactions",
-        method: "GET",
-        headers: {
-          token: localStorage.getItem("token")
-        }
-      })
-        .then(({ data }) => {
-          // this.getCart();
-          this.transactionList = data;
-        })
-        .catch(err => {
-          this.$swal({
-            type: "error",
-            title: "Oops...",
-            text: "Something went wrong!"
-          });
-        });
-    },
     onSubmit() {
       axios({
         url: "http://localhost:3000/users/login",
@@ -225,54 +173,11 @@ export default {
     homePage() {
       this.$router.push("/");
       this.$store.commit("BACK_HOME");
-    },
-    onCreate() {
-      let { name, description, file, stock, price } = this.create;
-      let fd = new FormData();
-      fd.append("name", name);
-      fd.append("description", description);
-      fd.append("image", file);
-      fd.append("stock", stock);
-      fd.append("price", price);
-      axios({
-        url: "http://localhost:3000/products",
-        method: "POST",
-        headers: {
-          token: localStorage.getItem("token")
-        },
-        data: fd
-      })
-        .then(({ data }) => {
-          // this.getProduct();
-          this.$swal({
-            position: "top-center",
-            type: "success",
-            title: "Data created",
-            showConfirmButton: false,
-            timer: 1000
-          });
-          name = "";
-          description = "";
-          file = null;
-          stock = 0;
-          price = 0;
-          this.$refs["modalcreate"].hide();
-        })
-        .catch(err => {
-          this.$swal({
-            type: "error",
-            title: "Oops...",
-            text: "Something went wrong!"
-          });
-        });
     }
   },
   computed: {
     getProduct() {
       return this.$store.state.allProduct;
-    },
-    getCart() {
-      return this.$store.state.myCart;
     },
     isAdmin() {
       return this.$store.state.admin;
@@ -282,8 +187,8 @@ export default {
     }
   },
   created() {
-    if (localStorage.getItem("token")) {
-      this.getTransaction();
+    if (localStorage.getItem("role") === "Admin") {
+      this.$store.commit("CHECK_ADMIN", true);
     }
     window.addEventListener("scroll", this.handleScroll);
   },

@@ -41,24 +41,29 @@ export default new Vuex.Store({
     },
     SHOW_CART(state, payload) {
       state.myCart = payload
+    },
+    ADDING_CART(state, payload) {
+      state.myCart.push(payload)
     }
   },
   actions: {
     ADD_CART(context, payload) {
       axios({
-          url: 'http://localhost:3000/transactions',
-          method: 'POST',
-          headers: {
-            token: localStorage.getItem('token')
-          },
-          data: {
-            productId: payload.id,
-            quantity: payload.qty
-          }
-        })
+        url: 'http://localhost:3000/transactions',
+        method: 'POST',
+        headers: {
+          token: localStorage.getItem('token')
+        },
+        data: {
+          productId: payload.id,
+          quantity: payload.qty
+        }
+      })
         .then(({
           data
         }) => {
+          console.log(data)
+          context.commit('ADDING_CART', data)
           console.log('successfull transaction')
         })
         .catch(err => {
@@ -67,12 +72,12 @@ export default new Vuex.Store({
     },
     GET_PRODUCT(context) {
       axios({
-          url: "http://localhost:3000/products",
-          method: "GET",
-          headers: {
-            token: localStorage.getItem("token")
-          }
-        })
+        url: "http://localhost:3000/products",
+        method: "GET",
+        headers: {
+          token: localStorage.getItem("token")
+        }
+      })
         .then(({
           data
         }) => {
@@ -88,15 +93,16 @@ export default new Vuex.Store({
     },
     GET_CART(context) {
       axios({
-          url: "http://localhost:3000/transactions",
-          method: "GET",
-          headers: {
-            token: localStorage.getItem("token")
-          }
-        })
+        url: "http://localhost:3000/transactions",
+        method: "GET",
+        headers: {
+          token: localStorage.getItem("token")
+        }
+      })
         .then(({
           data
         }) => {
+          console.log(data)
           context.commit('SHOW_CART', data)
         })
         .catch(err => {

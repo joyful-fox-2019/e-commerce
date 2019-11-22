@@ -10,7 +10,7 @@ const routes = require('./routes')
 const errorHandler = require('./middlewares/errorHandler')
 const cors = require('cors')
 
-mongoose.connect(`mongodb://localhost/ecom-${process.env.NODE_ENV}`, {
+mongoose.connect(`mongodb+srv://new-user_31:${process.env.MONGO_PASS}@cluster0-96gdk.gcp.mongodb.net/ecommercesrver?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, function (err) {

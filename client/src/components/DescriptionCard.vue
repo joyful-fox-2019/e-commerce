@@ -77,6 +77,12 @@ export default {
       if (!this.login) {
         alert("belom login");
       } else {
+        this.$router.push("/");
+        this.$store.commit("BACK_HOME");
+        this.$swal({
+          type: "success",
+          title: "Success adding to cart"
+        });
         this.$store.dispatch("ADD_CART", { id, qty: this.quantity });
       }
     },

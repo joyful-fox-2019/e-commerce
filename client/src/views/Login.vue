@@ -53,6 +53,9 @@ export default {
         }
       })
         .then(({ data }) => {
+          if (data.role === "Admin") {
+            localStorage.setItem("role", data.role);
+          }
           localStorage.setItem("token", data.token);
           data.role === "Admin"
             ? this.$store.commit("CHECK_ADMIN", true)
