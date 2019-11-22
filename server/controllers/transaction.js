@@ -72,7 +72,7 @@ class TransactionConroller {
   static updateStatus(req, res, next) {
     let idTransaction = req.params.id
     let { status } = req.body
-    Transaction.findByIdAndUpdate(idTransaction, { $set: { status: status } })
+    Transaction.findByIdAndUpdate(idTransaction, { $set: { status: status } }, {new: true})
       .then(transaction => {
         res.status(200).json(transaction)
       })

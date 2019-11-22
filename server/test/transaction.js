@@ -5,6 +5,8 @@ const app = require('../app.js')
 const db = require('../models/transaction')
 const dbUser = require('../models/user')
 const dbProduct = require('../models/product')
+const dbCart = require('../models/cart')
+const dbTransaction = require('../models/transaction')
 const { generateToken } = require('../helpers/jwt')
 
 chai.use(chaiHttp)
@@ -19,7 +21,7 @@ let cart1
 let cart2
 let id
 
-describe('Transaction', function () {
+describe.only('Transaction', function () {
   before(function (done) {
     this.timeout(5000)
     let dataAdm = {
@@ -155,7 +157,6 @@ describe('Transaction', function () {
         done()
       })
       .catch(err => {
-        console(err)
         return Promise.all([dbProduct.deleteMany({}), dbUser.deleteMany({})])
       })
       .then(() => { }
@@ -171,17 +172,161 @@ describe('Transaction', function () {
     // db.collection.deleteMany({})
     dbUser.collection.deleteMany({})
     dbProduct.collection.deleteMany({})
+    dbCart.collection.deleteMany({})
+    dbTransaction.collection.deleteMany({})
   })
   
   describe('Add-transaction', function () {
-    // console.log(cart2);
     // Success
     it('Should success checkout with status 201 without error', function (done) {
       chai.request(app)
         .post(`/transaction/checkout`)
         .set(customer, customer)
         .end((err, res) => {
-          // console.log(res.body);
+          id = res.body._id
+          expect(err).to.be.null
+          expect(res).to.have.status(201)
+          expect(res.body).to.have.all.keys('_id', 'products', 'carts', '__v', 'status', 'owner', 'totalPrice', 'createdAt', 'updatedAt')
+          expect(res.body.status).to.be.equal('Pending')
+          done()
+        })
+    })
+
+    // error = not Login
+    it('Should Error checkout with status 400 and message You are not Authentication!', function (done) {
+      chai.request(app)
+        .post(`/transaction/checkout`)
+        .end((err, res) => {
+          expect(err).to.be.null
+          expect(res).to.have.status(400)
+          expect(res.body).to.be.equal('You are not authentication!')
+          done()
+        })
+    })
+  })
+
+  describe('Get transactiton Customer', function () {
+    // Succes get transaction
+    it('Should success get transaction with status 200', function (done) {
+      chai.request(app)
+        .get(`/transaction`)
+        .set(customer, customer)
+        .end((err, res) => {
+          expect(err).to.be.null
+          expect(res).to.have.status(200)
+          expect(res.body).to.be.an('array')
+          expect(res.body[0]).to.have.all.keys('_id', '__v', 'products', 'carts', 'status', 'owner', 'totalPrice', 'createdAt', 'updatedAt')
+          expect(res.body[0].products).to.be.an('array')
+          expect(res.body[0].carts).to.be.an('array')
+          expect(res.body[0].owner).to.be.an('object')
+          done()
+        })
+    })
+
+    // error = not Login
+    it('Should Error get transaction with status 400 and message You are not Authentication!', function (done) {
+      chai.request(app)
+        .post(`/transaction`)
+        .end((err, res) => {
+          expect(err).to.be.null
+          expect(res).to.have.status(400)
+          expect(res.body).to.be.equal('You are not authentication!')
+          done()
+        })
+    })
+  })
+
+  describe('Get transaction Admin', function () {
+    // Succes get transaction
+    it('Should success get transaction with status 200', function (done) {
+      chai.request(app)
+        .get(`/transaction/adm`)
+        .set(admin, admin)
+        .end((err, res) => {
+          expect(err).to.be.null
+          expect(res).to.have.status(200)
+          expect(res.body).to.be.an('array')
+          expect(res.body[0]).to.have.all.keys('_id', '__v', 'products', 'carts', 'createdAt', 'status' , 'updatedAt')
+          expect(res.body[0].products).to.be.an('array')
+          expect(res.body[0].carts).to.be.an('array')
+          done()
+        })
+    })
+
+    // error = not Authentication
+    it('Should Error get transaction with status 400 and message You are not Authentication!', function (done) {
+      chai.request(app)
+        .post(`/transaction`)
+        .end((err, res) => {
+          expect(err).to.be.null
+          expect(res).to.have.status(400)
+          expect(res.body).to.be.equal('You are not authentication!')
+          done()
+        })
+    })
+  })
+
+  describe('Edit status', function () {
+    // Succes edit status
+    it(`Should succes with status 200 without error`, function (done) {
+      let body = {
+        status: 'On Proccess'
+      }
+      chai.request(app)
+        .patch(`/transaction/${id}/update`)
+        .send(body)
+        .set(customer, customer)
+        .end((err, res) => {
+          expect(err).to.be.null
+          expect(res).to.have.status(200)
+          expect(res.body.status).to.be.equal('On Proccess')
+          done()
+        })
+    })
+
+    // error = not Authentication
+    it('Should Error update status with status 400 and message You are not Authentication!', function (done) {
+      let body = {
+        status: 'On Proccess'
+      }
+      chai.request(app)
+        .patch(`/transaction/${id}/update`)
+        .send(body)
+        .end((err, res) => {
+          expect(err).to.be.null
+          expect(res).to.have.status(400)
+          expect(res.body).to.be.equal('You are not authentication!')
+          done()
+        })
+    })
+  })
+
+  describe(`Delete Transaction`, function () {
+    // Success
+    it(`Should succes delete transaction with status 200`, function (done) {
+      chai.request(app)
+        .delete(`/transaction/${id}/delete`)
+        .set(customer, customer)
+        .end((err, res) => {
+          expect(err).to.be.null
+          expect(res.body).to.have.all.keys('n', 'ok', 'deletedCount')
+          expect(res.body.ok).to.be.equal(1)
+          expect(res.body.deletedCount).to.be.equal(1)
+          done()
+        })
+    })
+
+    // error = not Authentication
+    it('Should Error update status with status 400 and message You are not Authentication!', function (done) {
+      let body = {
+        status: 'On Proccess'
+      }
+      chai.request(app)
+        .delete(`/transaction/${id}/delete`)
+        .end((err, res) => {
+          expect(err).to.be.null
+          expect(res).to.have.status(400)
+          expect(res.body).to.be.equal('You are not authentication!')
           done()
         })
     })

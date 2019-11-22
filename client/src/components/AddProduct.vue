@@ -27,4 +27,7 @@ export default {
         margin-top: 50px;
         text-align: center;
     }
+    .container {
+        min-height: 95vh;
+    }
 </style>

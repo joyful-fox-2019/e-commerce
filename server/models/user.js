@@ -22,10 +22,6 @@ const UserSchema = new Schema({
   role: {
     type: String,
     default: 'customer'
-  },
-  address: {
-    type: String,
-    required: [true, `Address is required!`]
   }
 }, {
     versionKey: false

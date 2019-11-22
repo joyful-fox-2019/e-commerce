@@ -146,7 +146,7 @@ describe('Cart', function () {
           expect(err).to.be.null
           expect(res).to.have.status(201)
           expect(res.body).to.be.an('object')
-          expect(res.body).to.have.all.keys("_id", "idUser", "idProduct", "qty")
+          expect(res.body).to.have.all.keys("_id", "idUser", "idProduct", "qty", "status")
           expect(res.body.idProduct).to.be.equal(`${product1}`)
           expect(res.body.qty).to.be.equal(1)
           done()
@@ -237,7 +237,7 @@ describe('Cart', function () {
           res.body.forEach(el => {
             expect(el).to.be.an('object')
             expect(el).to.have.all.keys(
-              "_id", "idUser", "idProduct", "qty"
+              "_id", "idUser", "idProduct", "qty", "status"
             )
             expect(el.idProduct).to.be.an("object")
           })

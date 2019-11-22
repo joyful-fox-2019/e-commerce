@@ -47,64 +47,64 @@
 </template>
 
 <script>
-import axios from 'axios'
-const host = `https://e-commerce-api.sigitariprasetyo.xyz`
+import axios from "axios";
+const host = `https://e-commerce-api.sigitariprasetyo.xyz`;
 // const host = `http://localhost:3000`
 
 export default {
-  name: 'FormAddProduct',
-  data () {
+  name: "FormAddProduct",
+  data() {
     return {
-      name: '',
-      description: '',
-      price: '',
-      stock: '',
+      name: "",
+      description: "",
+      price: "",
+      stock: "",
       category: [],
       image: null,
       isFullPage: true
-    }
+    };
   },
   methods: {
-    addProduct () {
+    addProduct() {
       const loadingComponent = this.$buefy.loading.open({
         container: this.isFullPage ? null : this.$refs.element.$el
-      })
+      });
 
-      const formData = new FormData()
-      formData.append('image', this.image)
-      formData.set('name', this.name)
-      formData.set('description', this.description)
-      formData.set('price', this.price)
-      formData.set('stock', this.stock)
-      formData.set('category', this.category)
+      const formData = new FormData();
+      formData.append("image", this.image);
+      formData.set("name", this.name);
+      formData.set("description", this.description);
+      formData.set("price", this.price);
+      formData.set("stock", this.stock);
+      formData.set("category", this.category);
 
       axios({
-        method: 'post',
-        url: `${host}/addProduct`,
+        method: "post",
+        url: `${host}/product/add`,
         data: formData,
         headers: {
-          token: localStorage.getItem('token'),
-          'Content-Type': 'multipart/form-data'
+          token: localStorage.getItem("token"),
+          "Content-Type": "multipart/form-data"
         }
       })
         .then(product => {
-          setTimeout(() => loadingComponent.close(), 1 * 1000)
+          setTimeout(() => loadingComponent.close(), 1 * 1000);
           setTimeout(() => {
             this.$buefy.toast.open({
               message: `Add product success...`,
-              type: 'is-success'
-            })
-          }, 1200)
-          this.$router.push('/')
+              type: "is-success"
+            });
+          }, 1200);
+          this.$router.push("/");
         })
         .catch(err => {
-          setTimeout(() => loadingComponent.close(), 1 * 1000)
+          setTimeout(() => loadingComponent.close(), 1 * 1000);
           this.$buefy.toast.open({
             message: `${err.response.data}`,
-            type: 'is-danger'
-          })
-        })
+            type: "is-danger"
+          });
+        });
     }
   }
-}
+};
 </script>
