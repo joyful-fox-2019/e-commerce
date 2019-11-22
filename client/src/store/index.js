@@ -87,7 +87,7 @@ export default new Vuex.Store({
           Swal.fire('Errors', `Something went wrong`, `error`)
         })
     },
-    removeFromCart ({ commit }, payload) {
+    removeFromCart ({ commit, dispatch }, payload) {
       axios({
         url: `http://localhost:3000/users/cart/remove`,
         method: 'PATCH',
@@ -105,7 +105,7 @@ export default new Vuex.Store({
             showConfirmButton: false,
             timer: 1500
           })
-          this.dispatch('viewCart') // untuk panggil halaman cart lagi biar ga ke refresh
+          dispatch('viewCart') // untuk panggil halaman cart lagi biar ga ke refresh
         })
         .catch(err => {
           console.log(err)

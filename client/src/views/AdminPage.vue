@@ -12,6 +12,7 @@
         </div>
 
         <div class="col-lg-9">
+          <router-view></router-view>
           <AdminCarousel></AdminCarousel>
           <div class="row">
             <AdminProductCard v-for="(product) in this.$store.state.products" :key="product._id" :ProductData="product"></AdminProductCard>

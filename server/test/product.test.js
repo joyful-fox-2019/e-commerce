@@ -36,6 +36,8 @@ let updateProductData = {
     stock: "1"
 }
 
+let gonnaBeDeletedProductId = ''
+
 before('register user as admin', function(done) {
     chai.request(app)
     .post('/users/register')
@@ -64,6 +66,25 @@ before('register user as customer', function(done) {
             done()
         }
     })
+})
+
+before('create gonna be deleted product', function(done) {
+    this.timeout(10000)
+    Product.create({
+        name: 'dummy product',
+        price: 9000,
+        stock: '12',
+        image: 'asdasdasd'
+    })
+        .then(data => {
+            gonnaBeDeletedProductId = data._id
+            console.log(data, "<<<<< DISINI")
+            done()
+        })
+        .catch(err => {
+            console.log(err)
+            done()
+        })
 })
 
 // after(function(done) {
@@ -297,7 +318,7 @@ describe('CRUD Products Endpoints', function() {
         describe('success process', function() {
             it('should return status 200', function(done) {
                 chai.request(app)
-                .delete('/products/' + '5dd1986fd8661a0dd25e937f')
+                .delete('/products/' + gonnaBeDeletedProductId)
                 .set('token', adminToken)
                 .end(function(err, res) {
                     expect(err).to.be.null
