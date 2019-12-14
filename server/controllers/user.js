@@ -12,6 +12,8 @@ class UserController {
       role : req.body.role
     })
       .then(user => {
+        console.log(user);
+        
         let token = generateToken({
           id : user._id,
           email : user.email
@@ -46,7 +48,7 @@ class UserController {
             // if (user.role === `admin`) {
             //   localStorage.setItem('isAdmin')
             // }
-            res.status(200).json({message : `login success`, token})
+            res.status(200).json({message : `login success`, token, user})
           } else {
             throw { status : 400, message : `username/password wrong`}
           }

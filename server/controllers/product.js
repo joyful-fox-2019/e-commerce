@@ -17,18 +17,24 @@ class ProductController {
       .catch(next)
   }
   static create(req, res, next) {
-    const { name, file, price, description, stock } = req.body
-    Product.create({ name, imageSource: file, price, description, stock }) 
+    const { name, imageSource, price, description, stock } = req.body
+    Product.create({ name, imageSource, price, description, stock }) 
       .then(product => {
         res.status(201).json(product)
       })
       .catch(next)
   }
   static update(req, res, next) {
+    console.log("masuk update");
+    
     let id = req.params.id
     const { name, imageSource, price, description, stock } = req.body
+    console.log(req.body, "body nya apa siii mau update plzzzzzzzzzzzzzz");
+    
     Product.findByIdAndUpdate(id, { name, imageSource, price, description, stock}, { omitUndefined: true, new: true, runValidators: true, useFindAndModify: false })
       .then(product => {
+        console.log(product, "update server balikan nya data lama ga");
+        
         res.status(200).json(product)
       })
       .catch(next)

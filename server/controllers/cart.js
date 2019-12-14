@@ -6,9 +6,9 @@ class CartController {
     // Cart.findOneAndUpdate({})
     console.log('kesini cart')
     console.log(req.loggedUser, "loggedUser")
-    Cart.find({ user: req.loggedUser._id}).sort({ createdAt : 'desc'})
-    .populate('user')//field mana yg akan di populate
-    .populate('product')
+    Cart.find({ user: req.loggedUser._id }).sort({ createdAt: 'desc' })
+      .populate('user')//field mana yg akan di populate
+      .populate('product')
       .then(cart => {
         res.status(200).json(cart)
       })
@@ -23,13 +23,26 @@ class CartController {
       .catch(next)
   }
   static create(req, res, next) {
+
     console.log(req.loggedUser, "loggedUser")
     const { product, amount } = req.body
     const user = req.loggedUser._id
-    Cart.create({ user, product, amount })
+    console.log(product, "punya product id??????????????");
+
+
+    Cart.findOne({ product, user })
+      .then(cart => {
+        console.log(cart);
+        
+        if (cart) {
+          throw { status: 403, message: 'this item is already in your cart'}
+        } else {
+          return Cart.create({ user, product, amount })
+        }
+      })
       .then(cart => {
         res.status(201).json(cart)
-      }) 
+      })
       .catch(next)
   }
   static update(req, res, next) {

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/poterie-indulgence'
+const mongoURI = process.env.MONGO_URI // || 'mongodb://localhost:27017/tembikar'
 
 const mongoConfig = {
   useCreateIndex : true,

@@ -10,7 +10,8 @@ router.get('/:id', productController.findOne)
 router.use(authentication)
 router.use(adminAuthorization)
 
-router.post('/', upload.single('file'), productController.create)
+router.post('/', upload.single('imageSource'), productController.create)
+router.patch('/:id/gcs', upload.single('imageSource'), productController.update)
 router.patch('/:id', productController.update)
 router.delete('/:id', productController.delete)
 

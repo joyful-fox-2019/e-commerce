@@ -1,13 +1,20 @@
 <template>
   <div class="home-page">
-    <section class="PageHome_ImageTextSection PageHome_NewCollection">
-      <div class="PageHomeTitleContainer text">
-        <h4 class="text title t-title t-titile--big Appear AppearText words splitting Appear-appeared" style="--word-total:3; padding-right: 150px;">
-        </h4>
-      <!-- <p><strong>
-              a fine play of the clay soft and sift moistened<br>
-              turns malleable gathered comes out a beautiful craft
-          </strong></p> -->
+    <section class="home-section">
+      <div class="front">
+        <!-- <div class="pict"> -->
+          <figure class="image is-rounded">
+          <img src="../assets/homepage.jpg" alt="tembikar" weight="1000" height="1000">
+          </figure>
+        <!-- </div> -->
+        <div class="text">
+          <h1 class="title"> HAND-CRAFTED &nbsp; <br /> STONEWARES</h1>
+          <p>
+            an inorganic compound, non-metalic, <br>
+            solid material comprising metal, non-metal or <br>
+            metalloid atoms primarily
+          </p>
+        </div>
       </div>
     </section>
   </div>
@@ -21,51 +28,54 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import url('https://fonts.googleapis.com/css?family=Zilla+Slab+Highlight&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Playfair+Display&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Zilla+Slab+Highlight&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Playfair+Display&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Abril+Fatface|Alice|Calistoga|Cormorant|Cormorant+Garamond|Playfair+Display+SC|Prata&display=swap');
 
-.PageHome_ImageTextSection {
+.front {
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
-  flex-direction: column;
-  margin-right: 370px;
-  text-align: center;
+  flex-direction: row;
+  margin-left: 15vw;
+  margin-top: 50px;
 }
-
-.PageHomeTitleContainer{
-  display: flex;
-  background-repeat: no-repeat;
-  background-image: url('../assets/homepage.jpg');
-  background-size: contain;
-  height:800px;
-  width: 1200px;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+.text {
+  margin-left: 7vw;
+  margin-top: 230px;
 }
-
+h1 {
+  font-family: "Playfair Display", serif;
+  font-weight: 500;
+  letter-spacing: 12px;
+  font-size: 50px;
+}
 p {
-  font-family: 'Playfair Display', serif;
-  font-size: 30px;
+  font-family: "Playfair Display", serif;
+  font-size: 17px;
   text-align: center;
   letter-spacing: 3px;
   display: flex;
   justify-content: center;
+  font-weight: 20;
 }
 
-h3 {
-  margin: 40px 0 0;
+@media only screen and (max-width: 1216px) {
+  .front {
+    flex-direction: column;
+    margin-right: 150px;
+  }
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+@media only screen and (max-width: 1408px) {
+  .front {
+    margin-right: 150px;
+  }
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
+/* font-family: 'Abril Fatface', cursive;
+font-family: 'Calistoga', cursive;
+font-family: 'Prata', serif;
+font-family: 'Alice', serif;
+font-family: 'Playfair Display SC', serif;
+font-family: 'Cormorant', serif;
+font-family: 'Cormorant Garamond', serif; */
 </style>

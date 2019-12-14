@@ -1,12 +1,20 @@
 const Transaction = require('../models/transaction')
+const Cart = require('../models/cart')
+const Product = require('../models/product')
 
 class TransactionController {
   static find(req, res, next) {
-    Transaction.find()
-      .then(transaction => {
-        res.status(200).json(transaction)
-      })
-      .catch(next)
+    let query = {}
+    if (req.loggedUser.role !== 'admin') {
+      query.userId = req.loggedUser._id
+    }
+    console.log(query, "querrrrrrrrrrrrrrrr");
+    
+      Transaction.find(query)
+        .then(transaction => {
+          res.status(200).json(transaction)
+        })
+        .catch(next)
 
   }
   static findOne(req, res, next) {
@@ -18,10 +26,31 @@ class TransactionController {
       .catch(next)
   }
   static create(req, res, next) {
-    const { userId, carts, total } = req.body
+    const { carts, total } = req.body
+    const userId = req.loggedUser._id
+    console.log(carts, "dari transaction mau create ");
+    
+    let trx = {}
+
+    
     Transaction.create({ userId, carts, total })
       .then(transaction => {
-        res.status(201).json(transaction)
+        trx = transaction
+        return Cart.deleteMany({user : req.loggedUser._id})
+      })
+      .then(n => {
+        let promises = []
+        carts.forEach(cart => {
+          let productId = cart.product._id
+          let stock =  cart.product.stock
+          let amount = cart.amount
+          promises.push(Product.findByIdAndUpdate(productId, { stock : stock - amount }))
+         
+        })
+        return Promise.all(promises)
+      })
+      .then(arr => {
+        res.status(201).json(trx)
       })
       .catch(next)
   }

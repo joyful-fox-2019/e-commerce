@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Navbar></Navbar>
-    <router-view/>
+    <Navbar :isLogin="isLogin" @setIsLogin="setIsLogin"></Navbar>
+    <router-view @alert="alert" @setIsLogin="setIsLogin"></router-view>
     <!-- <Footer /> -->
   </div>
 </template>
@@ -12,10 +12,39 @@ import Navbar from './components/Navbar.vue'
 
 export default {
   name: 'App',
+  data: function () {
+    return {
+      isLogin: false
+    }
+  },
   components: {
     Navbar
     // ,
     // Footer
+  },
+  methods: {
+    alert (err) {
+      // console.log(err.response.data.message, "INI APP");
+      if (err.response) {
+        this.$buefy.toast.open({
+          type: 'is-white',
+          message: err.response.data.message
+        })
+      } else {
+        this.$buefy.toast.open({
+          type: 'is-white',
+          message: `connection failed`
+        })
+      }
+    },
+    setIsLogin (status) {
+      this.isLogin = status
+    }
+  },
+  created () {
+    if (localStorage.getItem('token')) {
+      this.isLogin = true
+    }
   }
 }
 </script>

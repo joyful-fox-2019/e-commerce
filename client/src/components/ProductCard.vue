@@ -1,10 +1,12 @@
 <template>
-  <div class="productList">
-      <figure class="image is-3by4">
+  <div class="product-list">
+      <figure class="image is-square">
       <img @click="redirect(product._id)" :src="product.imageSource" alt="Product image">
       </figure>
+      <div class="product-info">
       <h4>{{product.name}}</h4>
       <p>{{itemPrice}}</p>
+      </div>
   </div>
 </template>
 
@@ -28,7 +30,15 @@ export default {
 .container-product {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: left;
+}
+.image {
+  object-fit: cover;
+}
+.product-info {
+  text-align: left;
+  padding-top: 10px;
+  padding-left: 20px;
 }
 
 </style>

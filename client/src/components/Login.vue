@@ -6,16 +6,16 @@
       <div class="text">
         <div class="container text">
           <h4>Login</h4>
-          <div>
+          <form @submit.prevent="login">
             <input v-model="email" class="input" type="email" placeholder="Email" value>
             <input v-model="password" class="input" type="password" placeholder="Password" value>
-            <div class="button first">
-              <span @click="login" class="button-text">Login</span>
+            <div >
+              <b-button native-type="submit">Login</b-button>
             </div>
             <div class="button second">
               <span @click="$router.push('/users/register')" class="button-text">I don't have account</span>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -33,20 +33,26 @@ export default {
   },
   methods: {
     login () {
+      console.log('hayolo login gakkkkk')
+
       this.axios.post(`/users/login`, {
         email: this.email,
         password: this.password
       })
         .then(({ data }) => {
+          this.$emit('setIsLogin', true)
+          console.log(data, 'iyaaaaaaaa')
           this.$router.push('/')
           localStorage.setItem('token', data.token)
-          console.log(data)
-          // if (data.user.role === `admin`) {
-          //   localStorage.setItem('isAdmin', true)
-          // }
+          console.log(data.user.role, 'rolenya apaaaaa')
+
+          if (data.user.role === `admin`) {
+            localStorage.setItem('isAdmin', true)
+          }
         })
         .catch(err => {
-          console.log(err)
+          console.log(err, 'aaaaa')
+          this.$emit('alert', err)
         })
     }
   }

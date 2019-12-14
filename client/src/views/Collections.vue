@@ -1,7 +1,7 @@
 <template>
   <div class="about">
     <div  class="container">
-      <div class="columns is-multiline is-mobile">
+      <div class="columns is-multiline">
         <div v-for="(product, index) in productList" :key="index" class="column is-half">
           <ProductCard :product="product" />
         </div>

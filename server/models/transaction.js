@@ -7,20 +7,22 @@ const transactionSchema = new Schema({
   }, 
   carts : [
     {
-      productId : {
-        type : Schema.Types.ObjectId,
-        ref : 'Product'
-      }
+        type : Object
     }
   ],
   total : {
     type : Number, 
+  },
+  status : {
+    type: String,
+    required: [true, 'please define the status'],
+    default: 'on hold for delivery confirmation'
   }
 }, {
   versionKey: false,
   timestamps : true
 })
 
-const Transaction = model('Transacction', transactionSchema)
+const Transaction = model('Transaction', transactionSchema)
 
 module.exports = Transaction
