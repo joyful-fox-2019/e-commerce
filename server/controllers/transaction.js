@@ -89,7 +89,6 @@ class TransactionController {
     }
 
     static deleteTransaction(req, res, next) {
-        // console.log(req.params.id, 'ini delete')
         Transaction.findByIdAndRemove(req.params.id)
             .then(transaction => {
                 res.status(200).json({
