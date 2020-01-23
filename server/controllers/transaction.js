@@ -57,7 +57,7 @@ class TransactionController {
     }
 
     static createTransaction(req, res, next) {
-        Transaction.findOne({ product: req.body.productId })
+        Transaction.findOne({ product: req.body.productId, checkout: false })
             .then(transaction => {
                 if (transaction) {
                     let newqty = Number(transaction.quantity) + Number(req.body.quantity)
@@ -89,6 +89,7 @@ class TransactionController {
     }
 
     static deleteTransaction(req, res, next) {
+        // console.log(req.params.id, 'ini delete')
         Transaction.findByIdAndRemove(req.params.id)
             .then(transaction => {
                 res.status(200).json({

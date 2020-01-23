@@ -40,10 +40,19 @@ export default new Vuex.Store({
       state.allProduct = payload
     },
     SHOW_CART(state, payload) {
-      state.myCart = payload
+      state.myCart = payload.transaction
     },
     ADDING_CART(state, payload) {
       state.myCart.push(payload)
+    },
+    REMOVE_CART(state, payload) {
+      if (payload) {
+        state.myCart = state.myCart.filter(item => {
+          item._id != payload
+        })
+      } else {
+        state.myCart = []
+      }
     }
   },
   actions: {
@@ -62,9 +71,9 @@ export default new Vuex.Store({
         .then(({
           data
         }) => {
-          console.log(data)
+          // console.log(data)
           context.commit('ADDING_CART', data)
-          console.log('successfull transaction')
+          // console.log('successfull transaction')
         })
         .catch(err => {
           console.log(err)
@@ -102,7 +111,7 @@ export default new Vuex.Store({
         .then(({
           data
         }) => {
-          console.log(data)
+          // console.log(data)
           context.commit('SHOW_CART', data)
         })
         .catch(err => {
@@ -112,6 +121,25 @@ export default new Vuex.Store({
             text: "Something went wrong!"
           });
         });
+    },
+    DELETE_CART(context, payload) {
+      axios({
+        url: `http://localhost:3000/transactions/${payload}`,
+        method: 'DELETE',
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+        .then(({ data }) => {
+          context.commit('REMOVE_CART', payload)
+        })
+        .catch(err => {
+          Swal.fire({
+            type: "error",
+            title: "Oops...",
+            text: "Something went wrong!"
+          });
+        })
     }
   },
   modules: {}

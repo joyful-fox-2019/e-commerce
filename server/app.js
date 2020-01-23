@@ -12,7 +12,8 @@ const cors = require('cors')
 
 mongoose.connect(`mongodb+srv://new-user_31:${process.env.MONGO_PASS}@cluster0-96gdk.gcp.mongodb.net/ecommercesrver?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
 }, function (err) {
     if (err) console.log(err)
     console.log('connected to mongoose')

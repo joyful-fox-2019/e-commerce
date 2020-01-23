@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h2 v-if="getCart.transaction.length < 1" style="text-align:center;">Empty cart :(</h2>
-    <div v-if="getCart.transaction.length > 0">
+    <h2 v-if="getCart.length < 1" style="text-align:center;">Empty cart :(</h2>
+    <div v-if="getCart.length > 0 && getCart[0].product">
       <b-button style="margin-left:48%;" type="button" @click="checkout" variant="info">Checkout</b-button>
       <b-card-group>
         <b-card
-          v-for="transaction in getCart.transaction"
+          v-for="transaction in getCart"
           :key="transaction._id"
           :title="transaction.product.name"
           :img-src="transaction.product.image"
@@ -18,7 +18,7 @@
           <b-card-text>{{transaction.product.description}}</b-card-text>
           <b-card-text>QTY : {{transaction.quantity}}</b-card-text>
           <b-card-text>SUBTOTAL : {{transaction.subTotal}}</b-card-text>
-          <!-- <b-button href="#" variant="primary">Go somewhere</b-button> -->
+          <b-button @click="deleteInCart(transaction._id)" variant="danger">Delete</b-button>
         </b-card>
       </b-card-group>
     </div>
@@ -39,6 +39,7 @@ export default {
         }
       })
         .then(({ data }) => {
+          this.$store.commit("REMOVE_CART");
           this.$router.push("/");
           this.$swal({
             type: "success",
@@ -52,6 +53,9 @@ export default {
             text: "Something went wrong!"
           });
         });
+    },
+    deleteInCart(id) {
+      this.$store.dispatch("DELETE_CART", id);
     }
   },
   computed: {
@@ -60,9 +64,7 @@ export default {
     }
   },
   created() {
-    if (localStorage.getItem("token")) {
-      this.$store.dispatch("GET_CART");
-    }
+    this.$store.dispatch("GET_CART");
   }
 };
 </script>
