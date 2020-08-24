@@ -1,0 +1,275 @@
+BRAND TITLE : poteriè indulgence
+
+base url = http://localhost:3000
+
+{
+    "message": [
+        "register failed",
+        "Invalid email format",
+        "Password have to contain at least 5 character"
+    ]
+}
+
+{
+    "message": [
+        "register failed",
+        "Please enter your username",
+        "Please enter your email",
+        "Please enter your password"
+    ]
+}
+
+{
+    "message": "you are not authorized to perform this task"
+}
+
+USER
+
+1. login
+
+    endpoint : {base url}/users/login
+    method : POST
+
+    headers : none
+    body : 
+      email : type string required
+      password : type string required
+
+    success response : 
+      status 201
+      content example
+
+      {
+    "message": "login success",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkY2E2ZDZjMDdiYjJmNTA4ZmUwYzdiZCIsImVtYWlsIjoibmF0aEBtYWlsLmNvbSIsImlhdCI6MTU3MzU0NzU5Nn0.345oidFzPMF3CLH4gRjnYE90ECWZ8DMwe8G35_26LLo"
+}
+
+2. register
+
+    endpoint : {base url}/users/register
+    method : POST
+
+    headers : none
+    body : 
+      username : type string required
+      email : type string required
+      password : type string required
+
+    success response : 
+      status 200
+      content example
+
+      {
+    "message": "register success",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkY2E2ZDZjMDdiYjJmNTA4ZmUwYzdiZCIsImVtYWlsIjoibmF0aEBtYWlsLmNvbSIsImlhdCI6MTU3MzU0NzM3Mn0.EOEtoDymFL9q26Jlw7rf6Dde2rDVuUqFawouRVIyQGk",
+    "user": {
+        "_id": "5dca6d6c07bb2f508fe0c7bd",
+        "username": "nath",
+        "email": "nath@mail.com",
+        "password": "$2b$10$eAWHEGjP8LZZ786hQNpPKOQ3S5rLDLELhO/AOFwRnGNPpPlWSxDCa"
+    }
+}
+    
+
+PRODUCT
+
+1.  create
+
+    endpoint : {base url}/products
+    method : POST
+
+    headers : 
+      authenticated : jwt token
+      authorized : admin token
+
+    body : 
+      name : type string required
+      imageSource : type string required
+      price : type integer required
+      stock : type integer required 
+
+    success response : 
+      status 201
+      content example
+
+{
+    "_id": "5dcb3f4b0414771df81a248d",
+    "name": "Ceramic Carafe",
+    "imageSource": "https://i.pinimg.com/564x/4c/f0/8e/4cf08e0a655257728bca2362455535ae.jpg",
+    "price": 266000,
+    "description": "shipping The Unison set is a carefully handcrafted ceramic tableware collection that puts your favourite food in a perfect limelight. The collection consists of seven differentpieces",
+    "stock": 4
+}
+
+2.  find all
+
+    endpoint : {base url}/products
+    method : GET
+
+    headers : none / query { params : name}
+
+    body : none
+
+    success response : 
+      status 200
+      content example
+ 
+
+
+3.  find one
+
+    endpoint : {base url}/products/:id
+    method : GET
+    
+    headers : none 
+
+    body : none
+
+     success response : 
+      status 200
+      content example
+
+
+
+4.  update :
+      endpoint : {base url}/products/:id
+      method : PATCH
+     
+      headers : 
+        authenticated : jwt token
+        authorized : admin token
+
+      body : 
+        name : type string required
+        imageSource : type string required
+        price : type integer required
+        stock : type integer required
+
+       success response : 
+        status 200
+        content example
+
+        {
+    "_id": "5dcb3809494fa7152e1de4ae",
+    "name": "Ceramic Carafe",
+    "imageSource": "https://i.pinimg.com/564x/4c/f0/8e/4cf08e0a655257728bca2362455535ae.jpg",
+    "price": 266000,
+    "description": "shipping The Unison set is a carefully handcrafted ceramic tableware collection that puts your favourite food in a perfect limelight. The collection consists of seven differentpieces",
+    "stock": 12
+}
+
+5.  delete :
+
+      endpoint : {base url}/products/:id
+      method : DELETE
+      
+      headers : 
+        authenticated : jwt token
+        authorized : admin token
+
+      body : none
+
+      success response : 
+        status 200
+        content example
+
+
+{
+    "_id": "5dcb4255bf858a21741ab8ba",
+    "name": "Ceramic Carafe",
+    "imageSource": "https://i.pinimg.com/564x/4c/f0/8e/4cf08e0a655257728bca2362455535ae.jpg",
+    "price": 266000,
+    "description": "shipping The Unison set is a carefully handcrafted ceramic tableware collection that puts your favourite food in a perfect limelight. The collection consists of seven differentpieces",
+    "stock": 4
+}
+
+CART
+
+1.  create
+
+    endpoint : {base url}/carts
+    method : POST
+
+    headers : 
+      authenticated : jwt token
+      
+
+    body : 
+      productId : type ObjectId, required
+      quantity : type integer, required
+
+    success response : 
+      status 201
+      content example
+
+      {
+    "_id": "5dcb490f9760a12850d8ef2f",
+    "user": "5dcb3cd77cc6e91b0590e154",
+    "product": "5dcb4255bf858a21741ab8ba",
+    "amount": 4
+}
+
+
+
+2.  find all
+
+    endpoint : {base url}/carts
+    method : GET
+
+    headers : 
+      authenticated : jwt token
+
+    body : none
+
+    success response : 
+      status 200
+      content example
+ 
+
+
+3.  delete :
+
+      endpoint : {base url}/carts/:id
+      method : DELETE
+      
+      headers : 
+        authenticated : jwt token
+        authorized : cart token
+
+      body : none
+
+      success response : 
+        status 200
+        content example
+
+
+{
+    "_id": "5dcb4676ce26e625e1f0a7c2",
+    "user": "5dcb3cd77cc6e91b0590e154",
+    "product": "5dcb4255bf858a21741ab8ba",
+    "amount": 5
+}
+
+
+
+___________________________done
+user 
+  register  
+  login
+
+product //by admin-auth
+  add
+  find
+  update
+  delete
+
+cart //by user-auth
+  create
+  find
+  update
+  delete
+
+
+______computed
+formatted price in product
+total product in cart

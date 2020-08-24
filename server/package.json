@@ -1,0 +1,40 @@
+{
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test mocha --exit || true",
+    "dev": "NODE_ENV=development nodemon bin/http.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elizabethwidiasri/e-commerce.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elizabethwidiasri/e-commerce/issues"
+  },
+  "homepage": "https://github.com/elizabethwidiasri/e-commerce#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "bcrypt": "^3.0.6",
+    "chart.js": "^2.9.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "gcs-upload": "^1.1.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.7.9",
+    "mongoose-unique-validator": "^2.0.3",
+    "mongoose-validator": "^2.1.0",
+    "vue-chartjs": "^3.5.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "dotenv": "^8.2.0",
+    "mocha": "^6.2.2"
+  }
+}
